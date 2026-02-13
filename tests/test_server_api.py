@@ -187,7 +187,7 @@ class ServerApiTests(unittest.TestCase):
         res = get_json(self.base, '/api/file?path=README.md')
         self.assertTrue(res['success'])
         self.assertEqual(res['path'], 'README.md')
-        self.assertIn('WBS Orchestration', res['content'])
+        self.assertIn('Formal packet/state-machine orchestration', res['content'])
 
     def test_unknown_api_route_returns_json_404(self):
         status, body = request_json(self.base, '/api/does-not-exist')

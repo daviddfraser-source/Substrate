@@ -9,7 +9,7 @@ repos:
 
       - id: packet-validate
         name: Packet schema validate
-        entry: python3 .governance/wbs_cli.py validate-packet .governance/wbs.json
+        entry: python3 .governance/wbs_cli.py validate-packet templates/wbs-codex-refactor.json
         language: system
         pass_filenames: false
 

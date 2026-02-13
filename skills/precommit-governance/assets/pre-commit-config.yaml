@@ -15,6 +15,6 @@ repos:
 
       - id: docs-command-check
         name: Docs legacy command check
-        entry: ./scripts/check_docs_no_legacy_commands.sh
+        entry: bash ./scripts/check_docs_no_legacy_commands.sh
         language: system
         pass_filenames: false

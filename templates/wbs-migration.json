@@ -1,0 +1,128 @@
+{
+  "metadata": {
+    "project_name": "Migration: [SOURCE] to [TARGET]",
+    "approved_by": "[YOUR NAME]",
+    "approved_at": "[DATE]"
+  },
+  "work_areas": [
+    {
+      "id": "1.0",
+      "title": "Discovery & Planning",
+      "description": "Understand current state and plan the migration"
+    },
+    {
+      "id": "2.0",
+      "title": "Preparation",
+      "description": "Set up target environment and tooling"
+    },
+    {
+      "id": "3.0",
+      "title": "Migration Execution",
+      "description": "Perform the actual migration incrementally"
+    },
+    {
+      "id": "4.0",
+      "title": "Validation & Cutover",
+      "description": "Verify everything works and switch over"
+    }
+  ],
+  "packets": [
+    {
+      "id": "MIG-001",
+      "wbs_ref": "1.1",
+      "area_id": "1.0",
+      "title": "Audit current system",
+      "scope": "Document what exists today. List all components, dependencies, data flows, integrations. Output: audit.md"
+    },
+    {
+      "id": "MIG-002",
+      "wbs_ref": "1.2",
+      "area_id": "1.0",
+      "title": "Define target state",
+      "scope": "Document where we're going. Describe target architecture, technology choices, expected improvements. Output: target-state.md"
+    },
+    {
+      "id": "MIG-003",
+      "wbs_ref": "1.3",
+      "area_id": "1.0",
+      "title": "Create migration plan",
+      "scope": "Plan the migration sequence. Identify what can be migrated independently vs. together. Define rollback procedures. Output: migration-plan.md"
+    },
+    {
+      "id": "MIG-004",
+      "wbs_ref": "2.1",
+      "area_id": "2.0",
+      "title": "Set up target environment",
+      "scope": "Provision and configure the target system. Verify it's ready to receive migrated components."
+    },
+    {
+      "id": "MIG-005",
+      "wbs_ref": "2.2",
+      "area_id": "2.0",
+      "title": "Create migration tooling",
+      "scope": "Build or configure tools for the migration. Data transformation scripts, sync utilities, validation tools."
+    },
+    {
+      "id": "MIG-006",
+      "wbs_ref": "2.3",
+      "area_id": "2.0",
+      "title": "Set up parallel running",
+      "scope": "Configure ability to run old and new systems in parallel. Set up traffic splitting or shadow mode if applicable."
+    },
+    {
+      "id": "MIG-007",
+      "wbs_ref": "3.1",
+      "area_id": "3.0",
+      "title": "Migrate batch 1 (low risk)",
+      "scope": "Migrate first set of components per migration plan. Start with lowest risk items. Validate after migration."
+    },
+    {
+      "id": "MIG-008",
+      "wbs_ref": "3.2",
+      "area_id": "3.0",
+      "title": "Migrate batch 2 (medium risk)",
+      "scope": "Migrate next set of components. Apply lessons learned from batch 1. Validate after migration."
+    },
+    {
+      "id": "MIG-009",
+      "wbs_ref": "3.3",
+      "area_id": "3.0",
+      "title": "Migrate batch 3 (high risk)",
+      "scope": "Migrate remaining components including critical systems. Extra validation. Have rollback ready."
+    },
+    {
+      "id": "MIG-010",
+      "wbs_ref": "4.1",
+      "area_id": "4.0",
+      "title": "Full system validation",
+      "scope": "End-to-end testing on target system. Verify all functionality works. Compare outputs with source system."
+    },
+    {
+      "id": "MIG-011",
+      "wbs_ref": "4.2",
+      "area_id": "4.0",
+      "title": "Cutover",
+      "scope": "Switch production traffic to new system. Execute cutover plan. Monitor closely for issues."
+    },
+    {
+      "id": "MIG-012",
+      "wbs_ref": "4.3",
+      "area_id": "4.0",
+      "title": "Decommission old system",
+      "scope": "After validation period, shut down old system. Archive data and configs. Update documentation."
+    }
+  ],
+  "dependencies": {
+    "MIG-002": ["MIG-001"],
+    "MIG-003": ["MIG-002"],
+    "MIG-004": ["MIG-003"],
+    "MIG-005": ["MIG-003"],
+    "MIG-006": ["MIG-004", "MIG-005"],
+    "MIG-007": ["MIG-006"],
+    "MIG-008": ["MIG-007"],
+    "MIG-009": ["MIG-008"],
+    "MIG-010": ["MIG-009"],
+    "MIG-011": ["MIG-010"],
+    "MIG-012": ["MIG-011"]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "approved_servers": [
+    {
+      "name": "example-mcp",
+      "url": "https://github.com/example/mcp"
+    }
+  ]
+}

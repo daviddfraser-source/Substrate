@@ -1,0 +1,201 @@
+{
+  "metadata": {
+    "project_name": "Critical App Delivery Acceleration + 50% Cost Reduction",
+    "approved_by": "lead",
+    "approved_at": "2026-02-12T00:00:00Z"
+  },
+  "work_areas": [
+    {
+      "id": "SPEED",
+      "title": "Cycle-Time Acceleration",
+      "description": "Ship critical capabilities faster"
+    },
+    {
+      "id": "COST",
+      "title": "Cost Reduction",
+      "description": "Reduce delivery + AI runtime costs by 50%"
+    },
+    {
+      "id": "CONTROL",
+      "title": "Quality + Governance",
+      "description": "Prevent rework and production regressions"
+    },
+    {
+      "id": "FOUND",
+      "title": "Reusable Platform",
+      "description": "Templates and shared accelerators"
+    },
+    {
+      "id": "OPS",
+      "title": "Operating Rhythm",
+      "description": "Execution cadence and kill decisions"
+    }
+  ],
+  "packets": [
+    {
+      "id": "IMP-001",
+      "wbs_ref": "1.1",
+      "area_id": "SPEED",
+      "title": "Form vertical pods",
+      "scope": "Create end-to-end pods (PM + domain + builders + AI operator) and assign critical workflows."
+    },
+    {
+      "id": "IMP-002",
+      "wbs_ref": "1.2",
+      "area_id": "SPEED",
+      "title": "Define mission-path scope",
+      "scope": "Reduce each critical app to 5-7 executable capabilities with trigger/output/SLA/failure mode."
+    },
+    {
+      "id": "IMP-003",
+      "wbs_ref": "1.3",
+      "area_id": "SPEED",
+      "title": "Implement 72-hour build loop",
+      "scope": "Standardize day-1 scaffold, day-2 thin slices, day-3 integration and acceptance drills."
+    },
+    {
+      "id": "IMP-004",
+      "wbs_ref": "1.4",
+      "area_id": "SPEED",
+      "title": "Adopt two-lane execution",
+      "scope": "Run feature lane and reliability lane in parallel for every sprint."
+    },
+    {
+      "id": "IMP-005",
+      "wbs_ref": "1.5",
+      "area_id": "SPEED",
+      "title": "Week-2 user pilot policy",
+      "scope": "Require real-user pilot by week 2 for every critical capability."
+    },
+    {
+      "id": "IMP-006",
+      "wbs_ref": "2.1",
+      "area_id": "COST",
+      "title": "Scope cut to mission path",
+      "scope": "Freeze all non-critical backlog for 60 days and publish defer list."
+    },
+    {
+      "id": "IMP-007",
+      "wbs_ref": "2.2",
+      "area_id": "COST",
+      "title": "Model routing + budget caps",
+      "scope": "Default to low-cost model tier; gate expensive models; set token/runtime/tool caps per workflow."
+    },
+    {
+      "id": "IMP-008",
+      "wbs_ref": "2.3",
+      "area_id": "COST",
+      "title": "Vendor/tool consolidation",
+      "scope": "Remove duplicate SaaS tools across CI/monitoring/PM and enforce approved stack list."
+    },
+    {
+      "id": "IMP-009",
+      "wbs_ref": "2.4",
+      "area_id": "COST",
+      "title": "Pod consolidation",
+      "scope": "Reduce cross-team handoffs and consolidate into fewer accountable pods."
+    },
+    {
+      "id": "IMP-010",
+      "wbs_ref": "2.5",
+      "area_id": "COST",
+      "title": "Cost telemetry dashboard",
+      "scope": "Track cost per capability, per model, and per deployment with weekly variance alerts."
+    },
+    {
+      "id": "IMP-011",
+      "wbs_ref": "3.1",
+      "area_id": "CONTROL",
+      "title": "Evidence-gated done criteria",
+      "scope": "No completion without tests, contract checks, rollback path, and KPI linkage."
+    },
+    {
+      "id": "IMP-012",
+      "wbs_ref": "3.2",
+      "area_id": "CONTROL",
+      "title": "AI role policy",
+      "scope": "Define AI as draft/review accelerator; human owns architecture and acceptance decisions."
+    },
+    {
+      "id": "IMP-013",
+      "wbs_ref": "3.3",
+      "area_id": "CONTROL",
+      "title": "Regression prevention gates",
+      "scope": "Add required pre-merge checks for integration, performance, and critical-path smoke tests."
+    },
+    {
+      "id": "IMP-014",
+      "wbs_ref": "4.1",
+      "area_id": "FOUND",
+      "title": "Build shared accelerator templates",
+      "scope": "Create reusable auth, audit, event schema, CI/CD, deployment, and incident runbook templates."
+    },
+    {
+      "id": "IMP-015",
+      "wbs_ref": "4.2",
+      "area_id": "FOUND",
+      "title": "Template adoption mandate",
+      "scope": "Require new critical capabilities to start from approved templates unless exception approved."
+    },
+    {
+      "id": "IMP-016",
+      "wbs_ref": "5.1",
+      "area_id": "OPS",
+      "title": "Instrument delivery KPIs",
+      "scope": "Measure lead time, deploy frequency, failure rate, MTTR, and rework %. Publish weekly trend."
+    },
+    {
+      "id": "IMP-017",
+      "wbs_ref": "5.2",
+      "area_id": "OPS",
+      "title": "Weekly kill-review cadence",
+      "scope": "Terminate workstreams not moving KPI within 2 weeks; reallocate capacity to mission path."
+    },
+    {
+      "id": "IMP-018",
+      "wbs_ref": "5.3",
+      "area_id": "OPS",
+      "title": "90-day budget rule rollout",
+      "scope": "Enforce 70/20/10 allocation: core capabilities/reliability/experiments."
+    },
+    {
+      "id": "IMP-019",
+      "wbs_ref": "5.4",
+      "area_id": "OPS",
+      "title": "Executive operating review",
+      "scope": "Run weekly review on cycle time, burn, risk, and blocked dependencies; approve corrective actions."
+    },
+    {
+      "id": "IMP-020",
+      "wbs_ref": "5.5",
+      "area_id": "OPS",
+      "title": "Target validation",
+      "scope": "Confirm 50% cost reduction and cycle-time improvement against baseline with signed report."
+    }
+  ],
+  "dependencies": {
+    "IMP-002": ["IMP-001"],
+    "IMP-003": ["IMP-002"],
+    "IMP-004": ["IMP-003"],
+    "IMP-005": ["IMP-003"],
+
+    "IMP-006": ["IMP-002"],
+    "IMP-007": ["IMP-006"],
+    "IMP-008": ["IMP-006"],
+    "IMP-009": ["IMP-001"],
+    "IMP-010": ["IMP-007", "IMP-008", "IMP-009"],
+
+    "IMP-011": ["IMP-003"],
+    "IMP-012": ["IMP-001"],
+    "IMP-013": ["IMP-011"],
+
+    "IMP-014": ["IMP-002"],
+    "IMP-015": ["IMP-014"],
+
+    "IMP-016": ["IMP-003"],
+    "IMP-017": ["IMP-016"],
+    "IMP-018": ["IMP-016"],
+    "IMP-019": ["IMP-016", "IMP-017", "IMP-018"],
+    "IMP-020": ["IMP-010", "IMP-013", "IMP-019", "IMP-005"]
+  }
+}

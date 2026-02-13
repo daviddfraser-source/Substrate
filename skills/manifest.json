@@ -1,0 +1,13 @@
+{
+  "version": "1.0",
+  "skills": [
+    { "name": "agent-eval", "path": "skills/agent-eval", "enabled": true },
+    { "name": "security-gates", "path": "skills/security-gates", "enabled": true },
+    { "name": "pr-review-automation", "path": "skills/pr-review-automation", "enabled": true },
+    { "name": "precommit-governance", "path": "skills/precommit-governance", "enabled": true },
+    { "name": "ui-regression", "path": "skills/ui-regression", "enabled": true },
+    { "name": "observability-baseline", "path": "skills/observability-baseline", "enabled": true },
+    { "name": "skill-authoring", "path": "skills/skill-authoring", "enabled": true },
+    { "name": "mcp-catalog-curation", "path": "skills/mcp-catalog-curation", "enabled": true }
+  ]
+}

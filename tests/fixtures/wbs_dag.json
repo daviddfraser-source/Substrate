@@ -1,0 +1,10 @@
+{
+  "metadata": {"project_name": "fixture-dag", "approved_by": "tests", "approved_at": "2026-01-01T00:00:00", "version": "1.0"},
+  "work_areas": [{"id": "1.0", "title": "Fixture DAG"}],
+  "packets": [
+    {"id": "FX-A", "wbs_ref": "1.1", "area_id": "1.0", "title": "A", "scope": "A"},
+    {"id": "FX-B", "wbs_ref": "1.2", "area_id": "1.0", "title": "B", "scope": "B"},
+    {"id": "FX-C", "wbs_ref": "1.3", "area_id": "1.0", "title": "C", "scope": "C"}
+  ],
+  "dependencies": {"FX-B": ["FX-A"], "FX-C": ["FX-B"]}
+}

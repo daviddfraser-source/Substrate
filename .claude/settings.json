@@ -1,0 +1,41 @@
+{
+  "project_name": "Substrate",
+  "project_type": "governance_framework",
+  "default_agent": "claude",
+  "governance": {
+    "enabled": true,
+    "cli_path": ".governance/wbs_cli.py",
+    "state_readonly": true,
+    "require_evidence": true
+  },
+  "workflows": {
+    "check_ready": {
+      "description": "List packets ready to claim",
+      "command": "python3 .governance/wbs_cli.py ready"
+    },
+    "claim_packet": {
+      "description": "Claim a packet for Claude",
+      "command": "python3 .governance/wbs_cli.py claim {packet_id} claude"
+    },
+    "complete_packet": {
+      "description": "Mark packet complete with evidence",
+      "command": "python3 .governance/wbs_cli.py done {packet_id} claude {evidence}"
+    },
+    "check_status": {
+      "description": "View full project status",
+      "command": "python3 .governance/wbs_cli.py status"
+    }
+  },
+  "protected_paths": [
+    ".governance/wbs.json",
+    ".governance/wbs-state.json"
+  ],
+  "permissions": {
+    "allow": [
+      "Bash(python3 .governance/wbs_cli.py *)",
+      "Bash(python3 .governance/wbs_server.py *)",
+      "Read(.governance/*)",
+      "Write(.governance/wbs_snapshot.txt)"
+    ]
+  }
+}

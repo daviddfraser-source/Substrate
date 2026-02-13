@@ -1,0 +1,33 @@
+[project]
+name = "substrate"
+version = "0.1.0"
+description = "Constitutional packet-governed orchestration scaffold for multi-agent development"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [
+  { name = "Project Maintainers" }
+]
+
+[tool.black]
+line-length = 100
+target-version = ["py38"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py38"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = []
+
+[tool.ruff.format]
+quote-style = "preserve"
+
+[tool.coverage.run]
+source = [".governance", "src"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false

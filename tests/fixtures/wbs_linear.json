@@ -1,0 +1,9 @@
+{
+  "metadata": {"project_name": "fixture-linear", "approved_by": "tests", "approved_at": "2026-01-01T00:00:00", "version": "1.0"},
+  "work_areas": [{"id": "1.0", "title": "Fixture Area"}],
+  "packets": [
+    {"id": "FX-1", "wbs_ref": "1.1", "area_id": "1.0", "title": "First", "scope": "first"},
+    {"id": "FX-2", "wbs_ref": "1.2", "area_id": "1.0", "title": "Second", "scope": "second"}
+  ],
+  "dependencies": {"FX-2": ["FX-1"]}
+}

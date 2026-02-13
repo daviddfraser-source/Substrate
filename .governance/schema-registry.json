@@ -1,0 +1,14 @@
+{
+  "schemas": [
+    {
+      "name": "packet",
+      "version": "1.0",
+      "path": ".governance/packet-schema.json"
+    },
+    {
+      "name": "scaffold_config",
+      "version": "1.0",
+      "path": ".governance/scaffold-config.schema.json"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "WBS Lifecycle Event",
+  "type": "object",
+  "required": ["packet_id", "event", "timestamp"],
+  "properties": {
+    "packet_id": { "type": "string" },
+    "event": { "type": "string" },
+    "agent": { "type": ["string", "null"] },
+    "timestamp": { "type": "string" },
+    "notes": { "type": ["string", "null"] }
+  },
+  "additionalProperties": true
+}

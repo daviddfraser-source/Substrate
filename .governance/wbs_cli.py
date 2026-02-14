@@ -1040,7 +1040,8 @@ def cmd_graph(output_path: str = ""):
             f.write("digraph wbs_dependencies {\n")
             f.write("  rankdir=LR;\n")
             for pid, pkt in packets.items():
-                label = f"{pid}\\n{pkt.get('title', '').replace('\"', '\\\\\"')}"
+                title = pkt.get('title', '').replace('"', '\\"')
+                label = f"{pid}\\n{title}"
                 f.write(f"  \"{pid}\" [label=\"{label}\"];\n")
             for target, sources in deps.items():
                 for source in sources:

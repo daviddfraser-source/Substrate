@@ -87,13 +87,11 @@ jobs:
 
       - name: Semgrep scan
         uses: returntocorp/semgrep-action@v1
-        continue-on-error: true
         with:
           config: auto
 
       - name: Trivy scan
         uses: aquasecurity/trivy-action@0.28.0
-        continue-on-error: true
         with:
           scan-type: fs
           scan-ref: .
@@ -102,7 +100,6 @@ jobs:
 
       - name: Gitleaks scan
         uses: gitleaks/gitleaks-action@v2
-        continue-on-error: true
 
   skills-pr-review-smoke:
     runs-on: ubuntu-latest
@@ -155,8 +152,8 @@ jobs:
 
       - name: Install Playwright
         run: |
-          npm install --prefix skills/ui-regression @playwright/test
-          npx --prefix skills/ui-regression playwright install --with-deps chromium
+          npm install -g @playwright/test
+          npx playwright install --with-deps chromium
 
       - name: Set up Python
         uses: actions/setup-python@v5

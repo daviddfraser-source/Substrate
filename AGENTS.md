@@ -116,3 +116,13 @@ Use this file as executable governance, not background documentation.
   - `CLAUDE.md`
   - `.claude/skills/*`
   - `docs/claude-code-guide.md`
+
+## Gemini Agents
+- Gemini sessions must follow the same CLI-governed lifecycle as any other agent.
+- Preferred execution identity: `gemini`.
+- Gemini should not modify `.governance/wbs-state.json` directly; all lifecycle changes go through `.governance/wbs_cli.py`.
+- Gemini should not claim multiple packets without explicit user approval.
+- Gemini should collect file-level evidence and validation results before `done`.
+- Gemini-specific usage guidance lives in:
+  - `GEMINI.md`
+  - `scripts/gc-*`

@@ -9,12 +9,12 @@ repos:
 
       - id: packet-validate
         name: Packet schema validate
-        entry: python3 .governance/wbs_cli.py validate-packet templates/wbs-codex-refactor.json
+        entry: python3 .governance/wbs_cli.py validate-packet .governance/wbs.json
         language: system
         pass_filenames: false
 
       - id: docs-command-check
         name: Docs legacy command check
-        entry: bash ./scripts/check_docs_no_legacy_commands.sh
+        entry: ./scripts/check_docs_no_legacy_commands.sh
         language: system
         pass_filenames: false

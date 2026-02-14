@@ -41,6 +41,10 @@ python3 start.py
 
 Requirements: Python 3.8+.
 
+> [!NOTE]
+> This is a **Template Repository**. The intended workflow is to **Clone and Own**: once you instantiate this template, you own the entire codebase, including the governance tools in `src/governed_platform`. You are free to modify them, but be aware that deviating from the core logic may affect future updates or standard tooling compatibility.
+
+
 ## How It Works
 
 ### Packet Lifecycle
@@ -71,6 +75,15 @@ Locking and write safety:
 - state mutations use lock-aware flows where supported
 - CLI remains source-of-truth for lifecycle transitions
 
+### Project Structure (Where to put your code)
+
+This template separates **governance tooling** from **user code**:
+
+- `src/governed_platform/`: Contains the core Substrate logic (CLI, Server, State Machine). **Do not modify** unless you are upgrading the governance system itself.
+- `src/app/`: **[YOUR CODE HERE]**. This is where your application logic, business rules, and agent implementations should reside.
+- `tests/`: Add your application tests here.
+
+
 ## Commands
 
 ```bash
@@ -95,6 +108,17 @@ scripts/cc-status
 ```
 
 Guide: `docs/claude-code-guide.md`
+
+### Gemini
+
+Gemini reads `GEMINI.md` at project open.
+
+```bash
+scripts/gc-ready
+scripts/gc-claim <PACKET_ID>
+scripts/gc-done <PACKET_ID> "evidence"
+scripts/gc-status
+```
 
 ### Codex
 

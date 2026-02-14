@@ -58,6 +58,7 @@ class CliConcurrencyTests(unittest.TestCase):
         finally:
             os.unlink(path)
 
+    @unittest.skipIf(sys.platform.startswith("win"), "Windows does not support fcntl locking")
     def test_only_one_claim_succeeds(self):
         results = []
 

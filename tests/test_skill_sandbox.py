@@ -24,11 +24,11 @@ class SkillSandboxTests(unittest.TestCase):
     def test_allows_permitted_command_and_path(self):
         perms = ExecutionPermissionModel(
             allowed_roots=[self.root],
-            allowed_commands=["python3"],
+            allowed_commands=[sys.executable],
         )
         req = SkillExecutionRequest(
             skill_name="test",
-            command=["python3", "-c", "print('ok')"],
+            command=[sys.executable, "-c", "print('ok')"],
             workdir=self.root,
         )
         res = self.engine.execute(req, perms)
@@ -38,7 +38,7 @@ class SkillSandboxTests(unittest.TestCase):
     def test_denies_unapproved_command(self):
         perms = ExecutionPermissionModel(
             allowed_roots=[self.root],
-            allowed_commands=["python3"],
+            allowed_commands=[sys.executable],
         )
         req = SkillExecutionRequest(
             skill_name="test",
@@ -52,11 +52,11 @@ class SkillSandboxTests(unittest.TestCase):
     def test_denies_unapproved_workdir(self):
         perms = ExecutionPermissionModel(
             allowed_roots=[self.root / "allowed"],
-            allowed_commands=["python3"],
+            allowed_commands=[sys.executable],
         )
         req = SkillExecutionRequest(
             skill_name="test",
-            command=["python3", "-c", "print('ok')"],
+            command=[sys.executable, "-c", "print('ok')"],
             workdir=self.root,
         )
         res = self.engine.execute(req, perms)

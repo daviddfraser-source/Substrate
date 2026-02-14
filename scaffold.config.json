@@ -1,0 +1,9 @@
+{
+  "project_name": "Substrate Template",
+  "default_agent": "codex-lead",
+  "dashboard_port": 8090,
+  "wbs_template": "templates/wbs-codex-full.json",
+  "wbs_file": ".governance/wbs.json",
+  "enable_skills": [],
+  "ci_profile": "full"
+}

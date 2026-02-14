@@ -2,8 +2,8 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
-OUT_DIR="${ROOT_DIR}/docs/codex-migration/skills/security"
-REPORT="${ROOT_DIR}/docs/codex-migration/skills/security-gates-report.md"
+OUT_DIR="${ROOT_DIR}/docs/security"
+REPORT="${ROOT_DIR}/docs/security-gates-report.md"
 
 mkdir -p "${OUT_DIR}"
 

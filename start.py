@@ -115,17 +115,17 @@ def validate_scaffold() -> Tuple[bool, List[str]]:
     messages: List[str] = []
     ok = True
 
-    if not SCAFFOLD_CONFIG.exists():
-        messages.append(f"missing scaffold config: {SCAFFOLD_CONFIG}")
-        return False, messages
-
-    try:
-        with open(SCAFFOLD_CONFIG) as f:
-            config = json.load(f)
-    except json.JSONDecodeError as e:
-        return False, [f"invalid JSON in scaffold config: {e}"]
-    except OSError as e:
-        return False, [f"unable to read scaffold config: {e}"]
+    config = load_scaffold_config()
+    if SCAFFOLD_CONFIG.exists():
+        try:
+            with open(SCAFFOLD_CONFIG) as f:
+                config = json.load(f)
+        except json.JSONDecodeError as e:
+            return False, [f"invalid JSON in scaffold config: {e}"]
+        except OSError as e:
+            return False, [f"unable to read scaffold config: {e}"]
+    else:
+        messages.append("scaffold config not found; validating with defaults")
 
     errors = _validate_scaffold_data(config)
     if errors:

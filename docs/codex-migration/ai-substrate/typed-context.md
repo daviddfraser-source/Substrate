@@ -25,4 +25,6 @@ Agents should produce a mini-bundle before making changes:
 
 ## Supporting files
 
-- `docs/codex-migration/ai-substrate/typed-context-index.json` (see next section)
+- `docs/codex-migration/ai-substrate/typed-context-config.json` keeps the canonical list of context entries and powers the refresh script.
+- `scripts/typed-context-refresh.js` validates the config, ensures every entry exists, and rewrites `typed-context-index.json`.
+- `docs/codex-migration/ai-substrate/typed-context-index.json` now takes the shape `{ generated_at, entries[] }`, where `entries` mirrors the config and includes `resolved` relative paths. Run `scripts/typed-context-refresh.js` after touching any indexed file to keep agents in sync.

@@ -83,3 +83,106 @@ These are wrappers around the governance CLI.
 - if blocked: mark packet `failed` with reason
 
 See `docs/PLAYBOOK.md` and `docs/governance-workflow-codex.md` for recovery patterns.
+
+## Governance Enforcement
+
+This project uses Claude Code hooks (`.claude/hooks.json`) to enforce constitutional rules:
+
+- **Protected files**: Direct edits to `wbs-state.json`, `wbs.json`, `constitution.md` are blocked
+- **Governance code**: CLI and server code cannot be modified without review
+- **Session start**: Governance status displayed automatically
+- **Post-completion**: State validation runs after `done` commands
+
+These hooks implement constitution.md Article IV (Protected Resources).
+
+## MCP Server Integration
+
+An MCP server (`.governance/mcp_server.py`) exposes governance operations as native tools:
+
+| MCP Tool | Description |
+|----------|-------------|
+| `wbs_ready` | List claimable packets |
+| `wbs_status` | Current state by status |
+| `wbs_claim` | Claim a packet |
+| `wbs_done` | Complete with evidence |
+| `wbs_fail` | Mark failed with reason |
+| `wbs_scope` | View packet requirements |
+| `wbs_log` | Activity log |
+| `wbs_progress` | Completion metrics |
+
+To enable, add to your MCP configuration or use CLI commands directly.
+
+## Plan Mode for Complex Packets
+
+For packets requiring architectural decisions, use Claude Code's plan mode:
+
+1. Review packet scope: `python3 .governance/wbs_cli.py scope <ID>`
+2. Enter plan mode: "Let's plan the approach for packet X"
+3. Explore codebase and draft implementation approach
+4. Get human approval on plan
+5. Claim packet and execute approved plan
+6. Complete with evidence
+
+See `docs/plan-mode-guide.md` for detailed workflow.
+
+## Agent Teams (Opus 4.6)
+
+This project supports Claude Code Agent Teams for parallel packet execution. Agent Teams are enabled in `.claude/settings.json`.
+
+### Team Lead Role
+
+As team lead, you:
+- Coordinate packet assignment across teammates
+- Monitor progress: `python3 .governance/wbs_cli.py status`
+- Validate evidence quality before accepting completion
+- Synthesize results across parallel work streams
+- Use **delegate mode** (Shift+Tab) to focus on coordination
+
+### Teammate Role
+
+As a teammate, you:
+- Claim your assigned packet: `python3 .governance/wbs_cli.py claim <ID> <your-name>`
+- Execute within packet scope only
+- Complete with evidence: `python3 .governance/wbs_cli.py done <ID> <your-name> "evidence"`
+- Message lead when blocked or finished
+
+### When to Use Agent Teams
+
+| Use Teams | Use Single Agent |
+|-----------|------------------|
+| 2+ packets ready with no dependencies | Sequential packet dependencies |
+| Different domains (frontend/backend/tests) | Same files need editing |
+| Research/review parallelization | Simple, focused tasks |
+| Cross-cutting concerns | Tight coordination required |
+
+### Spinning Up a Team
+
+```
+Create an agent team for parallel packet execution:
+- Teammate "docs": Claim UPG-001, execute docs work
+- Teammate "code": Claim UPG-002, execute implementation
+- Teammate "tests": Claim UPG-003, execute test coverage
+
+Each teammate must claim their packet before work.
+Require plan approval for complex packets.
+```
+
+See `.claude/skills/agent-teams/SKILL.md` for full documentation.
+
+## Opus 4.6 Features
+
+This project is configured for Claude Opus 4.6 with:
+
+- **Adaptive thinking**: Claude decides when and how much to reason
+- **Effort level**: Set to `high` by default (options: low, medium, high, max)
+- **128K output tokens**: Longer responses for comprehensive evidence
+- **Agent team hooks**: `TeammateIdle` and `TaskCompleted` enforce governance
+
+### Thinking Effort by Packet Type
+
+| Packet Type | Recommended Effort |
+|-------------|-------------------|
+| Simple docs/config | `low` |
+| Standard implementation | `high` (default) |
+| Complex architecture | `max` |
+| Research/exploration | `high` with plan mode |

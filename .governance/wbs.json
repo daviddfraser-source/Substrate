@@ -34,6 +34,11 @@
       "id": "6.0",
       "title": "AI-Optimized Template Substrate",
       "description": "Deliver a production-ready, AI-native web app skeleton with strict type and policy guardrails."
+    },
+    {
+      "id": "7.0",
+      "title": "AI Substrate Delivery Enhancements",
+      "description": "Improve drop-in readiness with onboarding guidance, automated context maintenance, artifact publishing, and contract changelog."
     }
   ],
   "packets": [
@@ -239,6 +244,34 @@
       "area_id": "6.0",
       "title": "Hardening review and release readiness",
       "scope": "Run end-to-end hardening pass for security, performance, and developer ergonomics; finalize release checklist. Output: release readiness report with residual risks and next actions."
+    },
+    {
+      "id": "UPG-030",
+      "wbs_ref": "7.1",
+      "area_id": "7.0",
+      "title": "Document onboarding bundle",
+      "scope": "Produce docs/codex-migration/ai-substrate/onboarding.md that summarizes the drop-in workflow, key context files, preflight commands, and how agents should use the new scripts on day one."
+    },
+    {
+      "id": "UPG-031",
+      "wbs_ref": "7.2",
+      "area_id": "7.0",
+      "title": "Automate typed-context maintenance",
+      "scope": "Create scripts/typed-context-refresh.js (optionally config) that regenerates docs/codex-migration/ai-substrate/typed-context-index.json from a canonical list, validates file paths, and timestamps the bundle for agents."
+    },
+    {
+      "id": "UPG-032",
+      "wbs_ref": "7.3",
+      "area_id": "7.0",
+      "title": "Publish evaluation artifacts",
+      "scope": "Implement scripts/ai-eval-publish.js that copies reports/ai-substrate-eval.json into docs/codex-migration/ai-substrate/eval-history with timestamps and updates release-readiness references."
+    },
+    {
+      "id": "UPG-033",
+      "wbs_ref": "7.4",
+      "area_id": "7.0",
+      "title": "Add AI contract changelog",
+      "scope": "Create docs/codex-migration/ai-substrate/contract-changelog.md plus scripts/contract-log-entry.sh to append structured entries for schema/env/policy changes so agents can track ontological shifts."
     }
   ],
   "dependencies": {
@@ -320,6 +353,15 @@
     "UPG-029": [
       "UPG-027",
       "UPG-028"
+    ],
+    "UPG-031": [
+      "UPG-025"
+    ],
+    "UPG-032": [
+      "UPG-027"
+    ],
+    "UPG-033": [
+      "UPG-022"
     ]
   }
 }

@@ -10,7 +10,7 @@
 - Failure logs include `logs/ai-substrate/preflight.log`.
 
 ## Drift detection
-- `docs/codex-migration/ai-substrate/typed-context-index.json` lists canonical files. Updates to these need corresponding diffs in `docs/codex-migration/ai-substrate/quality-gates.md`.
+- `docs/codex-migration/ai-substrate/typed-context-index.json` lists canonical files. Run `scripts/typed-context-refresh.js` after touching any indexed file so the index remains authoritative; note the script validates file presence before writing the timestamped bundle.
 - Policy drift: update `lib/auth/policy.ts` and `lib/db/adapter.ts` simultaneously; `scripts/policy-drifts.sh` documents this.
 
 ## Policy failure playbook

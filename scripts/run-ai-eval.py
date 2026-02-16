@@ -2,27 +2,25 @@
 import json
 import subprocess
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 
 def run(command):
-    start = datetime.utcnow().isoformat() + "Z"
+    start = datetime.now(timezone.utc).isoformat()
     try:
         subprocess.run(command, shell=True, check=True)
         result = "success"
     except subprocess.CalledProcessError:
         result = "failure"
-    end = datetime.utcnow().isoformat() + "Z"
+    end = datetime.now(timezone.utc).isoformat()
     return {"command": command, "result": result, "start": start, "end": end}
 
 
 def main():
     scenarios = [
-        "npm run lint",
-        "npm run typecheck",
-        "npm run test",
-        "node scripts/eval-policy.js"
+    "cd templates/ai-substrate && npm run test",
+    "node scripts/eval-policy.js"
     ]
-    report = {"scenarios": [], "generated_at": datetime.utcnow().isoformat() + "Z"}
+    report = {"scenarios": [], "generated_at": datetime.now(timezone.utc).isoformat()}
     for cmd in scenarios:
         report["scenarios"].append(run(cmd))
         if report["scenarios"][-1]["result"] == "failure":

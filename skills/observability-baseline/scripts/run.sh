@@ -3,8 +3,8 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 STATE="${ROOT_DIR}/.governance/wbs-state.json"
-OUT_EVENTS="${ROOT_DIR}/docs/observability-events.json"
-OUT_REPORT="${ROOT_DIR}/docs/observability-report.md"
+OUT_EVENTS="${ROOT_DIR}/docs/codex-migration/skills/observability-events.json"
+OUT_REPORT="${ROOT_DIR}/docs/codex-migration/skills/observability-report.md"
 
 mkdir -p "$(dirname "${OUT_EVENTS}")"
 
@@ -14,8 +14,8 @@ from pathlib import Path
 
 root = Path(".").resolve()
 state_path = root / ".governance" / "wbs-state.json"
-events_path = root / "docs" / "observability-events.json"
-report_path = root / "docs" / "observability-report.md"
+events_path = root / "docs" / "codex-migration" / "skills" / "observability-events.json"
+report_path = root / "docs" / "codex-migration" / "skills" / "observability-report.md"
 
 state = json.loads(state_path.read_text())
 log = state.get("log", [])

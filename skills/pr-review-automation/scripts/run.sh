@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
-REPORT="${ROOT_DIR}/docs/pr-review-report.md"
+REPORT="${ROOT_DIR}/docs/codex-migration/skills/pr-review-report.md"
 
 if ! command -v reviewdog >/dev/null 2>&1; then
   echo "reviewdog not found on PATH"

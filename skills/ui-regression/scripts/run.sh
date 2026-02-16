@@ -2,8 +2,8 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
-OUT_DIR="${ROOT_DIR}/docs/ui-regression"
-REPORT="${ROOT_DIR}/docs/ui-regression-report.md"
+OUT_DIR="${ROOT_DIR}/docs/codex-migration/skills/ui-regression"
+REPORT="${ROOT_DIR}/docs/codex-migration/skills/ui-regression-report.md"
 BASE="${UI_BASE_URL:-http://127.0.0.1:8090}"
 
 mkdir -p "${OUT_DIR}"
@@ -25,7 +25,7 @@ set -e
   echo
   echo "Generated: $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
   echo "Base URL: \`${BASE}\`"
-  echo "Log: \`docs/ui-regression/playwright.log\`"
+  echo "Log: \`docs/codex-migration/skills/ui-regression/playwright.log\`"
   echo
   if [[ ${rc} -eq 0 ]]; then
     echo "Status: PASS"

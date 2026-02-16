@@ -18,7 +18,7 @@ fi
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 ALLOWLIST="${ROOT_DIR}/skills/mcp-catalog-curation/assets/allowlist.json"
-OUT_DIR="${ROOT_DIR}/docs/mcp-curation"
+OUT_DIR="${ROOT_DIR}/docs/codex-migration/skills/mcp-curation"
 mkdir -p "${OUT_DIR}"
 
 ts="$(date -u +"%Y%m%dT%H%M%SZ")"

@@ -3,8 +3,8 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 CONFIG="${ROOT_DIR}/skills/agent-eval/assets/promptfooconfig.yaml"
-OUT_DIR="${ROOT_DIR}/docs/agent-eval-results"
-REPORT="${ROOT_DIR}/docs/agent-eval-report.md"
+OUT_DIR="${ROOT_DIR}/docs/codex-migration/skills/agent-eval-results"
+REPORT="${ROOT_DIR}/docs/codex-migration/skills/agent-eval-report.md"
 
 mkdir -p "${OUT_DIR}"
 
@@ -24,7 +24,7 @@ set -e
   echo "Generated: $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
   echo
   echo "Config: \`skills/agent-eval/assets/promptfooconfig.yaml\`"
-  echo "Output: \`docs/agent-eval-results/results.json\`"
+  echo "Output: \`docs/codex-migration/skills/agent-eval-results/results.json\`"
   echo
   if [[ ${rc} -eq 0 ]]; then
     echo "Status: PASS"

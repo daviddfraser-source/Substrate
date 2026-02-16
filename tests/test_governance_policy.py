@@ -28,7 +28,17 @@ class GovernancePolicyTests(unittest.TestCase):
         self.assertIn("python3 .governance/wbs_cli.py closeout-l2", text)
         self.assertIn(".governance/packet-schema.json", text)
 
+    def test_roles_and_guide_align_with_execution_discipline(self):
+        roles = read("docs/codex-migration/roles-and-sop.md")
+        guide = read("docs/codex-migration/guide.md")
 
+        self.assertIn("## Execution Discipline", roles)
+        self.assertIn("## Anti-Drift Controls", roles)
+        self.assertIn("## Escalation Rules", roles)
+
+        self.assertIn("Execute one packet at a time per agent", guide)
+        self.assertIn("closeout-l2", guide)
+        self.assertIn("Step 7: Blockers and Escalation", guide)
 
 
 if __name__ == "__main__":

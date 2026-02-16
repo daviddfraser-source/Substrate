@@ -190,7 +190,7 @@ class Handler(BaseHTTPRequestHandler):
             return {"success": False, "message": "Missing area_id, agent_name, or assessment_path"}
 
         args = [
-            sys.executable,
+            "python3",
             str(CLI),
             "closeout-l2",
             area_id,
@@ -667,7 +667,7 @@ class Handler(BaseHTTPRequestHandler):
         if not pid:
             return {"success": False, "message": "Missing packet_id"}
 
-        args = [sys.executable, str(CLI), cmd, pid]
+        args = ["python3", str(CLI), cmd, pid]
         if cmd != "reset":
             args += [agent, notes]
 

@@ -1,75 +1,325 @@
 {
   "metadata": {
-    "project_name": "Your Project Name",
-    "approved_by": "your-name",
-    "approved_at": "2025-01-01T00:00:00"
+    "project_name": "Agent Teams Starter Kit \u2014 Full Upgrade",
+    "approved_by": "human",
+    "approved_at": "2025-02-12T00:00:00"
   },
   "work_areas": [
     {
       "id": "1.0",
-      "title": "Phase 1: Planning",
-      "description": "Initial planning and requirements gathering"
+      "title": "Kickoff & Onboarding",
+      "description": "Help users actually start using Agent Teams"
     },
     {
       "id": "2.0",
-      "title": "Phase 2: Implementation",
-      "description": "Core implementation work"
+      "title": "WBS Templates",
+      "description": "Ready-to-use project patterns for common use cases"
     },
     {
       "id": "3.0",
-      "title": "Phase 3: Testing & Delivery",
-      "description": "Testing, documentation, and handover"
+      "title": "Skills Expansion",
+      "description": "Additional skills for common agent operations"
+    },
+    {
+      "id": "4.0",
+      "title": "Documentation & Playbooks",
+      "description": "Guides for team patterns, error recovery, best practices"
+    },
+    {
+      "id": "5.0",
+      "title": "Observability & Polish",
+      "description": "Monitoring, CLI improvements, final polish"
+    },
+    {
+      "id": "6.0",
+      "title": "AI-Optimized Template Substrate",
+      "description": "Deliver a production-ready, AI-native web app skeleton with strict type and policy guardrails."
     }
   ],
   "packets": [
     {
-      "id": "WP-001",
+      "id": "UPG-001",
       "wbs_ref": "1.1",
       "area_id": "1.0",
-      "title": "Define requirements",
-      "scope": "Document project requirements and acceptance criteria. Output: requirements.md"
+      "title": "Create lead agent kickoff prompt",
+      "scope": "Write prompts/kickoff-lead.md \u2014 example prompt for starting a lead agent session. Include: how to reference CLAUDE.md, how to init WBS, how to spawn teammates. Make it copy-pasteable."
     },
     {
-      "id": "WP-002",
+      "id": "UPG-002",
       "wbs_ref": "1.2",
       "area_id": "1.0",
-      "title": "Design solution architecture",
-      "scope": "Create technical design based on requirements. Output: design.md"
+      "title": "Create teammate kickoff prompt",
+      "scope": "Write prompts/kickoff-teammate.md \u2014 example prompt the lead uses to spawn a specialist. Include: how to pass context, which skills to use, how to report back."
     },
     {
-      "id": "WP-003",
+      "id": "UPG-003",
+      "wbs_ref": "1.3",
+      "area_id": "1.0",
+      "title": "Create 2-minute quickstart guide",
+      "scope": "Write prompts/QUICKSTART.md \u2014 absolute minimum steps to go from clone to working Agent Team. Target: under 2 minutes to first claimed packet."
+    },
+    {
+      "id": "UPG-004",
       "wbs_ref": "2.1",
       "area_id": "2.0",
-      "title": "Implement core functionality",
-      "scope": "Build the main feature set as defined in design. Output: working code in src/"
+      "title": "Create feature development WBS template",
+      "scope": "Write templates/wbs-feature.json \u2014 standard pattern for building a new feature. Phases: requirements, design, implement, test, document. 8-12 packets."
     },
     {
-      "id": "WP-004",
+      "id": "UPG-005",
       "wbs_ref": "2.2",
       "area_id": "2.0",
-      "title": "Implement secondary features",
-      "scope": "Build supporting features. Output: additional code in src/"
+      "title": "Create migration WBS template",
+      "scope": "Write templates/wbs-migration.json \u2014 pattern for migrating systems/code. Phases: audit, plan, execute incrementally, validate, cutover. Include rollback considerations."
     },
     {
-      "id": "WP-005",
+      "id": "UPG-006",
+      "wbs_ref": "2.3",
+      "area_id": "2.0",
+      "title": "Create refactor WBS template",
+      "scope": "Write templates/wbs-refactor.json \u2014 pattern for systematic refactoring. Phases: identify scope, add tests, refactor incrementally, validate. Emphasis on not breaking things."
+    },
+    {
+      "id": "UPG-007",
+      "wbs_ref": "2.4",
+      "area_id": "2.0",
+      "title": "Create bug campaign WBS template",
+      "scope": "Write templates/wbs-bugfix.json \u2014 pattern for tackling multiple bugs systematically. Phases: triage, reproduce, fix, verify. Good for 'fix all the linter errors' type work."
+    },
+    {
+      "id": "UPG-008",
       "wbs_ref": "3.1",
       "area_id": "3.0",
-      "title": "Write tests",
-      "scope": "Create test suite for all implemented functionality. Output: tests/"
+      "title": "Create code review skill",
+      "scope": "Write .claude/skills/review-code/SKILL.md \u2014 skill for reviewing code changes. Include: what to look for, how to report findings, severity levels. Should work with git diff."
     },
     {
-      "id": "WP-006",
+      "id": "UPG-009",
       "wbs_ref": "3.2",
       "area_id": "3.0",
-      "title": "Documentation and handover",
-      "scope": "Write user documentation and update README. Output: docs/"
+      "title": "Create test runner skill",
+      "scope": "Write .claude/skills/run-tests/SKILL.md \u2014 skill for running tests and interpreting results. Handle: pytest, jest, go test. Report pass/fail clearly."
+    },
+    {
+      "id": "UPG-010",
+      "wbs_ref": "3.3",
+      "area_id": "3.0",
+      "title": "Create PR skill",
+      "scope": "Write .claude/skills/create-pr/SKILL.md \u2014 skill for creating pull requests. Include: title conventions, description template, linking to WBS packets."
+    },
+    {
+      "id": "UPG-011",
+      "wbs_ref": "3.4",
+      "area_id": "3.0",
+      "title": "Create research/explore skill",
+      "scope": "Write .claude/skills/explore/SKILL.md \u2014 skill for exploring unfamiliar codebases. Include: how to summarize findings, what to document, how to report back to lead."
+    },
+    {
+      "id": "UPG-012",
+      "wbs_ref": "3.5",
+      "area_id": "3.0",
+      "title": "Create WBS report skill",
+      "scope": "Write .claude/skills/wbs-report/SKILL.md \u2014 skill for generating markdown summary of project status. Include: progress stats, completed work, blockers, next steps."
+    },
+    {
+      "id": "UPG-013",
+      "wbs_ref": "4.1",
+      "area_id": "4.0",
+      "title": "Write team patterns guide",
+      "scope": "Write docs/TEAM_PATTERNS.md \u2014 document common team structures: lead + specialists, parallel workers, pipeline. When to use each. How many agents for different project sizes."
+    },
+    {
+      "id": "UPG-014",
+      "wbs_ref": "4.2",
+      "area_id": "4.0",
+      "title": "Write error recovery playbook",
+      "scope": "Write docs/PLAYBOOK.md \u2014 what to do when things go wrong. Scenarios: agent stuck, wrong work done, dependency failed, need to restart. Step-by-step recovery procedures."
+    },
+    {
+      "id": "UPG-015",
+      "wbs_ref": "4.3",
+      "area_id": "4.0",
+      "title": "Write WBS design guide",
+      "scope": "Write docs/DESIGNING_WBS.md \u2014 how to break down a project into good packets. Sizing guidance, dependency patterns to avoid, common mistakes."
+    },
+    {
+      "id": "UPG-016",
+      "wbs_ref": "5.1",
+      "area_id": "5.0",
+      "title": "Add colored CLI output",
+      "scope": "Update .governance/wbs_cli.py to use ANSI colors. Green for success, red for errors, yellow for warnings, blue for info. Detect if terminal supports colors."
+    },
+    {
+      "id": "UPG-017",
+      "wbs_ref": "5.2",
+      "area_id": "5.0",
+      "title": "Add dashboard auto-refresh",
+      "scope": "Update .governance/static/index.html to auto-refresh every 5 seconds (already has setInterval, verify it works). Add visual indicator showing last refresh time."
+    },
+    {
+      "id": "UPG-018",
+      "wbs_ref": "5.3",
+      "area_id": "5.0",
+      "title": "Add GitHub Actions CI",
+      "scope": "Create .github/workflows/test.yml \u2014 run test.sh on push and PR. Add badge to README. Simple workflow, just validates the system works."
+    },
+    {
+      "id": "UPG-019",
+      "wbs_ref": "5.4",
+      "area_id": "5.0",
+      "title": "Add README badges and screenshot",
+      "scope": "Update README.md with badges (license, CI, Python version). Add screenshot or GIF of dashboard. Make it visually appealing at first glance."
+    },
+    {
+      "id": "UPG-020",
+      "wbs_ref": "5.5",
+      "area_id": "5.0",
+      "title": "Final review and cleanup",
+      "scope": "Review all new files for consistency. Update README if needed. Ensure .meta/ is documented as 'delete before publishing'. Run full test suite. Tag as v1.0."
+    },
+    {
+      "id": "UPG-021",
+      "wbs_ref": "6.1",
+      "area_id": "6.0",
+      "title": "Pin framework baseline and runtime policy",
+      "scope": "Define Next.js 16 baseline with pinned patch policy, server/client boundary rules, caching strategy defaults, and runtime targets. Output: architecture decision doc and enforced config updates in template defaults."
+    },
+    {
+      "id": "UPG-022",
+      "wbs_ref": "6.2",
+      "area_id": "6.0",
+      "title": "Design data layer: Prisma default with adapter seam",
+      "scope": "Define PostgreSQL + Supabase integration pattern with Prisma as default ORM, documented Drizzle swap seam, and canonical connection strategy. Output: data-layer ADR and starter implementation contract."
+    },
+    {
+      "id": "UPG-023",
+      "wbs_ref": "6.3",
+      "area_id": "6.0",
+      "title": "Define authorization model: RLS-first plus app policy",
+      "scope": "Establish authorization contract with Postgres RLS as enforcement source of truth and app-layer policy checks for UX capability gating. Output: auth architecture spec and starter policy module interface."
+    },
+    {
+      "id": "UPG-024",
+      "wbs_ref": "6.4",
+      "area_id": "6.0",
+      "title": "Implement substrate scaffold package",
+      "scope": "Build scaffold baseline for Next.js App Router, Tailwind, shadcn/ui primitives, Zod validation, and strict TypeScript defaults. Output: runnable template skeleton with seed pages and examples."
+    },
+    {
+      "id": "UPG-025",
+      "wbs_ref": "6.5",
+      "area_id": "6.0",
+      "title": "Create typed context artifacts for AI agents",
+      "scope": "Produce canonical context bundle including schema.prisma conventions, Zod contract layout, env schema, and agent-facing context index. Output: docs and starter files that minimize model ambiguity."
+    },
+    {
+      "id": "UPG-026",
+      "wbs_ref": "6.6",
+      "area_id": "6.0",
+      "title": "Add quality gates and AI guardrails",
+      "scope": "Add CI checks and local gates for typecheck, lint, test, schema validation, and policy drift detection. Output: repeatable verification pipeline and failure playbook references."
+    },
+    {
+      "id": "UPG-027",
+      "wbs_ref": "6.7",
+      "area_id": "6.0",
+      "title": "Build AI-task eval harness",
+      "scope": "Implement scripted eval scenarios to measure one-shot success for CRUD, auth checks, and schema edits by AI agents. Output: eval scripts, scoring rubric, and baseline report format."
+    },
+    {
+      "id": "UPG-028",
+      "wbs_ref": "6.8",
+      "area_id": "6.0",
+      "title": "Write migration and adoption playbook",
+      "scope": "Document migration path from existing templates to the new substrate, including decision criteria and rollback strategy. Output: adoption guide and phased rollout checklist."
+    },
+    {
+      "id": "UPG-029",
+      "wbs_ref": "6.9",
+      "area_id": "6.0",
+      "title": "Hardening review and release readiness",
+      "scope": "Run end-to-end hardening pass for security, performance, and developer ergonomics; finalize release checklist. Output: release readiness report with residual risks and next actions."
     }
   ],
   "dependencies": {
-    "WP-002": ["WP-001"],
-    "WP-003": ["WP-002"],
-    "WP-004": ["WP-003"],
-    "WP-005": ["WP-003", "WP-004"],
-    "WP-006": ["WP-005"]
+    "UPG-002": [
+      "UPG-001"
+    ],
+    "UPG-003": [
+      "UPG-001",
+      "UPG-002"
+    ],
+    "UPG-008": [
+      "UPG-003"
+    ],
+    "UPG-009": [
+      "UPG-003"
+    ],
+    "UPG-010": [
+      "UPG-003"
+    ],
+    "UPG-011": [
+      "UPG-003"
+    ],
+    "UPG-012": [
+      "UPG-003"
+    ],
+    "UPG-013": [
+      "UPG-003"
+    ],
+    "UPG-014": [
+      "UPG-003"
+    ],
+    "UPG-015": [
+      "UPG-003"
+    ],
+    "UPG-019": [
+      "UPG-018"
+    ],
+    "UPG-020": [
+      "UPG-004",
+      "UPG-005",
+      "UPG-006",
+      "UPG-007",
+      "UPG-008",
+      "UPG-009",
+      "UPG-010",
+      "UPG-011",
+      "UPG-012",
+      "UPG-013",
+      "UPG-014",
+      "UPG-015",
+      "UPG-016",
+      "UPG-017",
+      "UPG-019"
+    ],
+    "UPG-022": [
+      "UPG-021"
+    ],
+    "UPG-023": [
+      "UPG-022"
+    ],
+    "UPG-024": [
+      "UPG-021"
+    ],
+    "UPG-025": [
+      "UPG-022",
+      "UPG-024"
+    ],
+    "UPG-026": [
+      "UPG-024",
+      "UPG-025"
+    ],
+    "UPG-027": [
+      "UPG-025"
+    ],
+    "UPG-028": [
+      "UPG-023",
+      "UPG-026"
+    ],
+    "UPG-029": [
+      "UPG-027",
+      "UPG-028"
+    ]
   }
 }

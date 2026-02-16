@@ -1,0 +1,7 @@
+[
+  { "path": "templates/ai-substrate/prisma/schema.prisma", "purpose": "Data model reference; single source of truth" },
+  { "path": "templates/ai-substrate/lib/validation/env.ts", "purpose": "Environment contract for all deployments" },
+  { "path": "templates/ai-substrate/app/api/items/route.ts", "purpose": "Example server action with Zod validation" },
+  { "path": "templates/ai-substrate/lib/db/adapter.ts", "purpose": "Adapter seam for database access" },
+  { "path": "templates/ai-substrate/components/ui/button.tsx", "purpose": "Editable UI primitive" }
+]

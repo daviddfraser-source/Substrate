@@ -1,0 +1,327 @@
+[
+  {
+    "packet_id": "UPG-021",
+    "wbs_refs": ["6.1"],
+    "title": "Pin framework baseline and runtime policy",
+    "purpose": "Lock framework/runtime defaults that prevent drift and reduce AI-generated boundary errors.",
+    "status": "PENDING",
+    "owner": "codex",
+    "priority": "HIGH",
+    "preconditions": ["Area 6.0 initialized in WBS"],
+    "required_inputs": [
+      "docs/architecture.md",
+      "docs/template-usage.md",
+      "Current template scaffold files"
+    ],
+    "required_actions": [
+      "Define supported Next.js and Node version policy with patch pinning",
+      "Define server/client component boundary rules and lint expectations",
+      "Define cache defaults and invalidation conventions",
+      "Record decisions in a concise architecture decision record"
+    ],
+    "required_outputs": [
+      "docs/codex-migration/ai-substrate/framework-baseline.md",
+      "Template config updates enforcing baseline defaults"
+    ],
+    "validation_checks": [
+      "Version policy is explicit and machine-checkable",
+      "Boundary rules map to enforceable lint/config checks",
+      "Caching conventions include explicit opt-out guidance"
+    ],
+    "exit_criteria": [
+      "Baseline policy approved and represented in template defaults"
+    ],
+    "halt_conditions": [
+      "Framework versions are left as broad/unpinned ranges",
+      "Server/client rules remain advisory only"
+    ]
+  },
+  {
+    "packet_id": "UPG-022",
+    "wbs_refs": ["6.2"],
+    "title": "Design data layer: Prisma default with adapter seam",
+    "purpose": "Define a default ORM strategy while preserving the option to swap to Drizzle with bounded change.",
+    "status": "PENDING",
+    "owner": "codex",
+    "priority": "HIGH",
+    "preconditions": ["UPG-021 complete"],
+    "required_inputs": [
+      "docs/codex-migration/ai-substrate/framework-baseline.md",
+      "Supabase/PostgreSQL integration requirements"
+    ],
+    "required_actions": [
+      "Define Prisma-first schema and migration approach",
+      "Define adapter boundary where ORM-specific logic is isolated",
+      "Define canonical Supabase connection/pooling strategy",
+      "Document Drizzle swap path and non-goals"
+    ],
+    "required_outputs": [
+      "docs/codex-migration/ai-substrate/data-layer-adr.md",
+      "Data access adapter interface specification"
+    ],
+    "validation_checks": [
+      "Single source of truth for relational model is identified",
+      "Adapter contract prevents ORM usage leakage into feature code",
+      "Connection strategy includes operational constraints"
+    ],
+    "exit_criteria": [
+      "Data layer ADR accepted and adapter contract is implementation-ready"
+    ],
+    "halt_conditions": [
+      "ORM swap requires touching most application files",
+      "Connection policy is ambiguous across environments"
+    ]
+  },
+  {
+    "packet_id": "UPG-023",
+    "wbs_refs": ["6.3"],
+    "title": "Define authorization model: RLS-first plus app policy",
+    "purpose": "Enforce backend authorization in Postgres RLS while keeping app-layer policy checks for capability-aware UX.",
+    "status": "PENDING",
+    "owner": "codex",
+    "priority": "CRITICAL",
+    "preconditions": ["UPG-022 complete"],
+    "required_inputs": [
+      "docs/codex-migration/ai-substrate/data-layer-adr.md",
+      "Target role matrix and tenancy requirements"
+    ],
+    "required_actions": [
+      "Define RLS policy principles and migration ownership",
+      "Define app-layer policy module interface for UI gating",
+      "Map role/capability matrix to data and action scopes",
+      "Document denial/failure behavior and audit expectations"
+    ],
+    "required_outputs": [
+      "docs/codex-migration/ai-substrate/authz-model.md",
+      "Starter policy module contract"
+    ],
+    "validation_checks": [
+      "All protected data paths have RLS enforcement coverage",
+      "UI policy checks are non-authoritative and explicitly documented",
+      "Role matrix resolves without contradictory permissions"
+    ],
+    "exit_criteria": [
+      "Authorization contract is enforceable and testable across API/UI paths"
+    ],
+    "halt_conditions": [
+      "App policy is treated as sole enforcement",
+      "Multi-tenant isolation is not formally represented"
+    ]
+  },
+  {
+    "packet_id": "UPG-024",
+    "wbs_refs": ["6.4"],
+    "title": "Implement substrate scaffold package",
+    "purpose": "Produce a runnable template implementing the chosen baseline stack and conventions.",
+    "status": "PENDING",
+    "owner": "codex",
+    "priority": "HIGH",
+    "preconditions": ["UPG-021 complete"],
+    "required_inputs": [
+      "docs/codex-migration/ai-substrate/framework-baseline.md",
+      "Existing template generation flow"
+    ],
+    "required_actions": [
+      "Create scaffold files for Next.js App Router and strict TypeScript",
+      "Install Tailwind + shadcn primitives with project-local components",
+      "Add baseline Zod schemas for environment and payload validation",
+      "Provide seed route/page examples exercising server/client boundaries"
+    ],
+    "required_outputs": [
+      "Template scaffold source files",
+      "Runnable starter app with setup instructions"
+    ],
+    "validation_checks": [
+      "Fresh scaffold compiles and starts successfully",
+      "Generated project includes typed env validation",
+      "UI primitives are project-owned and editable"
+    ],
+    "exit_criteria": [
+      "Scaffold is runnable and aligned to baseline policy"
+    ],
+    "halt_conditions": [
+      "Scaffold cannot run without manual undocumented fixes",
+      "Template diverges from baseline policy decisions"
+    ]
+  },
+  {
+    "packet_id": "UPG-025",
+    "wbs_refs": ["6.5"],
+    "title": "Create typed context artifacts for AI agents",
+    "purpose": "Establish high-signal files that let AI agents infer valid changes with minimal hallucination.",
+    "status": "PENDING",
+    "owner": "codex",
+    "priority": "HIGH",
+    "preconditions": ["UPG-022 complete", "UPG-024 complete"],
+    "required_inputs": [
+      "Data layer ADR",
+      "Scaffold package files"
+    ],
+    "required_actions": [
+      "Define schema.prisma conventions and ownership model",
+      "Define Zod contract folder layout for API/actions/env",
+      "Create AI context index documenting authoritative files",
+      "Add examples showing schema change flow from model to UI"
+    ],
+    "required_outputs": [
+      "docs/codex-migration/ai-substrate/typed-context.md",
+      "Starter schema and contract examples"
+    ],
+    "validation_checks": [
+      "Context index references all authoritative contract files",
+      "Example flow compiles under strict typing",
+      "Schema and validation artifacts are internally consistent"
+    ],
+    "exit_criteria": [
+      "Typed context bundle is complete and usable as primary AI prompt context"
+    ],
+    "halt_conditions": [
+      "Contract ownership remains ambiguous",
+      "Examples require hidden assumptions not captured in docs"
+    ]
+  },
+  {
+    "packet_id": "UPG-026",
+    "wbs_refs": ["6.6"],
+    "title": "Add quality gates and AI guardrails",
+    "purpose": "Prevent low-confidence template changes from shipping by enforcing deterministic checks.",
+    "status": "PENDING",
+    "owner": "codex",
+    "priority": "HIGH",
+    "preconditions": ["UPG-024 complete", "UPG-025 complete"],
+    "required_inputs": [
+      "Scaffold package",
+      "Typed context artifacts"
+    ],
+    "required_actions": [
+      "Add CI workflow for lint, typecheck, test, and schema validation",
+      "Add local pre-flight check command for contributors",
+      "Define guardrails for policy drift and contract mismatch",
+      "Document failure triage workflow"
+    ],
+    "required_outputs": [
+      ".github/workflows/* template validation pipeline",
+      "docs/codex-migration/ai-substrate/quality-gates.md"
+    ],
+    "validation_checks": [
+      "Pipeline fails on type/schema/policy violations",
+      "Local and CI checks produce consistent outcomes",
+      "Failure modes are actionable and documented"
+    ],
+    "exit_criteria": [
+      "Quality gates are operational and required for merge"
+    ],
+    "halt_conditions": [
+      "Guardrails are optional or bypassed by default",
+      "Pipeline passes despite intentional contract violations"
+    ]
+  },
+  {
+    "packet_id": "UPG-027",
+    "wbs_refs": ["6.7"],
+    "title": "Build AI-task eval harness",
+    "purpose": "Measure AI-assisted development reliability with repeatable scenario-based scoring.",
+    "status": "PENDING",
+    "owner": "codex",
+    "priority": "MEDIUM",
+    "preconditions": ["UPG-025 complete"],
+    "required_inputs": [
+      "Typed context artifacts",
+      "Representative task scenarios"
+    ],
+    "required_actions": [
+      "Define deterministic eval scenarios for CRUD/auth/schema edits",
+      "Implement scripts to run checks and capture pass/fail metrics",
+      "Define baseline scorecard and reporting format",
+      "Persist results for regression comparison"
+    ],
+    "required_outputs": [
+      "docs/codex-migration/ai-substrate/eval-harness.md",
+      "scripts or fixtures for repeatable eval runs"
+    ],
+    "validation_checks": [
+      "Eval runs are repeatable and non-interactive",
+      "Score outputs are machine-parseable",
+      "At least one negative control case is included"
+    ],
+    "exit_criteria": [
+      "Eval harness generates baseline metrics for template quality"
+    ],
+    "halt_conditions": [
+      "Eval results are non-reproducible across identical runs",
+      "Scoring criteria are subjective or undocumented"
+    ]
+  },
+  {
+    "packet_id": "UPG-028",
+    "wbs_refs": ["6.8"],
+    "title": "Write migration and adoption playbook",
+    "purpose": "Enable incremental adoption from existing templates with low-risk rollout paths.",
+    "status": "PENDING",
+    "owner": "codex",
+    "priority": "MEDIUM",
+    "preconditions": ["UPG-023 complete", "UPG-026 complete"],
+    "required_inputs": [
+      "Authorization model",
+      "Quality gate outputs",
+      "Current template variants"
+    ],
+    "required_actions": [
+      "Define migration tracks by project maturity",
+      "Define compatibility constraints and rollback strategy",
+      "Document stepwise adoption checklist with validation points",
+      "Add decision matrix for selecting default vs advanced options"
+    ],
+    "required_outputs": [
+      "docs/codex-migration/ai-substrate/migration-playbook.md"
+    ],
+    "validation_checks": [
+      "Migration steps are executable without hidden preconditions",
+      "Rollback strategy includes trigger criteria",
+      "Decision matrix maps to concrete project profiles"
+    ],
+    "exit_criteria": [
+      "Playbook supports phased adoption with clear success gates"
+    ],
+    "halt_conditions": [
+      "Migration path requires big-bang cutover",
+      "Rollback process is not testable"
+    ]
+  },
+  {
+    "packet_id": "UPG-029",
+    "wbs_refs": ["6.9"],
+    "title": "Hardening review and release readiness",
+    "purpose": "Complete final security/performance/developer-experience checks before template release.",
+    "status": "PENDING",
+    "owner": "codex",
+    "priority": "CRITICAL",
+    "preconditions": ["UPG-027 complete", "UPG-028 complete"],
+    "required_inputs": [
+      "Eval harness results",
+      "Migration playbook",
+      "Quality gate history"
+    ],
+    "required_actions": [
+      "Run hardening checklist across security, performance, and DX",
+      "Compile residual risk register and mitigation owner",
+      "Finalize release readiness criteria and go/no-go checklist",
+      "Capture immediate next actions for post-release iteration"
+    ],
+    "required_outputs": [
+      "docs/codex-migration/ai-substrate/release-readiness.md"
+    ],
+    "validation_checks": [
+      "All critical risks are either mitigated or explicitly accepted",
+      "Release checklist is complete and evidence-linked",
+      "Post-release actions are assigned and time-bounded"
+    ],
+    "exit_criteria": [
+      "Template substrate is release-ready with explicit residual risk posture"
+    ],
+    "halt_conditions": [
+      "Critical risks remain unowned",
+      "Release decision lacks documented evidence"
+    ]
+  }
+]

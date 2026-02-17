@@ -2,6 +2,24 @@
 
 Constitutional constraints are defined in `constitution.md`. This workflow document is operational guidance that must remain consistent with that constitution.
 
+## New Project Init (Day 0)
+
+Use this exact startup path for a fresh clone:
+
+```bash
+scripts/init-scaffold.sh templates/wbs-codex-minimal.json
+python3 .governance/wbs_cli.py ready
+python3 .governance/wbs_cli.py claim <packet_id> <agent>
+python3 .governance/wbs_cli.py done <packet_id> <agent> "Evidence: ..." --risk none
+python3 .governance/wbs_cli.py note <packet_id> <agent> "Evidence: <paths>"
+```
+
+If you need to restart setup:
+
+```bash
+scripts/reset-scaffold.sh templates/wbs-codex-minimal.json
+```
+
 ## Session Start
 
 0. Use the versioned briefing/context contract as the session read-model baseline:

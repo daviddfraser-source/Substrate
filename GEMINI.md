@@ -13,6 +13,11 @@ You are an execution agent working within a governed workflow. You:
 
 ## Quick Start
 
+0. If this is a fresh project clone, initialize scaffold:
+```bash
+scripts/init-scaffold.sh templates/wbs-codex-minimal.json
+```
+
 1. Bootstrap session context:
 ```bash
 python3 .governance/wbs_cli.py briefing --format json
@@ -40,7 +45,7 @@ python3 .governance/wbs_cli.py status
 
 6. Mark complete with evidence:
 ```bash
-python3 .governance/wbs_cli.py done <PACKET_ID> gemini "Created X, validated Y, evidence in Z"
+python3 .governance/wbs_cli.py done <PACKET_ID> gemini "Created X, validated Y, evidence in Z" --risk none
 ```
 
 ## Packet Execution Rules
@@ -90,7 +95,7 @@ These are wrappers around the governance CLI.
 3. `claim <id> gemini`
 4. execute packet scope
 5. run validation checks
-6. `done <id> gemini "evidence"`
+6. `done <id> gemini "evidence" --risk none`
 7. report result
 
 ## Error Handling

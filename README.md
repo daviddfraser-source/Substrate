@@ -44,6 +44,27 @@ python3 start.py
 
 Requirements: Python 3.8+.
 
+### New Project Initialization (3 Steps)
+
+```bash
+# 1) Bootstrap a clean scaffold (minimal profile recommended)
+scripts/init-scaffold.sh templates/wbs-codex-minimal.json
+
+# 2) Confirm first ready packet
+python3 .governance/wbs_cli.py ready
+
+# 3) Execute first packet lifecycle
+python3 .governance/wbs_cli.py claim <PACKET_ID> <agent>
+python3 .governance/wbs_cli.py done <PACKET_ID> <agent> "evidence summary" --risk none
+python3 .governance/wbs_cli.py note <PACKET_ID> <agent> "Evidence: <paths>"
+```
+
+Re-initialize quickly during setup:
+
+```bash
+scripts/reset-scaffold.sh templates/wbs-codex-minimal.json
+```
+
 > [!NOTE]
 > This is a **Template Repository**. The intended workflow is to **Clone and Own**: once you instantiate this template, you own the entire codebase, including the governance tools in `src/governed_platform`. You are free to modify them, but be aware that deviating from the core logic may affect future updates or standard tooling compatibility.
 
@@ -175,6 +196,7 @@ scripts/init-scaffold.sh
 # or explicitly:
 scripts/init-scaffold.sh templates/wbs-codex-minimal.json
 scripts/reset-scaffold.sh
+python3 .governance/wbs_cli.py template-validate
 ```
 
 See `docs/template-usage.md` for scaffold onboarding flow.

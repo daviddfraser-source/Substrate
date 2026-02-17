@@ -12,6 +12,10 @@ Use this file as executable governance, not background documentation.
 - For governance-rule interpretation conflicts across repo docs, `constitution.md` takes precedence.
 
 ## How To Use This File
+- New project initialization (day-0):
+  - run `scripts/init-scaffold.sh templates/wbs-codex-minimal.json`
+  - verify `python3 .governance/wbs_cli.py ready` returns the expected first packet
+  - begin lifecycle with `claim` -> `done --risk none` -> `note`
 - At session start:
   - run `python3 .governance/wbs_cli.py briefing --format json` and review summary before claiming
   - confirm active WBS scope and ready packet(s)

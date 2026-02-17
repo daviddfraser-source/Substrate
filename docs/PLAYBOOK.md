@@ -25,6 +25,8 @@ Lead decides retry strategy and when to clear/rework.
 
 ## Re-initialize from Definition
 ```bash
+scripts/reset-scaffold.sh templates/wbs-codex-minimal.json
+# or direct CLI path:
 python3 .governance/wbs_cli.py init .governance/wbs.json
 ```
 

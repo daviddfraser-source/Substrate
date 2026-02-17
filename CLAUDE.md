@@ -13,6 +13,11 @@ You are an execution agent working within a governed workflow. You:
 
 ## Quick Start
 
+0. If this is a fresh project clone, initialize scaffold:
+```bash
+scripts/init-scaffold.sh templates/wbs-codex-minimal.json
+```
+
 1. Bootstrap session context:
 ```bash
 python3 .governance/wbs_cli.py briefing --format json
@@ -40,7 +45,7 @@ python3 .governance/wbs_cli.py status
 
 6. Mark complete with evidence:
 ```bash
-python3 .governance/wbs_cli.py done <PACKET_ID> claude "Created X, validated Y, evidence in Z"
+python3 .governance/wbs_cli.py done <PACKET_ID> claude "Created X, validated Y, evidence in Z" --risk none
 ```
 
 ## Packet Execution Rules
@@ -84,7 +89,7 @@ These are wrappers around the governance CLI.
 3. `claim <id> claude`
 4. execute packet scope
 5. run validation checks
-6. `done <id> claude "evidence"`
+6. `done <id> claude "evidence" --risk none`
 7. report result
 
 ## Error Handling
@@ -155,7 +160,7 @@ As team lead, you:
 As a teammate, you:
 - Claim your assigned packet: `python3 .governance/wbs_cli.py claim <ID> <your-name>`
 - Execute within packet scope only
-- Complete with evidence: `python3 .governance/wbs_cli.py done <ID> <your-name> "evidence"`
+- Complete with evidence: `python3 .governance/wbs_cli.py done <ID> <your-name> "evidence" --risk none`
 - Message lead when blocked or finished
 
 ### When to Use Agent Teams

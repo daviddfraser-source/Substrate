@@ -16,6 +16,19 @@ These wrappers provide portable shorthand around the WBS CLI.
 They are optional convenience commands. The source of truth is:
 `python3 .governance/wbs_cli.py ...`
 
+## New Project Quick Init
+
+```bash
+scripts/init-scaffold.sh templates/wbs-codex-minimal.json
+python3 .governance/wbs_cli.py ready
+```
+
+Reset setup quickly:
+
+```bash
+scripts/reset-scaffold.sh templates/wbs-codex-minimal.json
+```
+
 ## Skills Harness
 
 - `scripts/skills-smoke.sh`

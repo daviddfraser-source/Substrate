@@ -29,6 +29,8 @@ node_modules/
 # WBS state file - generated at runtime, not committed
 # The definition (wbs.json) IS committed
 .governance/wbs-state.json
+.governance/activity-log.jsonl
+.governance/residual-risk-register.json
 
 # Meta/planning directory (not part of template)
 .meta/

@@ -82,6 +82,19 @@ class GovernanceEngineTests(unittest.TestCase):
         self.assertEqual(state["version"], "1.0")
         self.assertIn("area_closeouts", state)
 
+    def test_status_normalization_handles_uppercase_runtime_inputs(self):
+        raw = json.loads(self.state_path.read_text())
+        raw["packets"]["A"]["status"] = "DONE"
+        raw["packets"]["B"]["status"] = "PENDING"
+        self.state_path.write_text(json.dumps(raw))
+
+        ready = self.engine.ready()["ready"]
+        self.assertEqual([x["id"] for x in ready], ["B"])
+
+        state = self.engine.status()
+        self.assertEqual(state["packets"]["A"]["status"], "done")
+        self.assertEqual(state["packets"]["B"]["status"], "pending")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -24,9 +24,11 @@ check_cmd() {
 
 check_cmd "WBS validate" python3 .governance/wbs_cli.py validate
 check_cmd "Packet schema validate" python3 .governance/wbs_cli.py validate-packet .governance/wbs.json
-check_cmd "Template packet schema validate" python3 .governance/wbs_cli.py validate-packet templates/wbs-codex-refactor.json
+check_cmd "Template packet schema validate (minimal profile)" python3 .governance/wbs_cli.py validate-packet templates/wbs-codex-minimal.json
+check_cmd "Runtime artifact tracked guard" ./scripts/governance-state-guard.sh --check-tracked
 check_cmd "State json parse" python3 -m json.tool .governance/wbs-state.json
 check_cmd "Definition json parse" python3 -m json.tool .governance/wbs.json
+check_cmd "Residual risk schema json parse" python3 -m json.tool .governance/residual-risk-register.schema.json
 check_cmd "CLI/server/start compile" python3 -m py_compile .governance/wbs_cli.py .governance/wbs_server.py start.py
 check_cmd "Docs legacy command check" ./scripts/check_docs_no_legacy_commands.sh
 

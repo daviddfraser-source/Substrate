@@ -67,7 +67,7 @@ class CliE2ETests(unittest.TestCase):
         self.assertEqual([x['id'] for x in ready1], ['A'])
 
         run_cli(['claim', 'A', 'agent'])
-        run_cli(['done', 'A', 'agent', 'ok'])
+        run_cli(['done', 'A', 'agent', 'ok', '--risk', 'none'])
 
         ready2 = json.loads(run_cli(['--json', 'ready']).stdout)['ready']
         self.assertEqual([x['id'] for x in ready2], ['B'])
@@ -75,7 +75,7 @@ class CliE2ETests(unittest.TestCase):
     def test_fail_cascades_to_blocked(self):
         self._init_dep_graph()
         run_cli(['claim', 'A', 'agent'])
-        run_cli(['done', 'A', 'agent', 'ok'])
+        run_cli(['done', 'A', 'agent', 'ok', '--risk', 'none'])
         run_cli(['claim', 'B', 'agent'])
         run_cli(['fail', 'B', 'agent', 'broken'])
 

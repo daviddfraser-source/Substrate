@@ -803,15 +803,33 @@ class Handler(BaseHTTPRequestHandler):
         pid = body.get("packet_id", "").strip()
         agent = body.get("agent_name", "").strip()
         notes = body.get("notes", body.get("reason", ""))
+        risk_ack = str(body.get("residual_risk_ack", "")).strip()
+        risk_file = str(body.get("residual_risk_file", "")).strip()
+        risk_json = body.get("residual_risk_json", "")
 
         if cmd != "reset" and (not pid or not agent):
             return {"success": False, "message": "Missing packet_id or agent_name"}
         if not pid:
             return {"success": False, "message": "Missing packet_id"}
+        if cmd == "done" and not risk_ack:
+            return {
+                "success": False,
+                "message": "Missing residual_risk_ack (use 'none' or 'declared')",
+            }
+        if cmd == "done" and risk_file and risk_json:
+            return {"success": False, "message": "Use either residual_risk_file or residual_risk_json"}
 
         args = ["python3", str(CLI), cmd, pid]
         if cmd != "reset":
-            args += [agent, notes]
+            args += [agent]
+            if notes:
+                args.append(notes)
+            if cmd == "done":
+                args += ["--risk", risk_ack]
+                if risk_file:
+                    args += ["--risk-file", risk_file]
+                elif risk_json:
+                    args += ["--risk-json", json.dumps(risk_json)]
 
         r = subprocess.run(args, capture_output=True, text=True)
         return {"success": r.returncode == 0, "message": (r.stdout + r.stderr).strip()}

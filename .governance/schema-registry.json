@@ -14,6 +14,11 @@
       "name": "scaffold_config",
       "version": "1.0",
       "path": ".governance/scaffold-config.schema.json"
+    },
+    {
+      "name": "residual_risk_register",
+      "version": "1.0",
+      "path": ".governance/residual-risk-register.schema.json"
     }
   ]
 }

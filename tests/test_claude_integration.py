@@ -49,7 +49,7 @@ class ClaudeIntegrationTests(unittest.TestCase):
 
     def test_done_with_evidence_as_claude(self):
         run_cli(['claim', 'FX-1', 'claude'])
-        run_cli(['done', 'FX-1', 'claude', 'Updated src/x.py, validated via unit tests'])
+        run_cli(['done', 'FX-1', 'claude', 'Updated src/x.py, validated via unit tests', '--risk', 'none'])
         state = json.loads(STATE.read_text())
         self.assertEqual(state['packets']['FX-1']['status'], 'done')
         self.assertIn('validated', state['packets']['FX-1']['notes'])

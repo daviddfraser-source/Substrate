@@ -71,6 +71,37 @@ class CliContractTests(unittest.TestCase):
         finally:
             os.unlink(path)
 
+    def test_init_without_argument_uses_default_wbs_path(self):
+        payload = {
+            'metadata': {'project_name': 'default-init', 'approved_by': 't', 'approved_at': '2026-01-01T00:00:00'},
+            'work_areas': [{'id': '1.0', 'title': 'Area'}],
+            'packets': [
+                {'id': 'D-1', 'wbs_ref': '1.1', 'area_id': '1.0', 'title': 'D1', 'scope': 'scope'}
+            ],
+            'dependencies': {}
+        }
+        WBS.write_text(json.dumps(payload))
+        run_cli(['init'])
+        state = json.loads(STATE.read_text())
+        self.assertIn('D-1', state['packets'])
+
+    def test_init_with_argument_overrides_default_wbs_path(self):
+        payload = {
+            'metadata': {'project_name': 'arg-init', 'approved_by': 't', 'approved_at': '2026-01-01T00:00:00'},
+            'work_areas': [{'id': '1.0', 'title': 'Area'}],
+            'packets': [
+                {'id': 'B-1', 'wbs_ref': '1.1', 'area_id': '1.0', 'title': 'B1', 'scope': 'scope'}
+            ],
+            'dependencies': {}
+        }
+        path = write_def(payload)
+        try:
+            run_cli(['init', path])
+        finally:
+            os.unlink(path)
+        definition = json.loads(WBS.read_text())
+        self.assertEqual(definition['packets'][0]['id'], 'B-1')
+
     def test_claim_requires_pending(self):
         self._init_single_packet()
         run_cli(['claim', 'A-1', 'agent-a'])
@@ -79,19 +110,51 @@ class CliContractTests(unittest.TestCase):
 
     def test_done_requires_in_progress(self):
         self._init_single_packet()
-        proc = run_cli(['done', 'A-1', 'agent-a', 'notes'], expect=1)
+        proc = run_cli(['done', 'A-1', 'agent-a', 'notes', '--risk', 'none'], expect=1)
         self.assertIn('not in_progress', proc.stdout)
 
     def test_note_updates_done_packet(self):
         self._init_single_packet()
         run_cli(['claim', 'A-1', 'agent-a'])
-        run_cli(['done', 'A-1', 'agent-a', 'initial'])
+        run_cli(['done', 'A-1', 'agent-a', 'initial', '--risk', 'none'])
         run_cli(['note', 'A-1', 'agent-a', 'evidence: docs/x.md'])
 
         state = json.loads(STATE.read_text())
         self.assertEqual(state['packets']['A-1']['status'], 'done')
         self.assertEqual(state['packets']['A-1']['notes'], 'evidence: docs/x.md')
         self.assertEqual(state['log'][-1]['event'], 'noted')
+
+    def test_handover_and_resume_commands(self):
+        self._init_single_packet()
+        run_cli(['claim', 'A-1', 'agent-a'])
+        run_cli(
+            [
+                'handover',
+                'A-1',
+                'agent-a',
+                'session-timeout',
+                '--to',
+                'agent-b',
+                '--progress',
+                'halfway done',
+                '--files',
+                'src/a.py,tests/test_a.py',
+                '--remaining',
+                'run-tests|update-docs',
+            ]
+        )
+
+        proc = run_cli(['done', 'A-1', 'agent-b', 'done', '--risk', 'none'], expect=1)
+        self.assertIn('active handover', proc.stdout)
+
+        run_cli(['resume', 'A-1', 'agent-b'])
+        run_cli(['done', 'A-1', 'agent-b', 'done', '--risk', 'none'])
+
+        state = json.loads(STATE.read_text())
+        handovers = state['packets']['A-1'].get('handovers', [])
+        self.assertEqual(len(handovers), 1)
+        self.assertFalse(handovers[0]['active'])
+        self.assertEqual(handovers[0]['resumed_by'], 'agent-b')
 
     def test_closeout_l2_requires_all_packets_done(self):
         self._init_single_packet()
@@ -116,7 +179,7 @@ class CliContractTests(unittest.TestCase):
     def test_closeout_l2_records_area_closeout(self):
         self._init_single_packet()
         run_cli(['claim', 'A-1', 'agent-a'])
-        run_cli(['done', 'A-1', 'agent-a', 'done'])
+        run_cli(['done', 'A-1', 'agent-a', 'done', '--risk', 'none'])
         drift_doc = write_temp_file(
             "\n".join(
                 [
@@ -142,6 +205,16 @@ class CliContractTests(unittest.TestCase):
             self.assertEqual(state['log'][-1]['event'], 'area_closed')
         finally:
             os.unlink(drift_doc)
+
+    def test_help_lists_template_validate_command(self):
+        proc = run_cli(['help'])
+        self.assertIn('template-validate', proc.stdout)
+
+    def test_done_requires_explicit_residual_risk_ack(self):
+        self._init_single_packet()
+        run_cli(['claim', 'A-1', 'agent-a'])
+        proc = run_cli(['done', 'A-1', 'agent-a', 'notes'], expect=1)
+        self.assertIn('Residual risk acknowledgement is required', proc.stdout)
 
 
 if __name__ == '__main__':

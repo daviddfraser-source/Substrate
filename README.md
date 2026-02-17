@@ -93,8 +93,9 @@ This template separates **governance tooling** from **user code**:
 ```bash
 python3 .governance/wbs_cli.py ready
 python3 .governance/wbs_cli.py claim IMP-001 codex-lead
-python3 .governance/wbs_cli.py done IMP-001 codex-lead "Implemented and tested"
+python3 .governance/wbs_cli.py done IMP-001 codex-lead "Implemented and tested" --risk none
 python3 .governance/wbs_cli.py note IMP-001 codex-lead "Evidence: docs/path.md"
+python3 .governance/wbs_cli.py risk-list --status open
 python3 .governance/wbs_cli.py status
 ```
 
@@ -164,15 +165,39 @@ python3 .governance/wbs_cli.py <command>
 
 | Template | Use Case |
 |---|---|
+| `.governance/wbs.json` | Default clean baseline scaffold for clone-and-own projects |
 | `templates/wbs-codex-minimal.json` | Fast Codex scaffold bootstrap |
 | `templates/wbs-codex-full.json` | Full scaffold/governance setup |
-| `templates/wbs-codex-refactor.json` | Full profile with migration compatibility |
+| `templates/wbs-codex-refactor.json` | Legacy migration profile compatibility |
 
 ```bash
-scripts/init-scaffold.sh templates/wbs-codex-full.json
+scripts/init-scaffold.sh
+# or explicitly:
+scripts/init-scaffold.sh templates/wbs-codex-minimal.json
+scripts/reset-scaffold.sh
 ```
 
 See `docs/template-usage.md` for scaffold onboarding flow.
+
+Internal Substrate upgrade roadmap packets are archived in:
+`docs/codex-migration/packets/substrate-internal-upgrade-roadmap-wbs-2026-02-17.json`.
+
+## Scaffold vs Runtime Artifacts
+
+Scaffold artifacts (safe to ship/commit):
+- `.governance/wbs.json` (baseline packet definition)
+- `templates/*.json` (profile definitions)
+- `scripts/init-scaffold.sh`, `scripts/reset-scaffold.sh`, `scripts/scaffold-check.sh`
+- `docs/*`, `prompts/*`, `skills/*`, `src/*`
+
+Runtime artifacts (generated during execution; do not ship):
+- `.governance/wbs-state.json`
+- `.governance/activity-log.jsonl` (legacy runtime log if present)
+- `.governance/residual-risk-register.json`
+
+Publishing hygiene:
+- Remove `.meta/` before publishing downstream template forks or release bundles.
+- Run `python3 .governance/wbs_cli.py template-validate` before release.
 
 ## Troubleshooting
 
@@ -197,6 +222,7 @@ See `docs/template-usage.md` for scaffold onboarding flow.
 ## Architecture Notes
 
 Additional architecture rationale is in `docs/architecture.md`.
+Residual risk lifecycle guidance is in `docs/codex-migration/residual-risk-governance.md`.
 
 ## Testing
 

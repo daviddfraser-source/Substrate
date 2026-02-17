@@ -39,14 +39,23 @@ Invariant expectations:
 ## Completion
 
 1. Mark done with evidence summary:
-   - `python3 .governance/wbs_cli.py done <packet_id> <agent> "Evidence: ..."`
-2. Reconcile status/log:
+   - `python3 .governance/wbs_cli.py done <packet_id> <agent> "Evidence: ..." --risk none`
+   - If residual risks exist: use `--risk declared --risk-file <path>` or `--risk declared --risk-json '<json>'`.
+2. Review and manage open residual risks:
+   - `python3 .governance/wbs_cli.py risk-list --status open`
+   - `python3 .governance/wbs_cli.py risk-update-status <risk_id> <mitigated|accepted|transferred> <agent> "notes"`
+3. Reconcile status/log:
    - `python3 .governance/wbs_cli.py status`
    - `python3 .governance/wbs_cli.py log 40`
 
+Reference: `docs/codex-migration/residual-risk-governance.md`.
+
 ## Runtime State Guard
 
-Repository automation blocks direct commits to `.governance/wbs-state.json` by default.
+Repository automation blocks direct commits to runtime governance artifacts by default:
+- `.governance/wbs-state.json`
+- `.governance/activity-log.jsonl`
+- `.governance/residual-risk-register.json`
 
 Preferred path:
 - use CLI lifecycle transitions so state changes are generated through governance commands.

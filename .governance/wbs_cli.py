@@ -8,6 +8,7 @@ import json
 import sys
 import csv
 import os
+import subprocess
 from pathlib import Path
 from datetime import datetime
 from typing import Optional
@@ -52,6 +53,16 @@ from governed_platform.governance.log_integrity import (
     verify_log_integrity,
 )
 from governed_platform.governance.state_manager import StateManager
+from governed_platform.governance.residual_risks import (
+    add_risks,
+    get_risk,
+    list_risks,
+    load_register,
+    normalize_risk_input,
+    normalize_risk_status,
+    risk_summary,
+    update_risk_status,
+)
 from governed_platform.governance.schema_registry import SchemaRegistry
 from governed_platform.governance.status import (
     PACKET_STATUS_VALUES,
@@ -88,6 +99,8 @@ except Exception:
 JSON_OUTPUT = False
 PACKET_SCHEMA_PATH = GOV / "packet-schema.json"
 WBS_SCHEMA_PATH = GOV / "wbs-schema.json"
+RESIDUAL_RISK_SCHEMA_PATH = GOV / "residual-risk-register.schema.json"
+RESIDUAL_RISK_REGISTER_PATH = GOV / "residual-risk-register.json"
 SCHEMA_REGISTRY_PATH = GOV / "schema-registry.json"
 AGENTS_REGISTRY_PATH = GOV / "agents.json"
 GIT_GOVERNANCE_PATH = GOV / "git-governance.json"
@@ -911,15 +924,160 @@ def cmd_claim(packet_id: str, agent: str) -> bool:
     return ok
 
 
-def cmd_done(packet_id: str, agent: str, notes: str = "") -> bool:
+def _load_risk_entries_from_file(path: str) -> list:
+    fp = Path(path).expanduser()
+    if not fp.is_absolute():
+        fp = GOV.parent / fp
+    if not fp.exists():
+        raise ValueError(f"Risk file not found: {path}")
+    try:
+        payload = json.loads(fp.read_text())
+    except json.JSONDecodeError as e:
+        raise ValueError(f"Risk file is not valid JSON: {e}")
+    if isinstance(payload, list):
+        return payload
+    if isinstance(payload, dict):
+        if isinstance(payload.get("risks"), list):
+            return payload["risks"]
+        return [payload]
+    raise ValueError("Risk file must contain a risk object or risk array")
+
+
+def _load_risk_entries_from_json(raw: str) -> list:
+    try:
+        payload = json.loads(raw)
+    except json.JSONDecodeError as e:
+        raise ValueError(f"Risk JSON is invalid: {e}")
+    if isinstance(payload, list):
+        return payload
+    if isinstance(payload, dict):
+        if isinstance(payload.get("risks"), list):
+            return payload["risks"]
+        return [payload]
+    raise ValueError("Risk JSON must be an object or array")
+
+
+def _annotate_done_risk_ack(
+    packet_id: str,
+    ack: str,
+    risk_ids: list,
+    *,
+    risk_git_commit: str = "",
+    risk_git_status: str = "",
+    risk_git_error: str = "",
+) -> None:
+    state = ensure_state_shape(load_state())
+    entries = state.get("log", [])
+    for entry in reversed(entries):
+        if not isinstance(entry, dict):
+            continue
+        if entry.get("packet_id") != packet_id:
+            continue
+        if entry.get("event") != "completed":
+            continue
+        entry["risk_ack"] = ack
+        entry["risk_ids"] = list(risk_ids or [])
+        if risk_git_commit:
+            entry["risk_git_commit"] = risk_git_commit
+        if risk_git_status:
+            entry["risk_git_status"] = risk_git_status
+        if risk_git_error:
+            entry["risk_git_error"] = risk_git_error
+        save_state(state)
+        return
+
+
+def _auto_commit_residual_risk_update(packet_id: str, actor: str) -> tuple:
+    """Optionally persist residual-risk register updates under git governance protocol."""
+    config = load_git_governance_config(GIT_GOVERNANCE_PATH)
+    mode = config.get("mode", GIT_MODE_DISABLED)
+    auto_commit = bool(config.get("auto_commit"))
+    if not auto_commit or mode == GIT_MODE_DISABLED:
+        return True, "", ""
+
+    ok, msg, commit_hash, _event_id = run_governance_auto_commit(
+        repo_root=GOV.parent,
+        packet_id=packet_id,
+        action="note",
+        actor=actor or "system",
+        stage_files=[str(RESIDUAL_RISK_REGISTER_PATH.relative_to(GOV.parent))],
+        protocol_version=config.get("commit_protocol_version", GIT_PROTOCOL_VERSION),
+    )
+    if ok:
+        return True, commit_hash, ""
+    if mode == GIT_MODE_STRICT:
+        return False, "", f"Git-native strict mode: residual risk auto-commit failed ({msg})"
+    return True, "", f"Git-native advisory warning: residual risk auto-commit failed ({msg})"
+
+
+def cmd_done(
+    packet_id: str,
+    agent: str,
+    notes: str = "",
+    *,
+    risk_ack: str = "",
+    risk_entries: list = None,
+) -> bool:
     """Mark packet done."""
+    ack = str(risk_ack or "").strip().lower()
+    risks = list(risk_entries or [])
+    if ack not in {"none", "declared"}:
+        print(red("Residual risk acknowledgement is required: use --risk none or provide --risk-file/--risk-json"))
+        return False
+    if ack == "none" and risks:
+        print(red("Invalid risk input: --risk none cannot be combined with risk entries"))
+        return False
+    if ack == "declared" and not risks:
+        print(red("Invalid risk input: --risk declared requires at least one risk entry"))
+        return False
+
+    # Validate risk payload before lifecycle mutation so data errors fail fast.
+    if risks:
+        try:
+            for raw in risks:
+                normalize_risk_input(raw, packet_id=packet_id, actor=agent)
+        except ValueError as e:
+            print(red(str(e)))
+            return False
+
     ok, msg = _run_lifecycle_with_git(
         packet_id=packet_id,
         action="done",
         agent=agent,
         operation=lambda: governance_engine().done(packet_id, agent, notes),
     )
+    risk_ids = []
+    risk_git_commit = ""
+    risk_git_error = ""
     if ok:
+        if risks:
+            try:
+                risk_ids = add_risks(RESIDUAL_RISK_REGISTER_PATH, packet_id=packet_id, actor=agent, entries=risks)
+            except Exception as e:
+                msg = f"{msg} (risk register warning: {e})"
+            if risk_ids:
+                commit_ok, commit_hash, commit_error = _auto_commit_residual_risk_update(packet_id, agent)
+                if not commit_ok:
+                    msg = f"{msg} ({commit_error})"
+                risk_git_commit = commit_hash
+                risk_git_error = commit_error
+        _annotate_done_risk_ack(
+            packet_id,
+            ack=ack,
+            risk_ids=risk_ids,
+            risk_git_commit=risk_git_commit,
+            risk_git_status=("linked" if risk_git_commit else ("warning" if risk_git_error else "")),
+            risk_git_error=risk_git_error,
+        )
+    if ok:
+        if risk_ids:
+            msg = f"{msg} (residual risks declared: {', '.join(risk_ids)})"
+            if risk_git_commit:
+                msg += f" [risk-git:{risk_git_commit[:12]}]"
+            elif risk_git_error:
+                msg += f" ({risk_git_error})"
+        else:
+            msg = f"{msg} (residual risk ack: none)"
         print(green(msg))
     else:
         print(red(_format_error(msg)))
@@ -1348,6 +1506,121 @@ def cmd_log(limit: int = 20):
         ts = e.get("timestamp", "")[:19]
         print(f"{e['packet_id']:<10} {e['event']:<10} {(e.get('agent') or '-'):<12} {ts:<20} {notes}")
     print()
+
+
+def cmd_risk_list(packet_id: str = "", status: str = "", limit: int = 100) -> bool:
+    """List residual risks with optional packet/status filters."""
+    if status:
+        try:
+            status = normalize_risk_status(status)
+        except ValueError as e:
+            print(red(str(e)))
+            return False
+
+    rows = list_risks(
+        RESIDUAL_RISK_REGISTER_PATH,
+        packet_id=(packet_id or "").strip(),
+        status=status,
+        limit=max(0, int(limit or 0)),
+    )
+    payload = {"risks": rows}
+    if output_json(payload):
+        return True
+
+    if not rows:
+        print("No residual risks")
+        return True
+
+    print(f"\nResidual Risks ({len(rows)}):")
+    print("-" * 96)
+    print(f"{'Risk ID':<10} {'Packet':<12} {'Status':<12} {'Impact':<10} {'Likelihood':<10} {'Summary'}")
+    print("-" * 96)
+    for row in rows:
+        summary = str(row.get("description") or "")[:45]
+        print(
+            f"{(row.get('risk_id') or ''):<10} {(row.get('packet_id') or ''):<12} "
+            f"{(row.get('status') or ''):<12} {(row.get('impact') or ''):<10} "
+            f"{(row.get('likelihood') or ''):<10} {summary}"
+        )
+    print()
+    return True
+
+
+def cmd_risk_show(risk_id: str) -> bool:
+    """Show a single residual risk record."""
+    risk = get_risk(RESIDUAL_RISK_REGISTER_PATH, risk_id)
+    if not risk:
+        print(red(f"Risk {risk_id} not found"))
+        return False
+    if output_json({"risk": risk}):
+        return True
+    print(json.dumps(risk, indent=2))
+    return True
+
+
+def cmd_risk_add(
+    packet_id: str,
+    actor: str,
+    description: str,
+    likelihood: str = "medium",
+    impact: str = "medium",
+    confidence: str = "medium",
+    notes: str = "",
+) -> bool:
+    """Create a residual risk entry directly."""
+    entry = {
+        "description": description,
+        "likelihood": likelihood,
+        "impact": impact,
+        "confidence": confidence,
+        "notes": notes,
+    }
+    try:
+        risk_ids = add_risks(RESIDUAL_RISK_REGISTER_PATH, packet_id=packet_id, actor=actor, entries=[entry])
+    except ValueError as e:
+        print(red(str(e)))
+        return False
+    rid = risk_ids[0]
+    if output_json({"risk_id": rid}):
+        return True
+    print(green(f"Residual risk created: {rid}"))
+    return True
+
+
+def cmd_risk_update_status(risk_id: str, status: str, actor: str, notes: str = "") -> bool:
+    """Update residual risk status."""
+    try:
+        ok, msg = update_risk_status(
+            RESIDUAL_RISK_REGISTER_PATH,
+            risk_id=risk_id,
+            status=status,
+            actor=actor,
+            notes=notes,
+        )
+    except ValueError as e:
+        print(red(str(e)))
+        return False
+    if ok:
+        print(green(msg))
+    else:
+        print(red(msg))
+    return ok
+
+
+def cmd_risk_summary() -> bool:
+    """Show aggregate residual risk counts."""
+    summary = risk_summary(RESIDUAL_RISK_REGISTER_PATH)
+    if output_json(summary):
+        return True
+    counts = summary.get("counts", {})
+    print("\nResidual Risk Summary")
+    print("-" * 40)
+    print(f"Total: {summary.get('total', 0)}")
+    print(f"Open: {summary.get('open', 0)}")
+    for status in sorted(counts.keys()):
+        print(f"  {status:<11}: {counts[status]}")
+    print()
+    return True
 
 
 def cmd_briefing(output_format: str = "text", compact: bool = False, recent_events: int = 10):
@@ -1906,6 +2179,23 @@ def cmd_validate(strict: bool = False) -> bool:
     return True
 
 
+def cmd_template_validate() -> bool:
+    """Run full template integrity checks via scaffold validation script."""
+    script = GOV.parent / "scripts" / "template-integrity.sh"
+    if not script.exists():
+        msg = f"Template integrity script missing: {script}"
+        if output_json({"ok": False, "message": msg}):
+            return False
+        print(red(msg))
+        return False
+
+    proc = subprocess.run(["bash", str(script)], cwd=str(GOV.parent))
+    ok = proc.returncode == 0
+    if output_json({"ok": ok, "script": str(script)}):
+        return ok
+    return ok
+
+
 def _validate_packet_object(pkt: dict, index_label: str = "") -> list:
     """Validate packet object against canonical packet standard."""
     errors = []
@@ -2145,7 +2435,13 @@ def cmd_export(kind: str, out_path: str) -> bool:
         print(green(f"Exported log CSV: {out}"))
         return True
 
-    print(red("Unknown export type. Use: state-json | log-json | log-csv"))
+    if kind == "risk-json":
+        payload = load_register(RESIDUAL_RISK_REGISTER_PATH)
+        out.write_text(json.dumps(payload, indent=2) + "\n")
+        print(green(f"Exported residual risk JSON: {out}"))
+        return True
+
+    print(red("Unknown export type. Use: state-json | log-json | log-csv | risk-json"))
     return False
 
 
@@ -2153,7 +2449,7 @@ def print_help():
     print("Usage: wbs_cli.py [--json] <command> [args]")
     print()
     print("Commands:")
-    print("  init <wbs.json>       Initialize from WBS file")
+    print("  init [wbs.json]       Initialize from WBS file (defaults to .governance/wbs.json)")
     print("  init --wizard         Interactive setup")
     print("  plan                  Guided WBS planning and export")
     print("  git-protocol          Show/validate structured governance commit protocol")
@@ -2165,13 +2461,14 @@ def print_help():
     print("  context <id>          Packet context bundle (deps/history/handovers/files)")
     print("  progress              Summary counts")
     print("  graph [--output file] ASCII dependency graph (+ optional Graphviz DOT export)")
-    print("  export <type> <path>  Export state/log data (state-json|log-json|log-csv)")
+    print("  export <type> <path>  Export state/log/risk data (state-json|log-json|log-csv|risk-json)")
     print("  validate [--strict]   Check WBS structure (strict enforces packet contract)")
+    print("  template-validate     Run template integrity checks")
     print("  validate-packet [path] Validate packets against packet schema")
     print("  closeout-l2 <area> <agent> <drift-md> [notes] Close level-2 area with drift assessment")
     print()
     print("  claim <id> <agent>    Claim a packet")
-    print("  done <id> <agent>     Mark done")
+    print("  done <id> <agent> [notes] --risk <none|declared> [--risk-file path|--risk-json json]")
     print("  note <id> <agent>     Update notes")
     print("  fail <id> <agent>     Mark failed")
     print("  reset <id>            Reset to pending")
@@ -2179,6 +2476,11 @@ def print_help():
     print("  resume <id> <agent>   Resume active handover and assign owner")
     print("  stale <minutes>       Find stuck packets")
     print("  log [limit]           Recent activity")
+    print("  risk-list [--packet id] [--status status] [--limit n] List residual risks")
+    print("  risk-show <risk_id>   Show one residual risk entry")
+    print("  risk-add <packet_id> <actor> <description> [--likelihood v] [--impact v] [--confidence v] [--notes text]")
+    print("  risk-update-status <risk_id> <status> <actor> [notes] Update risk status")
+    print("  risk-summary          Aggregate residual risk counts")
     print("  log-mode <mode>       Set log integrity mode (plain|hash-chain)")
     print("  verify-log            Verify tamper-evident log chain")
     print()
@@ -2223,7 +2525,9 @@ def print_help():
     print("  python3 .governance/wbs_cli.py git-reconstruct --limit 200 --output reports/git-reconstruct.json")
     print("  python3 .governance/wbs_cli.py git-branch-open UPG-056 codex --from main")
     print("  python3 .governance/wbs_cli.py git-branch-close UPG-056 codex --base main")
-    print("  python3 .governance/wbs_cli.py done CDX-3-1 codex-lead \"Implemented changes\"")
+    print("  python3 .governance/wbs_cli.py done CDX-3-1 codex-lead \"Implemented changes\" --risk none")
+    print("  python3 .governance/wbs_cli.py done CDX-3-2 codex-lead \"Implemented changes\" --risk declared --risk-file docs/risks/rsk-3-2.json")
+    print("  python3 .governance/wbs_cli.py risk-list --status open")
     print("  python3 .governance/wbs_cli.py note CDX-3-1 codex-lead \"Evidence: docs/path.md\"")
     print("  python3 .governance/wbs_cli.py closeout-l2 2 codex-lead docs/codex-migration/drift-wbs2.md \"ready for handoff\"")
     print()
@@ -2252,11 +2556,9 @@ def main():
         elif cmd == "init":
             if len(args) >= 2 and args[1] == "--wizard":
                 success = cmd_init_wizard()
-            elif len(args) < 2:
-                print("Usage: wbs_cli.py init <wbs.json>")
-                sys.exit(1)
             else:
-                success = cmd_init(args[1])
+                init_source = args[1] if len(args) >= 2 else str(WBS_DEF)
+                success = cmd_init(init_source)
             if not success:
                 sys.exit(1)
         elif cmd == "plan":
@@ -2433,10 +2735,55 @@ def main():
                 sys.exit(1)
         elif cmd == "done":
             if len(args) < 3:
-                print("Usage: wbs_cli.py done <packet_id> <agent> [notes]")
+                print("Usage: wbs_cli.py done <packet_id> <agent> [notes] --risk <none|declared> [--risk-file path|--risk-json json]")
                 sys.exit(1)
-            notes = args[3] if len(args) > 3 else ""
-            if require_state() and not cmd_done(args[1], args[2], notes):
+            packet_id = args[1]
+            agent = args[2]
+            notes = ""
+            risk_ack = ""
+            risk_file = ""
+            risk_json = ""
+            i = 3
+            while i < len(args):
+                token = args[i]
+                if token in ("--risk", "--risk-file", "--risk-json"):
+                    if i + 1 >= len(args):
+                        print("Usage: wbs_cli.py done <packet_id> <agent> [notes] --risk <none|declared> [--risk-file path|--risk-json json]")
+                        sys.exit(1)
+                    value = args[i + 1]
+                    if token == "--risk":
+                        risk_ack = value
+                    elif token == "--risk-file":
+                        risk_file = value
+                    elif token == "--risk-json":
+                        risk_json = value
+                    i += 2
+                    continue
+                if notes:
+                    print("Usage: wbs_cli.py done <packet_id> <agent> [notes] --risk <none|declared> [--risk-file path|--risk-json json]")
+                    sys.exit(1)
+                notes = token
+                i += 1
+
+            if bool(risk_file) and bool(risk_json):
+                print("Use either --risk-file or --risk-json, not both.")
+                sys.exit(1)
+
+            parsed_risks = []
+            if risk_file:
+                try:
+                    parsed_risks = _load_risk_entries_from_file(risk_file)
+                except ValueError as e:
+                    print(red(str(e)))
+                    sys.exit(1)
+            elif risk_json:
+                try:
+                    parsed_risks = _load_risk_entries_from_json(risk_json)
+                except ValueError as e:
+                    print(red(str(e)))
+                    sys.exit(1)
+
+            if require_state() and not cmd_done(packet_id, agent, notes, risk_ack=risk_ack, risk_entries=parsed_risks):
                 sys.exit(1)
         elif cmd == "note":
             if len(args) < 4:
@@ -2523,6 +2870,79 @@ def main():
         elif cmd == "log":
             limit = int(args[1]) if len(args) > 1 else 20
             if require_state(): cmd_log(limit)
+        elif cmd == "risk-list":
+            packet_id = ""
+            status = ""
+            limit = 100
+            i = 1
+            while i < len(args):
+                token = args[i]
+                if token in ("--packet", "--status", "--limit"):
+                    if i + 1 >= len(args):
+                        print("Usage: wbs_cli.py risk-list [--packet id] [--status status] [--limit n]")
+                        sys.exit(1)
+                    value = args[i + 1]
+                    if token == "--packet":
+                        packet_id = value
+                    elif token == "--status":
+                        status = value
+                    else:
+                        limit = int(value)
+                    i += 2
+                    continue
+                print("Usage: wbs_cli.py risk-list [--packet id] [--status status] [--limit n]")
+                sys.exit(1)
+            if not cmd_risk_list(packet_id=packet_id, status=status, limit=limit):
+                sys.exit(1)
+        elif cmd == "risk-show":
+            if len(args) < 2:
+                print("Usage: wbs_cli.py risk-show <risk_id>")
+                sys.exit(1)
+            if not cmd_risk_show(args[1]):
+                sys.exit(1)
+        elif cmd == "risk-add":
+            if len(args) < 4:
+                print("Usage: wbs_cli.py risk-add <packet_id> <actor> <description> [--likelihood v] [--impact v] [--confidence v] [--notes text]")
+                sys.exit(1)
+            packet_id = args[1]
+            actor = args[2]
+            description = args[3]
+            likelihood = "medium"
+            impact = "medium"
+            confidence = "medium"
+            notes = ""
+            i = 4
+            while i < len(args):
+                token = args[i]
+                if token in ("--likelihood", "--impact", "--confidence", "--notes"):
+                    if i + 1 >= len(args):
+                        print("Usage: wbs_cli.py risk-add <packet_id> <actor> <description> [--likelihood v] [--impact v] [--confidence v] [--notes text]")
+                        sys.exit(1)
+                    value = args[i + 1]
+                    if token == "--likelihood":
+                        likelihood = value
+                    elif token == "--impact":
+                        impact = value
+                    elif token == "--confidence":
+                        confidence = value
+                    else:
+                        notes = value
+                    i += 2
+                    continue
+                print("Usage: wbs_cli.py risk-add <packet_id> <actor> <description> [--likelihood v] [--impact v] [--confidence v] [--notes text]")
+                sys.exit(1)
+            if not cmd_risk_add(packet_id, actor, description, likelihood, impact, confidence, notes):
+                sys.exit(1)
+        elif cmd == "risk-update-status":
+            if len(args) < 4:
+                print("Usage: wbs_cli.py risk-update-status <risk_id> <status> <actor> [notes]")
+                sys.exit(1)
+            notes = args[4] if len(args) > 4 else ""
+            if not cmd_risk_update_status(args[1], args[2], args[3], notes):
+                sys.exit(1)
+        elif cmd == "risk-summary":
+            if not cmd_risk_summary():
+                sys.exit(1)
         elif cmd == "log-mode":
             if len(args) < 2:
                 print("Usage: wbs_cli.py log-mode <plain|hash-chain>")
@@ -2543,7 +2963,7 @@ def main():
             if require_state(): cmd_graph(output)
         elif cmd == "export":
             if len(args) < 3:
-                print("Usage: wbs_cli.py export <state-json|log-json|log-csv> <path>")
+                print("Usage: wbs_cli.py export <state-json|log-json|log-csv|risk-json> <path>")
                 sys.exit(1)
             if require_state() and not cmd_export(args[1], args[2]):
                 sys.exit(1)
@@ -2554,6 +2974,12 @@ def main():
                 sys.exit(1)
             strict = "--strict" in args[1:]
             if not cmd_validate(strict=strict):
+                sys.exit(1)
+        elif cmd == "template-validate":
+            if len(args) != 1:
+                print("Usage: wbs_cli.py template-validate")
+                sys.exit(1)
+            if not cmd_template_validate():
                 sys.exit(1)
         elif cmd == "validate-packet":
             target = args[1] if len(args) > 1 else ""

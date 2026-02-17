@@ -48,7 +48,7 @@ class CliTransitionEdgeTests(unittest.TestCase):
         self.assertIn('WBS-E-003', proc.stdout)
 
     def test_done_wrong_agent_fails(self):
-        proc = run_cli(['done', 'UNKNOWN', 'agent-b', 'bad id'], expect=1)
+        proc = run_cli(['done', 'UNKNOWN', 'agent-b', 'bad id', '--risk', 'none'], expect=1)
         self.assertIn('WBS-E-001', proc.stdout)
 
     def test_reset_only_in_progress(self):

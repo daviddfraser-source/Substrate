@@ -1,14 +1,22 @@
 # Substrate Template Usage
 
 ## 1. Choose a Profile
+- `.governance/wbs.json`: default clean baseline scaffold for clone-and-own starts.
 - `templates/wbs-codex-minimal.json`: fast startup, minimal governance footprint.
 - `templates/wbs-codex-full.json`: comprehensive scaffold setup.
-- `templates/wbs-codex-refactor.json`: full profile with migration compatibility.
+- `templates/wbs-codex-refactor.json`: legacy migration compatibility profile.
 
 ## 2. Bootstrap
 ```bash
-scripts/init-scaffold.sh templates/wbs-codex-full.json
+scripts/init-scaffold.sh
+# or explicitly:
+scripts/init-scaffold.sh templates/wbs-codex-minimal.json
 python3 .governance/wbs_cli.py ready
+```
+
+Reset to a clean scaffold state (idempotent):
+```bash
+scripts/reset-scaffold.sh
 ```
 
 Or use guided onboarding:
@@ -19,13 +27,15 @@ python3 start.py --wizard-scaffold
 ## 3. Execute Lifecycle
 ```bash
 python3 .governance/wbs_cli.py claim <packet_id> <agent>
-python3 .governance/wbs_cli.py done <packet_id> <agent> "summary + evidence"
+python3 .governance/wbs_cli.py done <packet_id> <agent> "summary + evidence" --risk none
 python3 .governance/wbs_cli.py note <packet_id> <agent> "updated evidence"
+python3 .governance/wbs_cli.py risk-list --status open
 ```
 
 ## 4. Verify Scaffold Health
 ```bash
 scripts/scaffold-check.sh
+python3 .governance/wbs_cli.py template-validate
 ```
 
 ## 5. Close Out Level-2 Areas
@@ -34,3 +44,17 @@ python3 .governance/wbs_cli.py closeout-l2 <area_id|n> <agent> docs/codex-migrat
 ```
 
 Use `docs/codex-migration/drift-assessment-template.md` for drift assessment structure.
+
+## 6. Artifact Boundaries
+
+Scaffold artifacts (commit/ship):
+- `.governance/wbs.json`, `templates/*.json`, `scripts/*`, `docs/*`, `src/*`, `prompts/*`
+
+Runtime artifacts (generated):
+- `.governance/wbs-state.json`
+- `.governance/activity-log.jsonl` (legacy format if present)
+- `.governance/residual-risk-register.json`
+
+Before publishing template forks:
+- remove `.meta/`
+- ensure runtime artifacts are not tracked (`scripts/governance-state-guard.sh --check-tracked`)

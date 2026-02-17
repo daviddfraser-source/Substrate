@@ -6,7 +6,8 @@ BAD_PATTERN='(/wbs-status|/claim-packet|/complete-packet|/reset-packet|/wbs-log|
 
 if rg -n -S "$BAD_PATTERN" \
   README.md AGENTS.md CLAUDE.md prompts docs \
-  -g '!docs/codex-migration/command-map.md'; then
+  -g '!docs/codex-migration/command-map.md' \
+  -g '!docs/codex-migration/packets/*.json'; then
   echo "Found legacy command/db patterns in primary docs." >&2
   exit 1
 fi

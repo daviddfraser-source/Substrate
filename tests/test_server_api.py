@@ -110,6 +110,19 @@ class ServerApiTests(unittest.TestCase):
         self.assertTrue(r1['success'])
 
         r2 = post_json(self.base, '/api/done', {'packet_id': 'A', 'agent_name': 'op', 'notes': 'done via api'})
+        self.assertFalse(r2['success'])
+        self.assertIn('residual_risk_ack', r2['message'])
+
+        r2 = post_json(
+            self.base,
+            '/api/done',
+            {
+                'packet_id': 'A',
+                'agent_name': 'op',
+                'notes': 'done via api',
+                'residual_risk_ack': 'none',
+            },
+        )
         self.assertTrue(r2['success'])
 
         status = get_json(self.base, '/api/status')
@@ -118,7 +131,11 @@ class ServerApiTests(unittest.TestCase):
 
     def test_note_endpoint_updates_notes(self):
         post_json(self.base, '/api/claim', {'packet_id': 'A', 'agent_name': 'op'})
-        post_json(self.base, '/api/done', {'packet_id': 'A', 'agent_name': 'op', 'notes': 'initial'})
+        post_json(
+            self.base,
+            '/api/done',
+            {'packet_id': 'A', 'agent_name': 'op', 'notes': 'initial', 'residual_risk_ack': 'none'},
+        )
         note_res = post_json(
             self.base,
             '/api/note',
@@ -166,7 +183,11 @@ class ServerApiTests(unittest.TestCase):
 
     def test_packet_endpoint_returns_full_payload(self):
         post_json(self.base, '/api/claim', {'packet_id': 'A', 'agent_name': 'op'})
-        post_json(self.base, '/api/done', {'packet_id': 'A', 'agent_name': 'op', 'notes': 'done via packet test'})
+        post_json(
+            self.base,
+            '/api/done',
+            {'packet_id': 'A', 'agent_name': 'op', 'notes': 'done via packet test', 'residual_risk_ack': 'none'},
+        )
         packet = get_json(self.base, '/api/packet?id=A')
         self.assertTrue(packet['success'])
         self.assertIn('packet', packet)
@@ -189,6 +210,23 @@ class ServerApiTests(unittest.TestCase):
         self.assertEqual(res['path'], 'README.md')
         self.assertIn('# Substrate', res['content'])
 
+    def test_docs_index_endpoint_returns_project_documents(self):
+        res = get_json(self.base, '/api/docs-index?limit=2000')
+        self.assertTrue(res['success'])
+        self.assertIn('documents', res)
+        self.assertGreater(res['returned'], 0)
+        self.assertTrue(any(d['path'] == 'README.md' for d in res['documents']))
+        self.assertIn('root', res.get('categories', []))
+
+    def test_docs_index_endpoint_supports_filters(self):
+        res = get_json(self.base, '/api/docs-index?kind=markdown&q=readme&category=root&limit=200')
+        self.assertTrue(res['success'])
+        docs = res.get('documents', [])
+        self.assertGreater(len(docs), 0)
+        self.assertTrue(all(d.get('kind') == 'markdown' for d in docs))
+        self.assertTrue(all(d.get('category') == 'root' for d in docs))
+        self.assertTrue(any(d.get('path') == 'README.md' for d in docs))
+
     def test_unknown_api_route_returns_json_404(self):
         status, body = request_json(self.base, '/api/does-not-exist')
         self.assertEqual(status, 404)
@@ -198,9 +236,17 @@ class ServerApiTests(unittest.TestCase):
 
     def test_closeout_l2_endpoint(self):
         post_json(self.base, '/api/claim', {'packet_id': 'A', 'agent_name': 'op'})
-        post_json(self.base, '/api/done', {'packet_id': 'A', 'agent_name': 'op', 'notes': 'done'})
+        post_json(
+            self.base,
+            '/api/done',
+            {'packet_id': 'A', 'agent_name': 'op', 'notes': 'done', 'residual_risk_ack': 'none'},
+        )
         post_json(self.base, '/api/claim', {'packet_id': 'B', 'agent_name': 'op'})
-        post_json(self.base, '/api/done', {'packet_id': 'B', 'agent_name': 'op', 'notes': 'done'})
+        post_json(
+            self.base,
+            '/api/done',
+            {'packet_id': 'B', 'agent_name': 'op', 'notes': 'done', 'residual_risk_ack': 'none'},
+        )
 
         fd, path = tempfile.mkstemp(suffix='-drift.md')
         with os.fdopen(fd, 'w') as f:
@@ -231,6 +277,20 @@ class ServerApiTests(unittest.TestCase):
             self.assertIsNotNone(status['areas'][0]['closeout'])
         finally:
             os.unlink(path)
+
+    def test_status_endpoints_normalize_uppercase_runtime_values(self):
+        state = json.loads(STATE.read_text())
+        state['packets']['A']['status'] = 'DONE'
+        state['packets']['B']['status'] = 'PENDING'
+        STATE.write_text(json.dumps(state))
+
+        ready = get_json(self.base, '/api/ready')
+        ready_ids = [p['id'] for p in ready['ready']]
+        self.assertIn('B', ready_ids)
+
+        status = get_json(self.base, '/api/status')
+        packet_a = next(p for a in status['areas'] for p in a['packets'] if p['id'] == 'A')
+        self.assertEqual(packet_a['status'], 'done')
 
 
 if __name__ == '__main__':

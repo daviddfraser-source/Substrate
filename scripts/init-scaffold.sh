@@ -4,7 +4,7 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "${ROOT_DIR}"
 
-WBS_TEMPLATE="${1:-templates/wbs-codex-refactor.json}"
+WBS_TEMPLATE="${1:-.governance/wbs.json}"
 WBS_FILE=".governance/wbs.json"
 STATE_FILE=".governance/wbs-state.json"
 

@@ -43,7 +43,7 @@ class CliExportTests(unittest.TestCase):
         fixture = ROOT / 'tests' / 'fixtures' / 'wbs_linear.json'
         run_cli(['init', str(fixture)])
         run_cli(['claim', 'FX-1', 'agent'])
-        run_cli(['done', 'FX-1', 'agent', 'evidence'])
+        run_cli(['done', 'FX-1', 'agent', 'evidence', '--risk', 'none'])
 
     def test_export_state_and_log(self):
         with tempfile.TemporaryDirectory() as td:

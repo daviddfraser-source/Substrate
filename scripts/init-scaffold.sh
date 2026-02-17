@@ -27,10 +27,6 @@ python3 .governance/wbs_cli.py validate-packet "${WBS_FILE}"
 echo "Initializing scaffold from ${WBS_FILE}..."
 python3 .governance/wbs_cli.py init "${WBS_FILE}"
 
-echo "Validating WBS and packet schema..."
-python3 .governance/wbs_cli.py validate
-python3 .governance/wbs_cli.py validate-packet "${WBS_FILE}"
-
 if command -v pre-commit >/dev/null 2>&1 && [[ -f ".pre-commit-config.yaml" ]]; then
   echo "Installing pre-commit hooks..."
   pre-commit install

@@ -13,8 +13,19 @@ if [[ ! -f "${WBS_TEMPLATE}" ]]; then
   exit 1
 fi
 
-echo "Initializing scaffold from ${WBS_TEMPLATE}..."
-python3 .governance/wbs_cli.py init "${WBS_TEMPLATE}"
+if [[ "${WBS_TEMPLATE}" != "${WBS_FILE}" ]]; then
+  echo "Installing scaffold definition into ${WBS_FILE}..."
+  cp "${WBS_TEMPLATE}" "${WBS_FILE}"
+else
+  echo "Using resident scaffold definition: ${WBS_FILE}"
+fi
+
+echo "Validating scaffold definition before init..."
+python3 .governance/wbs_cli.py validate
+python3 .governance/wbs_cli.py validate-packet "${WBS_FILE}"
+
+echo "Initializing scaffold from ${WBS_FILE}..."
+python3 .governance/wbs_cli.py init "${WBS_FILE}"
 
 echo "Validating WBS and packet schema..."
 python3 .governance/wbs_cli.py validate
@@ -30,5 +41,5 @@ echo "Scaffold initialized."
 echo "WBS:   ${WBS_FILE}"
 echo "State: ${STATE_FILE}"
 echo
-echo "Next:"
-echo "  python3 .governance/wbs_cli.py ready"
+echo "Briefing:"
+python3 .governance/wbs_cli.py briefing

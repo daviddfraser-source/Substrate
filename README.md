@@ -65,6 +65,8 @@ Re-initialize quickly during setup:
 scripts/reset-scaffold.sh templates/wbs-codex-minimal.json
 ```
 
+`init-scaffold.sh` installs the selected template into resident `.governance/wbs.json` before initialization.
+
 > [!NOTE]
 > This is a **Template Repository**. The intended workflow is to **Clone and Own**: once you instantiate this template, you own the entire codebase, including the governance tools in `src/governed_platform`. You are free to modify them, but be aware that deviating from the core logic may affect future updates or standard tooling compatibility.
 

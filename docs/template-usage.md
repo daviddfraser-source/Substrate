@@ -12,10 +12,14 @@ scripts/init-scaffold.sh templates/wbs-codex-minimal.json
 python3 .governance/wbs_cli.py ready
 ```
 
+`init-scaffold.sh` installs the selected template as resident `.governance/wbs.json` and initializes state from that file.
+
 Reset to a clean scaffold state (idempotent):
 ```bash
 scripts/reset-scaffold.sh templates/wbs-codex-minimal.json
 ```
+
+`reset-scaffold.sh` also clears `.governance/residual-risk-register.json`.
 
 Or use guided onboarding:
 ```bash

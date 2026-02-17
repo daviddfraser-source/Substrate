@@ -55,7 +55,7 @@ def load_scaffold_config():
         "project_name": "Substrate Project",
         "default_agent": "substrate-lead",
         "dashboard_port": 8080,
-        "wbs_template": "templates/wbs-codex-refactor.json",
+        "wbs_template": "templates/wbs-codex-minimal.json",
         "wbs_file": ".governance/wbs.json",
         "enable_skills": [],
         "ci_profile": "full",
@@ -145,6 +145,7 @@ def validate_scaffold() -> Tuple[bool, List[str]]:
     for command, label in (
         (["validate"], "wbs validation"),
         (["validate-packet", str(template_path)], "template packet validation"),
+        (["template-validate"], "template integrity validation"),
     ):
         result = run(command, capture=True)
         if result.returncode != 0:
@@ -153,6 +154,27 @@ def validate_scaffold() -> Tuple[bool, List[str]]:
             messages.append(f"{label} failed: {detail}")
 
     return ok, messages
+
+
+def validate_wbs_before_init(wbs_path: Path) -> Tuple[bool, List[str]]:
+    """Validate WBS definition before initializing runtime state."""
+    issues: List[str] = []
+    target = Path(wbs_path)
+    if not target.exists():
+        return False, [f"WBS definition not found: {target}"]
+
+    checks = (
+        (["validate"], "wbs validation"),
+        (["validate-packet", str(target)], "packet schema validation"),
+    )
+    ok = True
+    for command, label in checks:
+        result = run(command, capture=True)
+        if result.returncode != 0:
+            ok = False
+            detail = (result.stdout + result.stderr).strip()
+            issues.append(f"{label} failed: {detail}")
+    return ok, issues
 
 
 def save_scaffold_config(config):
@@ -232,6 +254,12 @@ def start_dashboard(port="8080"):
     """Start the web dashboard."""
     if not STATE.exists():
         print("  Initializing database first...")
+        valid, issues = validate_wbs_before_init(WBS_JSON)
+        if not valid:
+            print("  WBS validation failed; cannot initialize.")
+            for issue in issues:
+                print(f"    - {issue}")
+            sys.exit(1)
         run(["init", str(WBS_JSON)])
 
     print(f"  {green('*')} Dashboard: {bold(f'http://localhost:{port}')}")
@@ -254,7 +282,7 @@ def scaffold_wizard():
     print("    1) minimal (fast bootstrap)")
     print("    2) full (comprehensive governance)")
     print("    3) refactor (legacy-compatible full)")
-    template_choice = input(dim("  Choice [2]: ")).strip() or "2"
+    template_choice = input(dim("  Choice [1]: ")).strip() or "1"
     template_map = {
         "1": "templates/wbs-codex-minimal.json",
         "2": "templates/wbs-codex-full.json",
@@ -388,7 +416,21 @@ def main():
     if not STATE.exists():
         print(f"  {green('*')} First run — initializing project...")
         print()
+        valid, issues = validate_wbs_before_init(WBS_JSON)
+        if not valid:
+            print("  WBS validation failed; initialization skipped.")
+            for issue in issues:
+                print(f"    - {issue}")
+            print()
+            try:
+                choice = input(dim("  Run scaffold wizard now? [y/N]: ")).strip().lower()
+            except (KeyboardInterrupt, EOFError):
+                choice = ""
+            if choice in ("y", "yes"):
+                scaffold_wizard()
+            return
         run(["init", str(WBS_JSON)])
+        run(["briefing"])
         print()
 
     show_status_box()

@@ -38,14 +38,17 @@ scripts/reset-scaffold.sh templates/wbs-codex-minimal.json
 ## Scaffold Bootstrap
 
 - `scripts/init-scaffold.sh [template-path]`
-  - Initializes `.governance/wbs.json` and `.governance/wbs-state.json` from template.
+  - Copies selected template into resident `.governance/wbs.json`.
+  - Initializes `.governance/wbs-state.json` from resident definition.
   - Default template path is `.governance/wbs.json` (clean baseline scaffold).
-  - Runs governance validation and packet schema validation.
+  - Runs governance validation and packet schema validation before init.
+  - Prints `briefing` output after successful init.
 
 - `scripts/reset-scaffold.sh [template-path]`
-  - Clears runtime scaffold artifacts (`wbs-state.json`, legacy activity log).
+  - Clears runtime scaffold artifacts (`wbs-state.json`, legacy activity log, residual risk register).
   - Re-initializes from the selected WBS source in one command.
   - Default template path is `.governance/wbs.json`.
+  - Prints `briefing` output after successful reset.
 
 ## Skills Manifest
 

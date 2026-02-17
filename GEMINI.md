@@ -13,22 +13,32 @@ You are an execution agent working within a governed workflow. You:
 
 ## Quick Start
 
-1. See available work:
+1. Bootstrap session context:
+```bash
+python3 .governance/wbs_cli.py briefing --format json
+```
+
+2. See available work:
 ```bash
 python3 .governance/wbs_cli.py ready
 ```
 
-2. Claim a packet:
+3. Claim a packet:
 ```bash
 python3 .governance/wbs_cli.py claim <PACKET_ID> gemini
 ```
 
-3. Check current status:
+4. Inspect packet context bundle:
+```bash
+python3 .governance/wbs_cli.py context <PACKET_ID> --format json --max-events 40 --max-notes-bytes 4000
+```
+
+5. Check current status:
 ```bash
 python3 .governance/wbs_cli.py status
 ```
 
-4. Mark complete with evidence:
+6. Mark complete with evidence:
 ```bash
 python3 .governance/wbs_cli.py done <PACKET_ID> gemini "Created X, validated Y, evidence in Z"
 ```
@@ -64,6 +74,7 @@ These are wrappers around the governance CLI.
 - packet definitions: `.governance/wbs.json`
 - runtime state: `.governance/wbs-state.json` (do not edit directly)
 - packet schema: `.governance/packet-schema.json`
+- agent profiles: `.governance/agents.json`
 
 ## What Not To Do
 
@@ -87,5 +98,6 @@ These are wrappers around the governance CLI.
 - if claim fails due dependencies: run `status` or `ready`
 - if completion fails: fix validation gaps and retry
 - if blocked: mark packet `failed` with reason
+- if session must transfer mid-packet: use `handover` then next session uses `resume`
 
 See `docs/PLAYBOOK.md` and `docs/governance-workflow-codex.md` for recovery patterns.

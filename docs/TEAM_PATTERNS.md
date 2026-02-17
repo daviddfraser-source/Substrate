@@ -21,6 +21,18 @@ Each phase completes before next starts.
 ## Pattern 4: Solo + Assist
 Use for small sets (<10 packets) with occasional helper support.
 
+## Suggested Team Size by Project Scale
+
+| Project Size | Typical Packet Count | Suggested Agents | Default Pattern |
+|---|---:|---:|---|
+| Small | 1-10 | 1-2 | Solo + Assist |
+| Medium | 10-30 | 3-5 | Lead + Specialists |
+| Large | 30+ | 5-8 | Parallel Workers + Pipeline |
+
+Notes:
+- Start with fewer agents, then scale only when ready queue depth supports parallel execution.
+- Keep one lead responsible for dependency/risk decisions.
+
 ## Command Rhythm
 Lead:
 - `python3 .governance/wbs_cli.py ready`

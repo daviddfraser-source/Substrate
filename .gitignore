@@ -18,6 +18,8 @@ build/
 .env.local
 venv/
 env/
+node_modules/
+**/node_modules/
 
 # Temporary files
 *.tmp

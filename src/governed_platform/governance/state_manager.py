@@ -3,6 +3,10 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any
 
+from governed_platform.governance.file_lock import atomic_write_json
+from governed_platform.governance.log_integrity import normalize_log_mode
+from governed_platform.governance.status import normalize_packet_status_map
+
 
 STATE_VERSION = "1.0"
 
@@ -21,6 +25,7 @@ class StateManager:
             "packets": {},
             "log": [],
             "area_closeouts": {},
+            "log_integrity_mode": "plain",
         }
 
     def load(self) -> Dict[str, Any]:
@@ -29,12 +34,21 @@ class StateManager:
         with open(self.state_path) as f:
             state = json.load(f)
         state = self._ensure_version(state)
-        return state
+        state.setdefault("log_integrity_mode", "plain")
+        state["log_integrity_mode"] = normalize_log_mode(state.get("log_integrity_mode"))
+        return normalize_packet_status_map(state)
 
     def save(self, state: Dict[str, Any]) -> None:
         state["version"] = state.get("version", STATE_VERSION)
         state["updated_at"] = datetime.now().isoformat()
-        tmp = self.state_path.with_suffix(".tmp")
+        atomic_write_json(self.state_path, state)
+
+    def save_without_lock(self, state: Dict[str, Any]) -> None:
+        """Persist state atomically when caller already holds the state lock."""
+        state["version"] = state.get("version", STATE_VERSION)
+        state["updated_at"] = datetime.now().isoformat()
+        self.state_path.parent.mkdir(parents=True, exist_ok=True)
+        tmp = self.state_path.with_suffix(self.state_path.suffix + ".tmp")
         with open(tmp, "w") as f:
             json.dump(state, f, indent=2)
             f.write("\n")

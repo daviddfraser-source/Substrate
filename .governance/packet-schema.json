@@ -86,6 +86,13 @@
       },
       "description": "External packet/scope references."
     },
+    "required_capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Optional capability tags required for claim-time assignment checks."
+    },
     "preconditions": {
       "type": "array",
       "items": {

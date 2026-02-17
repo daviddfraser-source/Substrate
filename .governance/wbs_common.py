@@ -14,6 +14,19 @@ GOV = Path(__file__).parent
 WBS_DEF = GOV / "wbs.json"
 WBS_STATE = GOV / "wbs-state.json"
 
+SRC_PATH = GOV.parent / "src"
+if str(SRC_PATH) not in sys.path:
+    sys.path.insert(0, str(SRC_PATH))
+
+try:
+    from governed_platform.governance.status import normalize_runtime_status, normalize_packet_status_map
+    from governed_platform.governance.log_integrity import normalize_log_mode
+except Exception:
+    # Fallback keeps utility import-safe even before src is available.
+    normalize_runtime_status = lambda value, default="pending", strict=False: str(value or default).lower()  # noqa: E731
+    normalize_packet_status_map = lambda state: state  # noqa: E731
+    normalize_log_mode = lambda value, strict=False: str(value or "plain").lower()  # noqa: E731
+
 # Colors (respects NO_COLOR env var)
 def c(code, text):
     if os.environ.get("NO_COLOR") or not (hasattr(sys.stdout, "isatty") and sys.stdout.isatty()):
@@ -47,6 +60,7 @@ def load_state() -> dict:
             "packets": {},
             "log": [],
             "area_closeouts": {},
+            "log_integrity_mode": "plain",
         }
     with open(WBS_STATE) as f:
         state = json.load(f)
@@ -57,13 +71,15 @@ def load_state() -> dict:
     state.setdefault("packets", {})
     state.setdefault("log", [])
     state.setdefault("area_closeouts", {})
-    return state
+    state.setdefault("log_integrity_mode", "plain")
+    state["log_integrity_mode"] = normalize_log_mode(state.get("log_integrity_mode"))
+    return normalize_packet_status_map(state)
 
 
 def get_counts(state: dict) -> dict:
     """Get packet counts by status."""
     counts = {}
     for pstate in state.get("packets", {}).values():
-        s = pstate.get("status", "pending")
+        s = normalize_runtime_status(pstate.get("status", "pending"))
         counts[s] = counts.get(s, 0) + 1
     return counts

@@ -7,11 +7,8 @@ Simple, readable, git-friendly.
 import json
 import sys
 import csv
+import os
 from pathlib import Path
-try:
-    import fcntl
-except ImportError:
-    fcntl = None
 from datetime import datetime
 from typing import Optional
 
@@ -26,13 +23,74 @@ if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
 
 from governed_platform.governance.engine import GovernanceEngine
+from governed_platform.governance.file_lock import atomic_write_json
+from governed_platform.governance.git_ledger import (
+    GIT_MODE_ADVISORY,
+    GIT_MODE_DISABLED,
+    GIT_MODE_STRICT,
+    GIT_MODES,
+    PROTOCOL_VERSION as GIT_PROTOCOL_VERSION,
+    REQUIRED_TRAILERS as GIT_PROTOCOL_REQUIRED_TRAILERS,
+    build_closeout_tag,
+    close_packet_branch,
+    create_tag,
+    current_branch,
+    ensure_git_worktree,
+    format_governance_commit,
+    load_git_governance_config,
+    open_packet_branch,
+    parse_governance_commit_from_hash,
+    parse_governance_commit,
+    reconstruct_governance_history,
+    run_governance_auto_commit,
+    save_git_governance_config,
+)
+from governed_platform.governance.log_integrity import (
+    LOG_MODE_HASH_CHAIN,
+    LOG_MODE_PLAIN,
+    normalize_log_mode,
+    verify_log_integrity,
+)
 from governed_platform.governance.state_manager import StateManager
 from governed_platform.governance.schema_registry import SchemaRegistry
+from governed_platform.governance.status import (
+    PACKET_STATUS_VALUES,
+    normalize_packet_status,
+    normalize_packet_status_map,
+    normalize_runtime_status,
+)
+from governed_platform.governance.supervisor import (
+    ENFORCEMENT_ADVISORY,
+    ENFORCEMENT_DISABLED,
+    ENFORCEMENT_MODES,
+    ENFORCEMENT_STRICT,
+    default_agent_registry,
+    load_agent_registry,
+    normalize_enforcement_mode,
+    save_agent_registry,
+)
+from planner import (
+    build_definition as build_planned_definition,
+    collect_import_review_warnings,
+    import_markdown_to_spec,
+    load_plan_spec,
+    prompt_plan_spec,
+    validate_definition as validate_planned_definition,
+    write_definition as write_planned_definition,
+)
+
+try:
+    from jsonschema import Draft202012Validator
+except Exception:
+    Draft202012Validator = None
 
 # Global flags
 JSON_OUTPUT = False
 PACKET_SCHEMA_PATH = GOV / "packet-schema.json"
+WBS_SCHEMA_PATH = GOV / "wbs-schema.json"
 SCHEMA_REGISTRY_PATH = GOV / "schema-registry.json"
+AGENTS_REGISTRY_PATH = GOV / "agents.json"
+GIT_GOVERNANCE_PATH = GOV / "git-governance.json"
 
 REQUIRED_PACKET_FIELDS = [
     "packet_id",
@@ -51,7 +109,6 @@ REQUIRED_PACKET_FIELDS = [
     "halt_conditions",
 ]
 
-PACKET_STATUS_VALUES = {"DRAFT", "PENDING", "IN_PROGRESS", "BLOCKED", "DONE", "FAILED"}
 PACKET_PRIORITY_VALUES = {"LOW", "MEDIUM", "HIGH", "CRITICAL"}
 REQUIRED_DRIFT_SECTIONS = [
     "## Scope Reviewed",
@@ -93,23 +150,26 @@ def _format_error(message: str) -> str:
     return text
 
 
-def enforce_schema_contracts() -> tuple:
+def enforce_schema_contracts(required_schemas=None) -> tuple:
     """Enforce schema registry contract at runtime boundaries."""
+    required_schemas = required_schemas or [("packet", "1.0")]
     if not SCHEMA_REGISTRY_PATH.exists():
         return False, f"Schema registry missing: {SCHEMA_REGISTRY_PATH}"
     try:
         reg = SchemaRegistry.from_registry_file(SCHEMA_REGISTRY_PATH, root=GOV.parent)
     except Exception as e:
         return False, f"Schema registry load failed: {e}"
-    try:
-        packet_ok = reg.validate_version("packet", "1.0")
-        packet_schema = reg.get("packet")
-    except Exception as e:
-        return False, f"Schema registry invalid: {e}"
-    if not packet_ok:
-        return False, "Schema registry version mismatch for packet"
-    if not packet_schema.path.exists():
-        return False, f"Registered packet schema not found: {packet_schema.path}"
+
+    for schema_name, expected_version in required_schemas:
+        try:
+            schema_ok = reg.validate_version(schema_name, expected_version)
+            schema_record = reg.get(schema_name)
+        except Exception as e:
+            return False, f"Schema registry invalid: {e}"
+        if not schema_ok:
+            return False, f"Schema registry version mismatch for {schema_name}"
+        if not schema_record.path.exists():
+            return False, f"Registered schema not found ({schema_name}): {schema_record.path}"
     return True, "ok"
 
 
@@ -118,18 +178,14 @@ def ensure_state_shape(state: dict) -> dict:
     state.setdefault("packets", {})
     state.setdefault("log", [])
     state.setdefault("area_closeouts", {})
-    return state
+    state.setdefault("log_integrity_mode", LOG_MODE_PLAIN)
+    state["log_integrity_mode"] = normalize_log_mode(state.get("log_integrity_mode"))
+    return normalize_packet_status_map(state)
 
 
 def save_state(state: dict):
-    """Save state with file locking."""
-    tmp = WBS_STATE.with_suffix(".tmp")
-    with open(tmp, "w") as f:
-        if fcntl:
-            fcntl.flock(f.fileno(), fcntl.LOCK_EX)
-        json.dump(state, f, indent=2)
-        f.write("\n")
-    tmp.replace(WBS_STATE)
+    """Save state with cross-platform lock + atomic replace."""
+    atomic_write_json(WBS_STATE, state)
 
 
 def governance_engine() -> GovernanceEngine:
@@ -137,6 +193,7 @@ def governance_engine() -> GovernanceEngine:
     definition = load_definition()
     sm = StateManager(WBS_STATE)
     state = sm.load()
+    changed = False
     # Ensure all packets in definition exist in state
     for packet in definition.get("packets", []):
         pid = packet["id"]
@@ -149,7 +206,9 @@ def governance_engine() -> GovernanceEngine:
                 "completed_at": None,
                 "notes": None,
             }
-    sm.save(state)
+            changed = True
+    if changed:
+        sm.save(state)
     return GovernanceEngine(definition, sm)
 
 
@@ -293,19 +352,558 @@ def cmd_init_wizard() -> bool:
     return cmd_init(str(WBS_DEF))
 
 
+def cmd_plan(
+    from_json: str = "",
+    import_markdown: str = "",
+    output_path: str = "",
+    apply: bool = False,
+    allow_ambiguous: bool = False,
+) -> bool:
+    """Guided WBS planner workflow with optional non-interactive input."""
+    ok, msg = enforce_schema_contracts([("wbs_definition", "1.0")])
+    if not ok:
+        print(red(msg))
+        return False
+
+    try:
+        if from_json and import_markdown:
+            print(red("Use either --from-json or --import-markdown, not both."))
+            return False
+        if from_json:
+            spec = load_plan_spec(Path(from_json))
+        elif import_markdown:
+            spec = import_markdown_to_spec(Path(import_markdown))
+        else:
+            spec = prompt_plan_spec(default_actor=os.environ.get("USER", "planner"))
+        if import_markdown:
+            planning_source = "import_markdown"
+        elif from_json:
+            planning_source = "from_json"
+        else:
+            planning_source = "interactive"
+        spec.setdefault("planning_source", planning_source)
+        spec.setdefault("planning_generated_at", datetime.now().isoformat())
+        definition = build_planned_definition(spec)
+        errors = validate_planned_definition(definition)
+        if errors:
+            print(red("Planner validation failed:"))
+            for err in errors:
+                print(f"  - {err}")
+            return False
+
+        import_warnings = collect_import_review_warnings(definition)
+        if import_warnings:
+            print(yellow("Import warnings (manual review required):"))
+            for warning in import_warnings:
+                print(f"  - {warning}")
+            if apply and not allow_ambiguous:
+                print(
+                    red(
+                        "Planner import includes ambiguous mappings; export and correct the draft first, "
+                        "or rerun with --allow-ambiguous to force apply."
+                    )
+                )
+                return False
+
+        if output_path:
+            target = Path(output_path).expanduser()
+            if not target.is_absolute():
+                target = GOV.parent / target
+        elif apply:
+            target = WBS_DEF
+        else:
+            target = GOV / "wbs-planned.json"
+
+        written = write_planned_definition(definition, target)
+        print(green(f"Planner exported WBS: {written}"))
+
+        if apply:
+            return cmd_init(str(written))
+        return True
+    except FileNotFoundError as e:
+        print(red(f"Planner input not found: {e}"))
+        return False
+    except json.JSONDecodeError as e:
+        print(red(f"Planner input is not valid JSON: {e}"))
+        return False
+    except ValueError as e:
+        print(red(f"Planner input error: {e}"))
+        return False
+
+
+def cmd_git_protocol(parse_path: str = "") -> bool:
+    """Show or parse structured governance commit protocol."""
+    if parse_path:
+        try:
+            payload = Path(parse_path).read_text()
+        except FileNotFoundError:
+            print(red(f"File not found: {parse_path}"))
+            return False
+        except Exception as e:
+            print(red(f"Failed to read file: {e}"))
+            return False
+        try:
+            parsed = parse_governance_commit(payload)
+        except ValueError as e:
+            print(red(f"Protocol parse failed: {e}"))
+            return False
+        if output_json(parsed):
+            return True
+        print(green("Protocol parse OK"))
+        print(f"  packet: {parsed['packet_id']}")
+        print(f"  action: {parsed['action']}")
+        print(f"  actor:  {parsed['actor']}")
+        print(f"  event:  {parsed['event_id']}")
+        print(f"  proto:  {parsed['protocol_version']}")
+        return True
+
+    sample = format_governance_commit(
+        packet_id="IMP-001",
+        action="claim",
+        actor="codex-lead",
+        event_id="evt-00000001",
+        timestamp="2026-02-17T00:00:00+00:00",
+        protocol_version=GIT_PROTOCOL_VERSION,
+    )
+
+    payload = {
+        "protocol_version": GIT_PROTOCOL_VERSION,
+        "required_trailers": list(GIT_PROTOCOL_REQUIRED_TRAILERS),
+        "subject_format": "substrate(packet=<PACKET_ID>,action=<ACTION>,actor=<ACTOR>)",
+        "sample": sample,
+    }
+    if output_json(payload):
+        return True
+
+    print("Git Governance Commit Protocol")
+    print("-" * 60)
+    print(f"Protocol: {GIT_PROTOCOL_VERSION}")
+    print("Subject:")
+    print("  substrate(packet=<PACKET_ID>,action=<ACTION>,actor=<ACTOR>)")
+    print("Required trailers:")
+    for key in GIT_PROTOCOL_REQUIRED_TRAILERS:
+        print(f"  - {key}")
+    print()
+    print("Sample commit message:")
+    print(sample)
+    return True
+
+
+def _ensure_git_governance_exists() -> dict:
+    config = load_git_governance_config(GIT_GOVERNANCE_PATH)
+    if not GIT_GOVERNANCE_PATH.exists():
+        save_git_governance_config(GIT_GOVERNANCE_PATH, config)
+    return config
+
+
+def cmd_git_governance() -> bool:
+    """Show effective git-native governance configuration."""
+    config = _ensure_git_governance_exists()
+    if output_json(config):
+        return True
+    print(f"\nGit Governance Config ({GIT_GOVERNANCE_PATH})")
+    print("-" * 60)
+    print(f"Mode: {config.get('mode')}")
+    print(f"Auto-commit: {bool(config.get('auto_commit'))}")
+    print(f"Protocol version: {config.get('commit_protocol_version')}")
+    print(f"Stage files: {', '.join(config.get('stage_files', []))}")
+    return True
+
+
+def cmd_git_governance_mode(mode: str) -> bool:
+    """Set git-native governance mode."""
+    token = str(mode or "").strip().lower()
+    if token not in GIT_MODES:
+        print(red(f"Invalid mode: {mode}. Use one of: {', '.join(sorted(GIT_MODES))}"))
+        return False
+    config = _ensure_git_governance_exists()
+    config["mode"] = token
+    save_git_governance_config(GIT_GOVERNANCE_PATH, config)
+    print(green(f"Git governance mode set: {token}"))
+    return True
+
+
+def cmd_git_governance_autocommit(value: str) -> bool:
+    """Set git-native governance auto-commit toggle."""
+    token = str(value or "").strip().lower()
+    enabled = token in {"on", "true", "1", "yes", "enable", "enabled"}
+    disabled = token in {"off", "false", "0", "no", "disable", "disabled"}
+    if not (enabled or disabled):
+        print(red("Invalid value. Use one of: on|off"))
+        return False
+    config = _ensure_git_governance_exists()
+    config["auto_commit"] = bool(enabled)
+    save_git_governance_config(GIT_GOVERNANCE_PATH, config)
+    state_label = "enabled" if enabled else "disabled"
+    print(green(f"Git governance auto-commit {state_label}"))
+    return True
+
+
+def cmd_git_verify_ledger(strict: bool = False) -> bool:
+    """Verify git linkage integrity recorded on lifecycle log entries."""
+    state = ensure_state_shape(load_state())
+    entries = state.get("log", [])
+    issues = []
+    warnings = []
+
+    repo_ok, repo_reason = ensure_git_worktree(GOV.parent)
+
+    checked = 0
+    linked = 0
+    warning_count = 0
+    for idx, entry in enumerate(entries):
+        if not isinstance(entry, dict):
+            continue
+        has_git_fields = any(str(key).startswith("git_") for key in entry.keys())
+        if not has_git_fields:
+            continue
+        checked += 1
+        status = str(entry.get("git_link_status") or "").strip().lower()
+        if status == "linked":
+            linked += 1
+            for key in ("git_commit", "git_event_id", "git_action", "git_actor"):
+                if not str(entry.get(key) or "").strip():
+                    issues.append(f"log[{idx}] missing required git linkage field: {key}")
+            commit_hash = str(entry.get("git_commit") or "").strip()
+            if commit_hash and not repo_ok:
+                warnings.append(f"log[{idx}] linked commit cannot be verified: {repo_reason}")
+            elif commit_hash:
+                ok, parsed, reason = parse_governance_commit_from_hash(GOV.parent, commit_hash)
+                if not ok:
+                    issues.append(f"log[{idx}] commit parse failed: {reason}")
+                else:
+                    if parsed.get("packet_id") != str(entry.get("packet_id") or "").strip():
+                        issues.append(f"log[{idx}] packet mismatch between log and commit trailer")
+                    if parsed.get("action") != str(entry.get("git_action") or "").strip():
+                        issues.append(f"log[{idx}] action mismatch between log and commit trailer")
+                    if parsed.get("actor") != str(entry.get("git_actor") or "").strip():
+                        issues.append(f"log[{idx}] actor mismatch between log and commit trailer")
+                    if parsed.get("event_id") != str(entry.get("git_event_id") or "").strip():
+                        issues.append(f"log[{idx}] event_id mismatch between log and commit trailer")
+        elif status == "warning":
+            warning_count += 1
+            detail = str(entry.get("git_link_error") or "").strip()
+            if detail:
+                warnings.append(f"log[{idx}] advisory warning: {detail}")
+            else:
+                warnings.append(f"log[{idx}] warning status missing git_link_error detail")
+        else:
+            warnings.append(f"log[{idx}] has git fields with unsupported status '{status or '<empty>'}'")
+
+    valid = len(issues) == 0 and (not strict or (warning_count == 0 and len(warnings) == 0))
+    payload = {
+        "valid": valid,
+        "strict": strict,
+        "checked_entries": checked,
+        "linked_entries": linked,
+        "warning_entries": warning_count,
+        "issues": issues,
+        "warnings": warnings,
+    }
+    if output_json(payload):
+        return valid
+
+    if valid:
+        print(green("Git ledger verification passed"))
+    else:
+        print(red("Git ledger verification failed"))
+    print(
+        f"checked={checked} linked={linked} warning_entries={warning_count} "
+        f"issues={len(issues)} warnings={len(warnings)} strict={strict}"
+    )
+    for issue in issues:
+        print(red(f"  - {issue}"))
+    for warning in warnings:
+        print(yellow(f"  - {warning}"))
+    return valid
+
+
+def cmd_git_export_ledger(out_path: str) -> bool:
+    """Export git-linked governance log entries."""
+    state = ensure_state_shape(load_state())
+    entries = []
+    for entry in state.get("log", []):
+        if not isinstance(entry, dict):
+            continue
+        if not any(str(key).startswith("git_") for key in entry.keys()):
+            continue
+        entries.append(
+            {
+                "packet_id": entry.get("packet_id"),
+                "event": entry.get("event"),
+                "agent": entry.get("agent"),
+                "timestamp": entry.get("timestamp"),
+                "git_link_status": entry.get("git_link_status"),
+                "git_mode": entry.get("git_mode"),
+                "git_commit": entry.get("git_commit"),
+                "git_event_id": entry.get("git_event_id"),
+                "git_action": entry.get("git_action"),
+                "git_actor": entry.get("git_actor"),
+                "git_closeout_tag": entry.get("git_closeout_tag"),
+                "git_tag_error": entry.get("git_tag_error"),
+                "git_link_error": entry.get("git_link_error"),
+                "notes": entry.get("notes"),
+            }
+        )
+
+    out = Path(out_path).expanduser()
+    if not out.is_absolute():
+        out = GOV.parent / out
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps({"entries": entries}, indent=2) + "\n")
+    print(green(f"Git ledger exported: {out}"))
+    return True
+
+
+def cmd_git_reconstruct(limit: int = 500, out_path: str = "") -> bool:
+    """Reconstruct governance transition records from git commit history."""
+    ok, entries, reason = reconstruct_governance_history(GOV.parent, limit=limit)
+    if not ok:
+        print(red(f"Reconstruction failed: {reason}"))
+        return False
+
+    payload = {"count": len(entries), "entries": entries}
+    if out_path:
+        out = Path(out_path).expanduser()
+        if not out.is_absolute():
+            out = GOV.parent / out
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(payload, indent=2) + "\n")
+        print(green(f"Reconstructed governance history written: {out}"))
+        return True
+
+    if output_json(payload):
+        return True
+
+    print(green(f"Reconstructed governance records: {len(entries)}"))
+    for row in entries[:20]:
+        print(
+            f"  {row.get('commit', '')[:12]} "
+            f"{row.get('packet_id')} {row.get('action')} {row.get('actor')} "
+            f"{row.get('event_id')}"
+        )
+    if len(entries) > 20:
+        print(dim(f"... {len(entries) - 20} additional records omitted"))
+    return True
+
+
+def _packet_state(packet_id: str) -> dict:
+    state = ensure_state_shape(load_state())
+    return state.get("packets", {}).get(packet_id, {})
+
+
+def cmd_git_branch_open(packet_id: str, agent: str, from_ref: str = "") -> bool:
+    """Open an opt-in packet execution branch for the assigned owner."""
+    pkt = _packet_state(packet_id)
+    if not pkt:
+        print(red(f"Packet {packet_id} not found"))
+        return False
+    status = normalize_runtime_status(pkt.get("status"))
+    owner = str(pkt.get("assigned_to") or "")
+    if status != "in_progress":
+        print(red(f"Packet {packet_id} is {status}, not in_progress"))
+        return False
+    if owner and owner != agent:
+        print(red(f"Packet {packet_id} assigned to {owner}, not {agent}"))
+        return False
+
+    ok, branch, reason = open_packet_branch(GOV.parent, packet_id=packet_id, agent=agent, from_ref=from_ref)
+    if not ok:
+        print(red(f"Branch open failed: {reason}"))
+        return False
+    active_ok, active_branch = current_branch(GOV.parent)
+    active_label = active_branch if active_ok else branch
+    print(green(f"Opened packet branch: {branch}"))
+    print(dim(f"Active branch: {active_label}"))
+    return True
+
+
+def cmd_git_branch_close(packet_id: str, agent: str, base_branch: str = "main", delete_branch: bool = True) -> bool:
+    """Close packet execution branch via fast-forward merge into base."""
+    pkt = _packet_state(packet_id)
+    if not pkt:
+        print(red(f"Packet {packet_id} not found"))
+        return False
+    owner = str(pkt.get("assigned_to") or "")
+    if owner and owner != agent:
+        print(red(f"Packet {packet_id} assigned to {owner}, not {agent}"))
+        return False
+
+    ok, branch, reason = close_packet_branch(
+        GOV.parent,
+        packet_id=packet_id,
+        agent=agent,
+        base_branch=base_branch,
+        delete_branch=delete_branch,
+    )
+    if not ok:
+        print(red(f"Branch close failed: {reason}"))
+        return False
+
+    active_ok, active_branch = current_branch(GOV.parent)
+    active_label = active_branch if active_ok else base_branch
+    delete_label = "deleted" if delete_branch else "retained"
+    print(green(f"Merged packet branch: {branch} -> {base_branch} ({delete_label})"))
+    print(dim(f"Active branch: {active_label}"))
+    return True
+
+
+def _snapshot_state_bytes():
+    if WBS_STATE.exists():
+        return WBS_STATE.read_bytes()
+    return None
+
+
+def _restore_state_bytes(snapshot) -> None:
+    if snapshot is None:
+        WBS_STATE.unlink(missing_ok=True)
+    else:
+        WBS_STATE.write_bytes(snapshot)
+
+
+def _annotate_git_link(
+    packet_id: str,
+    *,
+    action: str,
+    actor: str,
+    mode: str,
+    status: str,
+    commit_hash: str = "",
+    event_id: str = "",
+    error: str = "",
+) -> None:
+    state = ensure_state_shape(load_state())
+    entries = state.get("log", [])
+    for entry in reversed(entries):
+        if not isinstance(entry, dict):
+            continue
+        if entry.get("packet_id") != packet_id:
+            continue
+        if entry.get("git_link_status"):
+            continue
+        entry["git_link_status"] = status
+        entry["git_mode"] = mode
+        entry["git_action"] = action
+        entry["git_actor"] = actor
+        if commit_hash:
+            entry["git_commit"] = commit_hash
+        if event_id:
+            entry["git_event_id"] = event_id
+        if error:
+            entry["git_link_error"] = error
+        save_state(state)
+        return
+
+
+def _annotate_git_tag(packet_id: str, *, tag_name: str = "", error: str = "") -> None:
+    state = ensure_state_shape(load_state())
+    entries = state.get("log", [])
+    for entry in reversed(entries):
+        if not isinstance(entry, dict):
+            continue
+        if entry.get("packet_id") != packet_id:
+            continue
+        if tag_name:
+            entry["git_closeout_tag"] = tag_name
+        if error:
+            entry["git_tag_error"] = error
+        save_state(state)
+        return
+
+
+def _run_lifecycle_with_git(
+    packet_id: str,
+    action: str,
+    agent: str,
+    operation,
+    *,
+    area_id: str = "",
+    closeout_area: str = "",
+) -> tuple:
+    config = load_git_governance_config(GIT_GOVERNANCE_PATH)
+    mode = config.get("mode", GIT_MODE_DISABLED)
+    auto_commit = bool(config.get("auto_commit"))
+
+    snapshot = None
+    if auto_commit and mode != GIT_MODE_DISABLED:
+        snapshot = _snapshot_state_bytes()
+
+    ok, msg = operation()
+    if not ok:
+        return ok, msg
+
+    if not auto_commit or mode == GIT_MODE_DISABLED:
+        return ok, msg
+
+    commit_ok, commit_msg, commit_hash, git_event_id = run_governance_auto_commit(
+        repo_root=GOV.parent,
+        packet_id=packet_id,
+        action=action,
+        actor=agent or "system",
+        stage_files=config.get("stage_files", []),
+        protocol_version=config.get("commit_protocol_version", GIT_PROTOCOL_VERSION),
+        area_id=area_id,
+        closeout_area=closeout_area,
+    )
+    if commit_ok:
+        _annotate_git_link(
+            packet_id,
+            action=action,
+            actor=agent or "system",
+            mode=mode,
+            status="linked",
+            commit_hash=commit_hash,
+            event_id=git_event_id,
+        )
+        suffix = f" [git:{commit_hash[:12]}]"
+        if action == "closeout-l2":
+            tag_name = build_closeout_tag(closeout_area or area_id or packet_id)
+            tag_ok, tag_reason = create_tag(GOV.parent, tag_name=tag_name, commit_hash=commit_hash)
+            if tag_ok:
+                _annotate_git_tag(packet_id, tag_name=tag_name)
+                suffix += f" [tag:{tag_name}]"
+            else:
+                _annotate_git_tag(packet_id, error=tag_reason)
+                suffix += f" (tag warning: {tag_reason})"
+        return True, f"{msg}{suffix}"
+
+    if mode == GIT_MODE_STRICT:
+        _restore_state_bytes(snapshot)
+        return (
+            False,
+            f"Git-native strict mode: auto-commit failed ({commit_msg}). Transition rolled back.",
+        )
+
+    _annotate_git_link(
+        packet_id,
+        action=action,
+        actor=agent or "system",
+        mode=mode,
+        status="warning",
+        error=commit_msg,
+        event_id=git_event_id,
+    )
+    return True, f"{msg} (Git-native advisory warning: {commit_msg})"
+
+
 def check_deps_met(packet_id: str, definition: dict, state: dict) -> tuple:
     """Check if all dependencies are done. Returns (ready, blocking_id)."""
     deps = definition.get("dependencies", {}).get(packet_id, [])
     for dep_id in deps:
         dep_state = state["packets"].get(dep_id, {})
-        if dep_state.get("status") != "done":
+        if normalize_runtime_status(dep_state.get("status")) != "done":
             return False, dep_id
     return True, None
 
 
 def cmd_claim(packet_id: str, agent: str) -> bool:
     """Claim a packet."""
-    ok, msg = governance_engine().claim(packet_id, agent)
+    ok, msg = _run_lifecycle_with_git(
+        packet_id=packet_id,
+        action="claim",
+        agent=agent,
+        operation=lambda: governance_engine().claim(packet_id, agent),
+    )
     if ok:
         print(green(msg))
     else:
@@ -315,7 +913,12 @@ def cmd_claim(packet_id: str, agent: str) -> bool:
 
 def cmd_done(packet_id: str, agent: str, notes: str = "") -> bool:
     """Mark packet done."""
-    ok, msg = governance_engine().done(packet_id, agent, notes)
+    ok, msg = _run_lifecycle_with_git(
+        packet_id=packet_id,
+        action="done",
+        agent=agent,
+        operation=lambda: governance_engine().done(packet_id, agent, notes),
+    )
     if ok:
         print(green(msg))
     else:
@@ -325,7 +928,12 @@ def cmd_done(packet_id: str, agent: str, notes: str = "") -> bool:
 
 def cmd_note(packet_id: str, agent: str, notes: str) -> bool:
     """Update notes for any existing packet state."""
-    ok, msg = governance_engine().note(packet_id, agent, notes)
+    ok, msg = _run_lifecycle_with_git(
+        packet_id=packet_id,
+        action="note",
+        agent=agent,
+        operation=lambda: governance_engine().note(packet_id, agent, notes),
+    )
     if ok:
         print(green(msg))
     else:
@@ -335,7 +943,12 @@ def cmd_note(packet_id: str, agent: str, notes: str) -> bool:
 
 def cmd_fail(packet_id: str, agent: str, reason: str = "") -> bool:
     """Mark packet failed and block downstream."""
-    ok, msg = governance_engine().fail(packet_id, agent, reason)
+    ok, msg = _run_lifecycle_with_git(
+        packet_id=packet_id,
+        action="fail",
+        agent=agent,
+        operation=lambda: governance_engine().fail(packet_id, agent, reason),
+    )
     if ok:
         print(yellow(msg))
     else:
@@ -345,12 +958,142 @@ def cmd_fail(packet_id: str, agent: str, reason: str = "") -> bool:
 
 def cmd_reset(packet_id: str) -> bool:
     """Reset packet to pending."""
-    ok, msg = governance_engine().reset(packet_id)
+    ok, msg = _run_lifecycle_with_git(
+        packet_id=packet_id,
+        action="reset",
+        agent="system",
+        operation=lambda: governance_engine().reset(packet_id),
+    )
     if ok:
         print(green(msg))
     else:
         print(red(_format_error(msg)))
     return ok
+
+
+def cmd_handover(
+    packet_id: str,
+    agent: str,
+    reason: str,
+    progress_notes: str = "",
+    files_modified=None,
+    remaining_work=None,
+    to_agent: str = "",
+) -> bool:
+    """Create governed handover record for an in-progress packet."""
+    ok, msg = _run_lifecycle_with_git(
+        packet_id=packet_id,
+        action="handover",
+        agent=agent,
+        operation=lambda: governance_engine().handover(
+            packet_id=packet_id,
+            agent=agent,
+            reason=reason,
+            progress_notes=progress_notes,
+            files_modified=files_modified or [],
+            remaining_work=remaining_work or [],
+            to_agent=to_agent or None,
+        ),
+    )
+    if ok:
+        print(yellow(msg))
+    else:
+        print(red(_format_error(msg)))
+    return ok
+
+
+def cmd_resume(packet_id: str, agent: str) -> bool:
+    """Resume a packet from active handover and atomically assign owner."""
+    ok, msg = _run_lifecycle_with_git(
+        packet_id=packet_id,
+        action="resume",
+        agent=agent,
+        operation=lambda: governance_engine().resume(packet_id, agent),
+    )
+    if ok:
+        print(green(msg))
+    else:
+        print(red(_format_error(msg)))
+    return ok
+
+
+def _ensure_agent_registry_exists() -> dict:
+    registry = load_agent_registry(AGENTS_REGISTRY_PATH)
+    if not AGENTS_REGISTRY_PATH.exists():
+        save_agent_registry(registry, AGENTS_REGISTRY_PATH)
+    return registry
+
+
+def cmd_agent_list() -> bool:
+    """List registered agents and capability enforcement mode."""
+    registry = _ensure_agent_registry_exists()
+    if output_json(registry):
+        return True
+
+    mode = normalize_enforcement_mode(registry.get("enforcement_mode"))
+    print(f"\nAgent Registry ({AGENTS_REGISTRY_PATH})")
+    print("-" * 60)
+    print(f"Mode: {mode}")
+    print(f"Taxonomy: {', '.join(registry.get('capability_taxonomy', []))}")
+    print("-" * 60)
+    agents = registry.get("agents", [])
+    if not agents:
+        print("No agents registered")
+        return True
+    for agent in agents:
+        caps = ", ".join(agent.get("capabilities", [])) or "-"
+        constraints = agent.get("constraints", {})
+        print(f"{agent.get('id'):<16} {agent.get('type', '-'):<14} caps=[{caps}] constraints={constraints}")
+    return True
+
+
+def cmd_agent_mode(mode: str) -> bool:
+    """Set capability enforcement mode (disabled|advisory|strict)."""
+    raw = str(mode or "").strip().lower()
+    if raw not in ENFORCEMENT_MODES:
+        print(red(f"Invalid mode: {mode}. Use one of: {', '.join(sorted(ENFORCEMENT_MODES))}"))
+        return False
+    normalized = normalize_enforcement_mode(raw)
+    registry = _ensure_agent_registry_exists()
+    registry["enforcement_mode"] = normalized
+    save_agent_registry(registry, AGENTS_REGISTRY_PATH)
+    print(green(f"Agent capability enforcement mode set: {normalized}"))
+    return True
+
+
+def cmd_agent_register(agent_id: str, agent_type: str, capabilities_csv: str) -> bool:
+    """Register or update an agent profile."""
+    aid = (agent_id or "").strip()
+    atype = (agent_type or "").strip()
+    if not aid or not atype:
+        print(red("agent_id and agent_type are required"))
+        return False
+
+    caps = [cap.strip() for cap in (capabilities_csv or "").split(",") if cap.strip()]
+    registry = _ensure_agent_registry_exists()
+    taxonomy = registry.setdefault("capability_taxonomy", default_agent_registry()["capability_taxonomy"])
+    for cap in caps:
+        if cap not in taxonomy:
+            taxonomy.append(cap)
+
+    agents = registry.setdefault("agents", [])
+    existing = next((a for a in agents if a.get("id") == aid), None)
+    profile = {
+        "id": aid,
+        "type": atype,
+        "capabilities": caps,
+        "constraints": {"max_concurrent_packets": 1},
+        "metadata": {},
+    }
+    if existing:
+        existing.update(profile)
+        action = "updated"
+    else:
+        agents.append(profile)
+        action = "registered"
+    save_agent_registry(registry, AGENTS_REGISTRY_PATH)
+    print(green(f"Agent {aid} {action}"))
+    return True
 
 
 def cmd_ready():
@@ -362,7 +1105,7 @@ def cmd_ready():
     ready = []
     for pkt in packets:
         pid = pkt["id"]
-        if state["packets"].get(pid, {}).get("status") == "pending":
+        if normalize_runtime_status(state["packets"].get(pid, {}).get("status")) == "pending":
             ok, _ = check_deps_met(pid, definition, state)
             if ok:
                 ready.append({"id": pkt["id"], "wbs_ref": pkt["wbs_ref"], "title": pkt["title"]})
@@ -395,7 +1138,7 @@ def cmd_status():
                     ps = state["packets"].get(pkt["id"], {})
                     pkts.append({
                         "id": pkt["id"], "wbs_ref": pkt["wbs_ref"], "title": pkt["title"],
-                        "status": ps.get("status", "pending"), "assigned_to": ps.get("assigned_to"),
+                        "status": normalize_runtime_status(ps.get("status", "pending")), "assigned_to": ps.get("assigned_to"),
                         "notes": ps.get("notes")
                     })
             areas.append({
@@ -427,7 +1170,7 @@ def cmd_status():
             if pkt.get("area_id") == area["id"]:
                 pid = pkt["id"]
                 pstate = state["packets"].get(pid, {})
-                status = pstate.get("status", "pending").upper()
+                status = normalize_runtime_status(pstate.get("status", "pending")).upper()
                 assigned = pstate.get("assigned_to") or "-"
 
                 status_color = {"DONE": green, "FAILED": red, "BLOCKED": red, "IN_PROGRESS": yellow}.get(status, dim)
@@ -477,13 +1220,114 @@ def cmd_scope(packet_id: str):
     print(f"\nPacket: {pkt['id']}")
     print(f"Title: {pkt['title']}")
     print(f"WBS Ref: {pkt['wbs_ref']}")
-    print(f"Status: {pstate.get('status', 'pending')}")
+    print(f"Status: {normalize_runtime_status(pstate.get('status', 'pending'))}")
     if pstate.get("assigned_to"):
         print(f"Assigned: {pstate['assigned_to']}")
     if deps:
         print(f"Depends on: {', '.join(deps)}")
     print(f"\nScope:\n{pkt['scope']}")
     print()
+
+
+def cmd_context(
+    packet_id: str,
+    output_format: str = "text",
+    compact: bool = False,
+    max_events: int = 40,
+    max_notes_bytes: int = 4000,
+    max_handovers: int = 40,
+) -> bool:
+    """Show governed packet context bundle."""
+    ok, payload = governance_engine().context_bundle(
+        packet_id=packet_id,
+        compact=compact,
+        max_events=max_events,
+        max_notes_bytes=max_notes_bytes,
+        max_handovers=max_handovers,
+    )
+    if not ok:
+        print(red(_format_error(payload.get("message", "Unknown error"))))
+        return False
+
+    if JSON_OUTPUT or output_format == "json":
+        print(json.dumps(payload, indent=2, default=str))
+        return True
+
+    print("\nPacket Definition")
+    print("-" * 60)
+    definition = payload.get("packet_definition", {})
+    print(f"ID: {definition.get('id')}")
+    print(f"Ref: {definition.get('wbs_ref')}")
+    print(f"Title: {definition.get('title')}")
+    print(f"Scope: {definition.get('scope', '')[:400]}")
+
+    print("\nRuntime State")
+    print("-" * 60)
+    runtime = payload.get("runtime_state", {})
+    print(f"Status: {runtime.get('status')}")
+    print(f"Assigned: {runtime.get('assigned_to') or '-'}")
+    print(f"Started: {(runtime.get('started_at') or '-')[:19]}")
+    print(f"Completed: {(runtime.get('completed_at') or '-')[:19]}")
+    if runtime.get("notes"):
+        print(f"Notes: {runtime.get('notes')[:300]}")
+
+    print("\nDependencies")
+    print("-" * 60)
+    deps = payload.get("dependencies", {})
+    upstream = deps.get("upstream", [])
+    downstream = deps.get("downstream", [])
+    print("Upstream:")
+    if upstream:
+        for item in upstream:
+            print(f"  - {item.get('packet_id')} ({item.get('status')})")
+    else:
+        print("  - None")
+    print("Downstream:")
+    if downstream:
+        for item in downstream:
+            print(f"  - {item.get('packet_id')} ({item.get('status')})")
+    else:
+        print("  - None")
+
+    print("\nHistory")
+    print("-" * 60)
+    history = payload.get("history", [])
+    if history:
+        for event in history:
+            ts = (event.get("timestamp") or "")[:19]
+            print(
+                f"{event.get('packet_id'):<10} {event.get('event'):<10} "
+                f"{event.get('agent') or '-':<12} {ts} {(event.get('notes') or '')[:40]}"
+            )
+    else:
+        print("None")
+
+    print("\nHandovers")
+    print("-" * 60)
+    handovers = payload.get("handovers", [])
+    if handovers:
+        for handover in handovers:
+            print(
+                f"{handover.get('handover_id'):<8} from={handover.get('from_agent') or '-'} "
+                f"to={handover.get('to_agent') or '-'} active={handover.get('active')}"
+            )
+    else:
+        print("None")
+
+    print("\nFile Manifest")
+    print("-" * 60)
+    manifest = payload.get("file_manifest", [])
+    if manifest:
+        for item in manifest[:50]:
+            marker = "ok" if item.get("exists") else "missing"
+            print(f"{marker:<8} {item.get('path')}")
+    else:
+        print("None")
+
+    if payload.get("truncated"):
+        print(yellow(f"\nTruncated: true {payload.get('truncation')}"))
+    print()
+    return True
 
 
 def cmd_log(limit: int = 20):
@@ -506,6 +1350,121 @@ def cmd_log(limit: int = 20):
     print()
 
 
+def cmd_briefing(output_format: str = "text", compact: bool = False, recent_events: int = 10):
+    """Render a structured session bootstrap summary."""
+    payload = governance_engine().briefing(recent_events=recent_events, compact=compact)
+    if JSON_OUTPUT or output_format == "json":
+        print(json.dumps(payload, indent=2, default=str))
+        return
+
+    project = payload.get("project", {})
+    counts = payload.get("counts", {})
+    ready = payload.get("ready_packets", [])
+    blocked = payload.get("blocked_packets", [])
+    active = payload.get("active_assignments", [])
+    recent = payload.get("recent_events", [])
+
+    print("\nSummary")
+    print("-" * 60)
+    print(f"Project: {project.get('project_name') or '-'}")
+    print(f"Generated: {payload.get('generated_at')}")
+    print(f"Mode: {payload.get('mode')}  Schema: {payload.get('schema_id')}@{payload.get('schema_version')}")
+    print(
+        "Counts: "
+        + ", ".join(
+            f"{name}={counts.get(name, 0)}"
+            for name in ("pending", "in_progress", "done", "failed", "blocked")
+        )
+    )
+    if payload.get("truncated"):
+        print(yellow(f"Truncated: true (limits={payload.get('limits')})"))
+
+    print("\nReady Packets")
+    print("-" * 60)
+    if ready:
+        for item in ready:
+            print(f"{item.get('id'):<10} {item.get('wbs_ref', '-'):<8} {item.get('title', '')}")
+    else:
+        print("None")
+
+    print("\nBlocked Packets")
+    print("-" * 60)
+    if blocked:
+        for item in blocked:
+            reasons = ", ".join(
+                f"{b.get('packet_id')}({b.get('status')})" for b in item.get("blockers", [])
+            )
+            print(f"{item.get('id'):<10} {item.get('wbs_ref', '-'):<8} {item.get('status', '-'):<10} {reasons}")
+    else:
+        print("None")
+
+    print("\nActive Assignments")
+    print("-" * 60)
+    if active:
+        for item in active:
+            started = (item.get("started_at") or "")[:19]
+            print(f"{item.get('packet_id'):<10} {item.get('agent') or '-':<12} {started}")
+    else:
+        print("None")
+
+    print("\nRecent Events")
+    print("-" * 60)
+    if recent:
+        for event in recent:
+            ts = (event.get("timestamp") or "")[:19]
+            print(
+                f"{event.get('packet_id'):<10} {event.get('event'):<10} "
+                f"{event.get('agent') or '-':<12} {ts} {(event.get('notes') or '')[:40]}"
+            )
+    else:
+        print("None")
+    print()
+
+
+def cmd_log_mode(mode: str) -> bool:
+    """Set lifecycle log integrity mode (plain or hash-chain)."""
+    try:
+        normalized = normalize_log_mode(mode, strict=True)
+    except ValueError as e:
+        print(red(str(e)))
+        return False
+
+    state = ensure_state_shape(load_state())
+    state["log_integrity_mode"] = normalized
+    save_state(state)
+
+    if normalized == LOG_MODE_HASH_CHAIN:
+        print(green("Log integrity mode set: hash-chain (tamper-evident)"))
+    else:
+        print(green("Log integrity mode set: plain"))
+    return True
+
+
+def cmd_verify_log() -> bool:
+    """Verify lifecycle log hash chain integrity."""
+    state = ensure_state_shape(load_state())
+    entries = state.get("log", [])
+    valid, issues = verify_log_integrity(entries)
+    result = {
+        "valid": valid,
+        "events": len(entries),
+        "hashed_events": sum(1 for e in entries if isinstance(e, dict) and e.get("hash")),
+        "mode": state.get("log_integrity_mode", LOG_MODE_PLAIN),
+        "issues": issues,
+    }
+    if output_json(result):
+        return valid
+
+    if valid:
+        print(green(f"Log integrity OK: {result['hashed_events']} hashed events across {result['events']} total events"))
+        return True
+
+    print(red(f"Log integrity FAILED ({len(issues)} issues):"))
+    for issue in issues:
+        print(f"  - {issue}")
+    return False
+
+
 def cmd_next():
     """Show recommended next action."""
     definition = load_definition()
@@ -514,7 +1473,7 @@ def cmd_next():
     # Check for in-progress
     for pkt in definition.get("packets", []):
         pid = pkt["id"]
-        if state["packets"].get(pid, {}).get("status") == "in_progress":
+        if normalize_runtime_status(state["packets"].get(pid, {}).get("status")) == "in_progress":
             agent = state["packets"][pid].get("assigned_to", "your-name")
             print("Next action:")
             print(f"  python3 .governance/wbs_cli.py done {pid} {agent} \"notes\"")
@@ -524,7 +1483,7 @@ def cmd_next():
     # Check for ready
     for pkt in definition.get("packets", []):
         pid = pkt["id"]
-        if state["packets"].get(pid, {}).get("status") == "pending":
+        if normalize_runtime_status(state["packets"].get(pid, {}).get("status")) == "pending":
             ok, _ = check_deps_met(pid, definition, state)
             if ok:
                 print("Next action:")
@@ -533,7 +1492,7 @@ def cmd_next():
                 return
 
     # Check completion
-    done = sum(1 for p in state["packets"].values() if p.get("status") == "done")
+    done = sum(1 for p in state["packets"].values() if normalize_runtime_status(p.get("status")) == "done")
     total = len(state["packets"])
 
     if done == total and total > 0:
@@ -547,6 +1506,20 @@ def cmd_next():
 def cmd_stale(minutes: int):
     """Find stale in-progress packets."""
     state = ensure_state_shape(load_state())
+    now = datetime.now()
+    found = False
+
+    for pid, pstate in state["packets"].items():
+        status = normalize_runtime_status(pstate.get("status"))
+        if status == "in_progress" and pstate.get("started_at"):
+            started = datetime.fromisoformat(pstate["started_at"])
+            elapsed = (now - started).total_seconds() / 60
+            if elapsed > minutes:
+                print(yellow(f"Warning: {pid} in progress for {int(elapsed)} minutes"))
+                found = True
+
+    if not found:
+        print(green("No stale packets"))
 
 
 def _resolve_area_id(definition: dict, area_id: str) -> str:
@@ -582,26 +1555,20 @@ def _validate_drift_assessment(path: str) -> tuple:
 
 def cmd_closeout_l2(area_id: str, agent: str, assessment_path: str, notes: str = "") -> bool:
     """Close out a level-2 area with required drift assessment evidence."""
-    ok, msg = governance_engine().closeout_l2(area_id, agent, assessment_path, notes)
+    ok, msg = _run_lifecycle_with_git(
+        packet_id=f"AREA-{area_id}",
+        action="closeout-l2",
+        agent=agent,
+        operation=lambda: governance_engine().closeout_l2(area_id, agent, assessment_path, notes),
+        area_id=area_id,
+        closeout_area=area_id,
+    )
     if ok:
         print(green(msg))
         print(dim(f"Drift assessment: {assessment_path}"))
     else:
         print(red(_format_error(msg)))
     return ok
-    now = datetime.now()
-    found = False
-
-    for pid, pstate in state["packets"].items():
-        if pstate.get("status") == "in_progress" and pstate.get("started_at"):
-            started = datetime.fromisoformat(pstate["started_at"])
-            elapsed = (now - started).total_seconds() / 60
-            if elapsed > minutes:
-                print(yellow(f"Warning: {pid} in progress for {int(elapsed)} minutes"))
-                found = True
-
-    if not found:
-        print(green("No stale packets"))
 
 
 def require_state():
@@ -613,12 +1580,8 @@ def require_state():
 
 
 def save_definition(defn: dict):
-    """Save WBS definition with atomic write."""
-    tmp = WBS_DEF.with_suffix(".tmp")
-    with open(tmp, "w") as f:
-        json.dump(defn, f, indent=2)
-        f.write("\n")
-    tmp.replace(WBS_DEF)
+    """Save WBS definition with cross-platform lock + atomic replace."""
+    atomic_write_json(WBS_DEF, defn)
 
 
 def cmd_add_area(area_id: str, title: str, description: str = "") -> bool:
@@ -730,8 +1693,9 @@ def cmd_remove(item_id: str, force: bool = False) -> bool:
     if packet:
         state = ensure_state_shape(load_state())
         pkt_state = state["packets"].get(item_id, {})
-        if pkt_state.get("status") in ("in_progress", "done") and not force:
-            print(red(f"Packet {item_id} is {pkt_state['status']}. Use --force to remove."))
+        packet_status = normalize_runtime_status(pkt_state.get("status"))
+        if packet_status in ("in_progress", "done") and not force:
+            print(red(f"Packet {item_id} is {packet_status}. Use --force to remove."))
             return False
 
         # Check for dependents
@@ -797,48 +1761,148 @@ def cmd_remove(item_id: str, force: bool = False) -> bool:
     return False
 
 
-def cmd_validate() -> bool:
-    """Validate WBS structure."""
+def _format_json_path(path_tokens) -> str:
+    """Render validator path tokens as $.foo[0].bar for readable errors."""
+    out = "$"
+    for token in path_tokens:
+        if isinstance(token, int):
+            out += f"[{token}]"
+        else:
+            out += f".{token}"
+    return out
+
+
+def _validate_json_schema(payload: dict, schema_path: Path) -> list:
+    """Validate payload against JSON schema and return readable error lines."""
+    if Draft202012Validator is None:
+        return ["jsonschema dependency not available; install `jsonschema` to run schema validation"]
+    try:
+        schema = json.loads(schema_path.read_text())
+    except Exception as e:
+        return [f"failed to load schema {schema_path}: {e}"]
+
+    validator = Draft202012Validator(schema)
+    errors = []
+    ordered = sorted(validator.iter_errors(payload), key=lambda err: _format_json_path(err.path))
+    for err in ordered:
+        errors.append(f"{_format_json_path(err.path)}: {err.message}")
+    return errors
+
+
+def _validate_packet_strict(pkt: dict, index: int) -> list:
+    """Apply strict packet contract checks with packet-specific error labels."""
+    label = pkt.get("id") if isinstance(pkt, dict) and pkt.get("id") else f"packet[{index}]"
+    errors = _validate_packet_object(pkt, label)
+    if not isinstance(pkt, dict):
+        return errors
+
+    pkt_id = pkt.get("id")
+    canonical_id = pkt.get("packet_id")
+    if isinstance(pkt_id, str) and isinstance(canonical_id, str) and canonical_id != pkt_id:
+        errors.append(f"{label}: packet_id must match id ({canonical_id} != {pkt_id})")
+
+    wbs_ref = pkt.get("wbs_ref")
+    wbs_refs = pkt.get("wbs_refs")
+    if isinstance(wbs_ref, str) and isinstance(wbs_refs, list) and wbs_ref and wbs_ref not in wbs_refs:
+        errors.append(f"{label}: wbs_refs must include wbs_ref value ({wbs_ref})")
+
+    status = pkt.get("status")
+    if status is not None:
+        canonical_status = normalize_packet_status(status)
+        if status != canonical_status:
+            errors.append(f"{label}: status must use canonical packet value {canonical_status}")
+    return errors
+
+
+def cmd_validate(strict: bool = False) -> bool:
+    """Validate WBS structure and, optionally, strict packet contract compliance."""
     defn = load_definition()
     errors = []
 
+    schema_requirements = [("packet", "1.0"), ("wbs_definition", "1.0")]
+    ok, msg = enforce_schema_contracts(schema_requirements)
+    if not ok:
+        errors.append(msg)
+
+    wbs_schema_path = WBS_SCHEMA_PATH
+    try:
+        reg = SchemaRegistry.from_registry_file(SCHEMA_REGISTRY_PATH, root=GOV.parent)
+        wbs_schema_path = reg.get("wbs_definition").path
+    except Exception:
+        pass
+
+    if wbs_schema_path.exists():
+        for err in _validate_json_schema(defn, wbs_schema_path):
+            errors.append(f"schema: {err}")
+    else:
+        errors.append(f"WBS schema missing: {wbs_schema_path}")
+
+    work_areas = defn.get("work_areas", []) if isinstance(defn, dict) else []
+    packets_list = defn.get("packets", []) if isinstance(defn, dict) else []
+    deps = defn.get("dependencies", {}) if isinstance(defn, dict) else {}
+
     # Check for circular dependencies
-    deps = defn.get("dependencies", {})
-    cycle = detect_circular(deps)
-    if cycle:
-        errors.append(f"Circular dependency: {' -> '.join(cycle)}")
+    if isinstance(deps, dict):
+        cycle = detect_circular(deps)
+        if cycle:
+            errors.append(f"Circular dependency: {' -> '.join(cycle)}")
 
     # Check all packets have valid areas
-    areas = {a["id"] for a in defn.get("work_areas", [])}
-    for pkt in defn.get("packets", []):
+    areas = {a.get("id") for a in work_areas if isinstance(a, dict)}
+    for pkt in packets_list:
+        if not isinstance(pkt, dict):
+            continue
         if pkt.get("area_id") not in areas:
-            errors.append(f"Packet {pkt['id']} references unknown area: {pkt.get('area_id')}")
+            errors.append(f"Packet {pkt.get('id', '<unknown>')} references unknown area: {pkt.get('area_id')}")
 
     # Check all dependencies reference valid packets
-    packets = {p["id"] for p in defn.get("packets", [])}
+    packet_ids = {p.get("id") for p in packets_list if isinstance(p, dict)}
     for pid, dep_list in deps.items():
-        if pid not in packets:
+        if pid not in packet_ids:
             errors.append(f"Dependency references unknown packet: {pid}")
+        if not isinstance(dep_list, list):
+            errors.append(f"Dependency list for {pid} must be an array")
+            continue
         for dep in dep_list:
-            if dep not in packets:
+            if dep not in packet_ids:
                 errors.append(f"Packet {pid} depends on unknown packet: {dep}")
 
     # Check for duplicate IDs
-    pkt_ids = [p["id"] for p in defn.get("packets", [])]
+    pkt_ids = [p.get("id") for p in packets_list if isinstance(p, dict)]
     if len(pkt_ids) != len(set(pkt_ids)):
         errors.append("Duplicate packet IDs found")
 
-    area_ids = [a["id"] for a in defn.get("work_areas", [])]
+    area_ids = [a.get("id") for a in work_areas if isinstance(a, dict)]
     if len(area_ids) != len(set(area_ids)):
         errors.append("Duplicate area IDs found")
 
+    if strict:
+        for idx, pkt in enumerate(packets_list):
+            errors.extend(_validate_packet_strict(pkt, idx))
+
+    result = {
+        "valid": len(errors) == 0,
+        "strict": strict,
+        "areas": len(area_ids),
+        "packets": len(pkt_ids),
+        "errors": errors,
+    }
+    if output_json(result):
+        return result["valid"]
+
+    mode = "strict" if strict else "standard"
     if errors:
-        print(red("Validation failed:"))
-        for err in errors:
+        print(red(f"Validation failed ({mode}):"))
+        max_errors = 120
+        shown = errors[:max_errors]
+        for err in shown:
             print(f"  - {err}")
+        if len(errors) > max_errors:
+            remaining = len(errors) - max_errors
+            print(f"  - ... {remaining} additional errors omitted (use --json for full output)")
         return False
 
-    print(green(f"Validation passed: {len(areas)} areas, {len(packets)} packets"))
+    print(green(f"Validation passed ({mode}): {len(area_ids)} areas, {len(pkt_ids)} packets"))
     return True
 
 
@@ -875,6 +1939,7 @@ def _validate_packet_object(pkt: dict, index_label: str = "") -> list:
     # Array fields
     array_fields = (
         "wbs_refs",
+        "required_capabilities",
         "preconditions",
         "required_inputs",
         "required_actions",
@@ -995,7 +2060,7 @@ def cmd_graph(output_path: str = ""):
     def print_tree(pid, prefix="", is_last=True):
         pkt = packets.get(pid, {})
         pstate = state["packets"].get(pid, {})
-        status = pstate.get("status", "pending")
+        status = normalize_runtime_status(pstate.get("status", "pending"))
         sym = status_sym.get(status, "[ ]")
 
         connector = "`-- " if is_last else "|-- "
@@ -1090,14 +2155,18 @@ def print_help():
     print("Commands:")
     print("  init <wbs.json>       Initialize from WBS file")
     print("  init --wizard         Interactive setup")
+    print("  plan                  Guided WBS planning and export")
+    print("  git-protocol          Show/validate structured governance commit protocol")
     print("  status                Full project status")
+    print("  briefing              Session bootstrap summary")
     print("  ready                 List claimable packets")
     print("  next                  Recommended next action")
     print("  scope <id>            Packet details")
+    print("  context <id>          Packet context bundle (deps/history/handovers/files)")
     print("  progress              Summary counts")
     print("  graph [--output file] ASCII dependency graph (+ optional Graphviz DOT export)")
     print("  export <type> <path>  Export state/log data (state-json|log-json|log-csv)")
-    print("  validate              Check WBS structure")
+    print("  validate [--strict]   Check WBS structure (strict enforces packet contract)")
     print("  validate-packet [path] Validate packets against packet schema")
     print("  closeout-l2 <area> <agent> <drift-md> [notes] Close level-2 area with drift assessment")
     print()
@@ -1106,20 +2175,54 @@ def print_help():
     print("  note <id> <agent>     Update notes")
     print("  fail <id> <agent>     Mark failed")
     print("  reset <id>            Reset to pending")
+    print("  handover <id> <agent> <reason> [--to agent] [--progress text] [--files a,b] [--remaining x|y]")
+    print("  resume <id> <agent>   Resume active handover and assign owner")
     print("  stale <minutes>       Find stuck packets")
     print("  log [limit]           Recent activity")
+    print("  log-mode <mode>       Set log integrity mode (plain|hash-chain)")
+    print("  verify-log            Verify tamper-evident log chain")
     print()
     print("  add-area <id> <title> [desc]       Add work area")
     print("  add-packet <id> <area> <title>     Add packet (scope via stdin or -s)")
     print("  add-dep <packet> <depends-on>      Add dependency")
     print("  remove <id> [--force]              Remove packet or area")
+    print("  agent-list                         Show registered agent profiles and mode")
+    print("  agent-mode <disabled|advisory|strict> Set capability enforcement mode")
+    print("  agent-register <id> <type> <caps>  Register/update agent (caps comma-separated)")
+    print("  git-governance                     Show git-native governance config")
+    print("  git-governance-mode <disabled|advisory|strict> Set git-native governance mode")
+    print("  git-governance-autocommit <on|off> Toggle git-native auto-commit")
+    print("  git-verify-ledger [--strict]       Verify git linkage for lifecycle log entries")
+    print("  git-export-ledger <path>           Export git-linked ledger entries as JSON")
+    print("  git-reconstruct [--limit N] [--output path] Reconstruct governance protocol commits")
+    print("  git-branch-open <packet> <agent> [--from ref] Open packet execution branch")
+    print("  git-branch-close <packet> <agent> [--base main] [--keep-branch] Merge/close packet branch")
     print()
     print("Options:")
     print("  --json              Output as JSON (for scripting)")
     print()
     print("Examples:")
     print("  python3 .governance/wbs_cli.py ready")
+    print("  python3 .governance/wbs_cli.py plan --from-json docs/wbs-plan.json --output .governance/wbs-draft.json")
+    print("  python3 .governance/wbs_cli.py plan --import-markdown docs/project-plan.md --output .governance/wbs-imported.json")
+    print("  python3 .governance/wbs_cli.py plan --apply")
+    print("  python3 .governance/wbs_cli.py git-protocol")
+    print("  python3 .governance/wbs_cli.py git-protocol --parse /tmp/commit-msg.txt")
+    print("  python3 .governance/wbs_cli.py briefing --format json --recent 20")
+    print("  python3 .governance/wbs_cli.py context CDX-3-1 --format json --max-events 30 --max-notes-bytes 4000")
     print("  python3 .governance/wbs_cli.py claim CDX-3-1 codex-lead")
+    print("  python3 .governance/wbs_cli.py handover CDX-3-1 codex-lead \"session timeout\" --to codex-2 --remaining \"rerun tests|update docs\"")
+    print("  python3 .governance/wbs_cli.py resume CDX-3-1 codex-2")
+    print("  python3 .governance/wbs_cli.py agent-mode strict")
+    print("  python3 .governance/wbs_cli.py agent-register gemini-research llm-gemini \"research,docs\"")
+    print("  python3 .governance/wbs_cli.py git-governance")
+    print("  python3 .governance/wbs_cli.py git-governance-mode advisory")
+    print("  python3 .governance/wbs_cli.py git-governance-autocommit on")
+    print("  python3 .governance/wbs_cli.py git-verify-ledger --strict")
+    print("  python3 .governance/wbs_cli.py git-export-ledger reports/git-ledger.json")
+    print("  python3 .governance/wbs_cli.py git-reconstruct --limit 200 --output reports/git-reconstruct.json")
+    print("  python3 .governance/wbs_cli.py git-branch-open UPG-056 codex --from main")
+    print("  python3 .governance/wbs_cli.py git-branch-close UPG-056 codex --base main")
     print("  python3 .governance/wbs_cli.py done CDX-3-1 codex-lead \"Implemented changes\"")
     print("  python3 .governance/wbs_cli.py note CDX-3-1 codex-lead \"Evidence: docs/path.md\"")
     print("  python3 .governance/wbs_cli.py closeout-l2 2 codex-lead docs/codex-migration/drift-wbs2.md \"ready for handoff\"")
@@ -1156,8 +2259,105 @@ def main():
                 success = cmd_init(args[1])
             if not success:
                 sys.exit(1)
+        elif cmd == "plan":
+            from_json = ""
+            import_markdown = ""
+            output_path = ""
+            apply = False
+            allow_ambiguous = False
+            extra = args[1:]
+            i = 0
+            while i < len(extra):
+                token = extra[i]
+                if token == "--apply":
+                    apply = True
+                    i += 1
+                    continue
+                if token == "--allow-ambiguous":
+                    allow_ambiguous = True
+                    i += 1
+                    continue
+                if token in ("--from-json", "--import-markdown", "--output"):
+                    if i + 1 >= len(extra):
+                        print(
+                            "Usage: wbs_cli.py plan [--from-json spec.json] [--import-markdown plan.md] "
+                            "[--output draft.json] [--apply] [--allow-ambiguous]"
+                        )
+                        sys.exit(1)
+                    value = extra[i + 1]
+                    if token == "--from-json":
+                        from_json = value
+                    elif token == "--import-markdown":
+                        import_markdown = value
+                    else:
+                        output_path = value
+                    i += 2
+                    continue
+                print(
+                    "Usage: wbs_cli.py plan [--from-json spec.json] [--import-markdown plan.md] "
+                    "[--output draft.json] [--apply] [--allow-ambiguous]"
+                )
+                sys.exit(1)
+            if not cmd_plan(
+                from_json=from_json,
+                import_markdown=import_markdown,
+                output_path=output_path,
+                apply=apply,
+                allow_ambiguous=allow_ambiguous,
+            ):
+                sys.exit(1)
+        elif cmd == "git-protocol":
+            parse_path = ""
+            extra = args[1:]
+            i = 0
+            while i < len(extra):
+                token = extra[i]
+                if token == "--parse":
+                    if i + 1 >= len(extra):
+                        print("Usage: wbs_cli.py git-protocol [--parse path/to/commit-msg.txt]")
+                        sys.exit(1)
+                    parse_path = extra[i + 1]
+                    i += 2
+                    continue
+                print("Usage: wbs_cli.py git-protocol [--parse path/to/commit-msg.txt]")
+                sys.exit(1)
+            if not cmd_git_protocol(parse_path=parse_path):
+                sys.exit(1)
         elif cmd == "status":
             if require_state(): cmd_status()
+        elif cmd == "briefing":
+            output_format = "text"
+            compact = False
+            recent_events = 10
+            extra = args[1:]
+            i = 0
+            while i < len(extra):
+                token = extra[i]
+                if token == "--compact":
+                    compact = True
+                    i += 1
+                    continue
+                if token == "--format":
+                    if i + 1 >= len(extra):
+                        print("Usage: wbs_cli.py briefing [--format json|text] [--compact] [--recent N]")
+                        sys.exit(1)
+                    output_format = extra[i + 1].strip().lower()
+                    if output_format not in ("json", "text"):
+                        print("briefing --format must be one of: json, text")
+                        sys.exit(1)
+                    i += 2
+                    continue
+                if token == "--recent":
+                    if i + 1 >= len(extra):
+                        print("Usage: wbs_cli.py briefing [--format json|text] [--compact] [--recent N]")
+                        sys.exit(1)
+                    recent_events = int(extra[i + 1])
+                    i += 2
+                    continue
+                print("Usage: wbs_cli.py briefing [--format json|text] [--compact] [--recent N]")
+                sys.exit(1)
+            if require_state():
+                cmd_briefing(output_format=output_format, compact=compact, recent_events=recent_events)
         elif cmd == "ready":
             if require_state(): cmd_ready()
         elif cmd == "next":
@@ -1169,6 +2369,62 @@ def main():
                 print("Usage: wbs_cli.py scope <packet_id>")
                 sys.exit(1)
             if require_state(): cmd_scope(args[1])
+        elif cmd == "context":
+            if len(args) < 2:
+                print(
+                    "Usage: wbs_cli.py context <packet_id> [--format json|text] [--compact] "
+                    "[--max-events N] [--max-notes-bytes N] [--max-handovers N]"
+                )
+                sys.exit(1)
+            packet_id = args[1]
+            output_format = "text"
+            compact = False
+            max_events = 40
+            max_notes_bytes = 4000
+            max_handovers = 40
+            extra = args[2:]
+            i = 0
+            while i < len(extra):
+                token = extra[i]
+                if token == "--compact":
+                    compact = True
+                    i += 1
+                    continue
+                if token in ("--format", "--max-events", "--max-notes-bytes", "--max-handovers"):
+                    if i + 1 >= len(extra):
+                        print(
+                            "Usage: wbs_cli.py context <packet_id> [--format json|text] [--compact] "
+                            "[--max-events N] [--max-notes-bytes N] [--max-handovers N]"
+                        )
+                        sys.exit(1)
+                    value = extra[i + 1]
+                    if token == "--format":
+                        output_format = value.strip().lower()
+                        if output_format not in ("json", "text"):
+                            print("context --format must be one of: json, text")
+                            sys.exit(1)
+                    elif token == "--max-events":
+                        max_events = int(value)
+                    elif token == "--max-notes-bytes":
+                        max_notes_bytes = int(value)
+                    elif token == "--max-handovers":
+                        max_handovers = int(value)
+                    i += 2
+                    continue
+                print(
+                    "Usage: wbs_cli.py context <packet_id> [--format json|text] [--compact] "
+                    "[--max-events N] [--max-notes-bytes N] [--max-handovers N]"
+                )
+                sys.exit(1)
+            if require_state() and not cmd_context(
+                packet_id=packet_id,
+                output_format=output_format,
+                compact=compact,
+                max_events=max_events,
+                max_notes_bytes=max_notes_bytes,
+                max_handovers=max_handovers,
+            ):
+                sys.exit(1)
         elif cmd == "claim":
             if len(args) < 3:
                 print("Usage: wbs_cli.py claim <packet_id> <agent>")
@@ -1202,6 +2458,63 @@ def main():
                 sys.exit(1)
             if require_state() and not cmd_reset(args[1]):
                 sys.exit(1)
+        elif cmd == "handover":
+            if len(args) < 4:
+                print(
+                    "Usage: wbs_cli.py handover <packet_id> <agent> <reason> "
+                    "[--to agent] [--progress text] [--files a,b] [--remaining x|y]"
+                )
+                sys.exit(1)
+            packet_id = args[1]
+            agent = args[2]
+            reason = args[3]
+            to_agent = ""
+            progress_notes = ""
+            files_modified = []
+            remaining_work = []
+            extra = args[4:]
+            i = 0
+            while i < len(extra):
+                token = extra[i]
+                if token in ("--to", "--progress", "--files", "--remaining"):
+                    if i + 1 >= len(extra):
+                        print(
+                            "Usage: wbs_cli.py handover <packet_id> <agent> <reason> "
+                            "[--to agent] [--progress text] [--files a,b] [--remaining x|y]"
+                        )
+                        sys.exit(1)
+                    value = extra[i + 1]
+                    if token == "--to":
+                        to_agent = value
+                    elif token == "--progress":
+                        progress_notes = value
+                    elif token == "--files":
+                        files_modified = [item.strip() for item in value.split(",") if item.strip()]
+                    elif token == "--remaining":
+                        remaining_work = [item.strip() for item in value.split("|") if item.strip()]
+                    i += 2
+                    continue
+                print(
+                    "Usage: wbs_cli.py handover <packet_id> <agent> <reason> "
+                    "[--to agent] [--progress text] [--files a,b] [--remaining x|y]"
+                )
+                sys.exit(1)
+            if require_state() and not cmd_handover(
+                packet_id,
+                agent,
+                reason,
+                progress_notes=progress_notes,
+                files_modified=files_modified,
+                remaining_work=remaining_work,
+                to_agent=to_agent,
+            ):
+                sys.exit(1)
+        elif cmd == "resume":
+            if len(args) < 3:
+                print("Usage: wbs_cli.py resume <packet_id> <agent>")
+                sys.exit(1)
+            if require_state() and not cmd_resume(args[1], args[2]):
+                sys.exit(1)
         elif cmd == "stale":
             if len(args) < 2:
                 print("Usage: wbs_cli.py stale <minutes>")
@@ -1210,6 +2523,15 @@ def main():
         elif cmd == "log":
             limit = int(args[1]) if len(args) > 1 else 20
             if require_state(): cmd_log(limit)
+        elif cmd == "log-mode":
+            if len(args) < 2:
+                print("Usage: wbs_cli.py log-mode <plain|hash-chain>")
+                sys.exit(1)
+            if require_state() and not cmd_log_mode(args[1]):
+                sys.exit(1)
+        elif cmd == "verify-log":
+            if require_state() and not cmd_verify_log():
+                sys.exit(1)
         elif cmd == "graph":
             output = ""
             if "--output" in args:
@@ -1226,7 +2548,12 @@ def main():
             if require_state() and not cmd_export(args[1], args[2]):
                 sys.exit(1)
         elif cmd == "validate":
-            if not cmd_validate():
+            extra = [arg for arg in args[1:] if arg != "--strict"]
+            if extra:
+                print("Usage: wbs_cli.py validate [--strict]")
+                sys.exit(1)
+            strict = "--strict" in args[1:]
+            if not cmd_validate(strict=strict):
                 sys.exit(1)
         elif cmd == "validate-packet":
             target = args[1] if len(args) > 1 else ""
@@ -1282,6 +2609,135 @@ def main():
                 sys.exit(1)
             force = "--force" in args
             if not cmd_remove(args[1], force):
+                sys.exit(1)
+        elif cmd == "agent-list":
+            if not cmd_agent_list():
+                sys.exit(1)
+        elif cmd == "agent-mode":
+            if len(args) < 2:
+                print("Usage: wbs_cli.py agent-mode <disabled|advisory|strict>")
+                sys.exit(1)
+            if not cmd_agent_mode(args[1]):
+                sys.exit(1)
+        elif cmd == "agent-register":
+            if len(args) < 4:
+                print("Usage: wbs_cli.py agent-register <agent_id> <agent_type> <cap1,cap2,...>")
+                sys.exit(1)
+            if not cmd_agent_register(args[1], args[2], args[3]):
+                sys.exit(1)
+        elif cmd == "git-governance":
+            if not cmd_git_governance():
+                sys.exit(1)
+        elif cmd == "git-governance-mode":
+            if len(args) < 2:
+                print("Usage: wbs_cli.py git-governance-mode <disabled|advisory|strict>")
+                sys.exit(1)
+            if not cmd_git_governance_mode(args[1]):
+                sys.exit(1)
+        elif cmd == "git-governance-autocommit":
+            if len(args) < 2:
+                print("Usage: wbs_cli.py git-governance-autocommit <on|off>")
+                sys.exit(1)
+            if not cmd_git_governance_autocommit(args[1]):
+                sys.exit(1)
+        elif cmd == "git-verify-ledger":
+            strict = "--strict" in args[1:]
+            extra = [arg for arg in args[1:] if arg != "--strict"]
+            if extra:
+                print("Usage: wbs_cli.py git-verify-ledger [--strict]")
+                sys.exit(1)
+            if not cmd_git_verify_ledger(strict=strict):
+                sys.exit(1)
+        elif cmd == "git-export-ledger":
+            if len(args) < 2:
+                print("Usage: wbs_cli.py git-export-ledger <path>")
+                sys.exit(1)
+            if not cmd_git_export_ledger(args[1]):
+                sys.exit(1)
+        elif cmd == "git-reconstruct":
+            limit = 500
+            output_path = ""
+            extra = args[1:]
+            i = 0
+            while i < len(extra):
+                token = extra[i]
+                if token in ("--limit", "--output"):
+                    if i + 1 >= len(extra):
+                        print("Usage: wbs_cli.py git-reconstruct [--limit N] [--output path]")
+                        sys.exit(1)
+                    value = extra[i + 1]
+                    if token == "--limit":
+                        limit = int(value)
+                    else:
+                        output_path = value
+                    i += 2
+                    continue
+                print("Usage: wbs_cli.py git-reconstruct [--limit N] [--output path]")
+                sys.exit(1)
+            if not cmd_git_reconstruct(limit=limit, out_path=output_path):
+                sys.exit(1)
+        elif cmd == "git-branch-open":
+            if len(args) < 3:
+                print("Usage: wbs_cli.py git-branch-open <packet_id> <agent> [--from ref]")
+                sys.exit(1)
+            packet_id = args[1]
+            agent = args[2]
+            from_ref = ""
+            extra = args[3:]
+            i = 0
+            while i < len(extra):
+                token = extra[i]
+                if token == "--from":
+                    if i + 1 >= len(extra):
+                        print("Usage: wbs_cli.py git-branch-open <packet_id> <agent> [--from ref]")
+                        sys.exit(1)
+                    from_ref = extra[i + 1]
+                    i += 2
+                    continue
+                print("Usage: wbs_cli.py git-branch-open <packet_id> <agent> [--from ref]")
+                sys.exit(1)
+            if not cmd_git_branch_open(packet_id, agent, from_ref=from_ref):
+                sys.exit(1)
+        elif cmd == "git-branch-close":
+            if len(args) < 3:
+                print(
+                    "Usage: wbs_cli.py git-branch-close <packet_id> <agent> "
+                    "[--base main] [--keep-branch]"
+                )
+                sys.exit(1)
+            packet_id = args[1]
+            agent = args[2]
+            base_branch = "main"
+            delete_branch = True
+            extra = args[3:]
+            i = 0
+            while i < len(extra):
+                token = extra[i]
+                if token == "--keep-branch":
+                    delete_branch = False
+                    i += 1
+                    continue
+                if token == "--base":
+                    if i + 1 >= len(extra):
+                        print(
+                            "Usage: wbs_cli.py git-branch-close <packet_id> <agent> "
+                            "[--base main] [--keep-branch]"
+                        )
+                        sys.exit(1)
+                    base_branch = extra[i + 1]
+                    i += 2
+                    continue
+                print(
+                    "Usage: wbs_cli.py git-branch-close <packet_id> <agent> "
+                    "[--base main] [--keep-branch]"
+                )
+                sys.exit(1)
+            if not cmd_git_branch_close(
+                packet_id,
+                agent,
+                base_branch=base_branch,
+                delete_branch=delete_branch,
+            ):
                 sys.exit(1)
         else:
             print(red(f"Unknown command: {cmd}"))

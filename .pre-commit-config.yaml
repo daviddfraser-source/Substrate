@@ -31,3 +31,9 @@ repos:
         entry: bash -lc 'command -v shellcheck >/dev/null 2>&1 && shellcheck scripts/*.sh || echo "shellcheck not installed; skipping"'
         language: system
         pass_filenames: false
+
+      - id: governance-state-guard
+        name: Governance runtime state guard
+        entry: bash scripts/governance-state-guard.sh --commit-msg
+        language: system
+        stages: [commit-msg]

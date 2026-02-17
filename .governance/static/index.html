@@ -54,6 +54,13 @@
         .stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gray-400); }
 
         .header-actions { display: flex; gap: 12px; }
+        .refresh-indicator {
+            align-self: center;
+            color: var(--gray-400);
+            font-size: 12px;
+            min-width: 130px;
+            text-align: right;
+        }
 
         /* Buttons */
         .btn {
@@ -277,6 +284,23 @@
         .viewer-event { padding: 8px 10px; border-bottom: 1px solid var(--gray-200); font-size: 12px; }
         .viewer-event:last-child { border-bottom: none; }
         .viewer-file { width: 100%; min-height: 180px; border: 1px solid var(--gray-200); border-radius: 8px; padding: 10px; background: #0b1020; color: #d6def8; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; white-space: pre-wrap; overflow: auto; }
+        .docs-explorer-layout { display: grid; grid-template-columns: 340px 1fr; gap: 12px; min-height: 540px; }
+        .docs-sidebar { border: 1px solid var(--gray-200); border-radius: 10px; padding: 12px; background: var(--gray-50); display: flex; flex-direction: column; gap: 10px; min-height: 0; }
+        .docs-filters { display: grid; gap: 8px; }
+        .docs-list { border: 1px solid var(--gray-200); border-radius: 8px; background: white; overflow: auto; min-height: 0; flex: 1; }
+        .docs-item { padding: 10px 12px; border-bottom: 1px solid var(--gray-100); cursor: pointer; }
+        .docs-item:last-child { border-bottom: none; }
+        .docs-item:hover { background: var(--gray-50); }
+        .docs-item.active { background: #e0e7ff; border-left: 3px solid var(--primary); padding-left: 9px; }
+        .docs-item-title { font-size: 13px; font-weight: 600; color: var(--gray-800); margin-bottom: 2px; }
+        .docs-item-meta { font-size: 11px; color: var(--gray-500); }
+        .docs-item-summary { font-size: 12px; color: var(--gray-600); margin-top: 4px; }
+        .docs-main { border: 1px solid var(--gray-200); border-radius: 10px; background: var(--gray-50); padding: 12px; display: flex; flex-direction: column; gap: 10px; min-height: 0; }
+        .docs-main-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+        .docs-main-title { font-size: 14px; font-weight: 600; color: var(--gray-800); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .docs-main-meta { font-size: 12px; color: var(--gray-500); }
+        .docs-empty { padding: 20px 12px; color: var(--gray-500); font-size: 13px; text-align: center; }
+        .docs-stats { font-size: 12px; color: var(--gray-500); }
 
         /* Progress Ring */
         .progress-ring { position: relative; width: 80px; height: 80px; }
@@ -292,6 +316,8 @@
         .empty-state-desc { color: var(--gray-500); margin-bottom: 24px; }
         @media (max-width: 1024px) {
             .packet-viewer-grid { grid-template-columns: 1fr; }
+            .docs-explorer-layout { grid-template-columns: 1fr; }
+            .docs-sidebar { max-height: 320px; }
         }
     </style>
 </head>
@@ -318,6 +344,7 @@
             </div>
         </div>
         <div class="header-actions">
+            <span class="refresh-indicator" id="last-refresh">Last refresh: --</span>
             <button class="btn btn-ghost btn-icon" onclick="refreshData()" title="Refresh">↻</button>
             <button class="btn btn-success" onclick="showCloseoutL2()">L2 Closeout</button>
             <button class="btn btn-secondary" onclick="showAddCategory()">+ Category</button>
@@ -339,6 +366,7 @@
             <div class="content-header">
                 <div class="content-title" id="content-title">All Work Items</div>
                 <div style="display:flex;gap:8px">
+                    <button class="btn btn-sm btn-ghost" onclick="showDocsExplorer()">Docs Explorer</button>
                     <button class="btn btn-sm btn-ghost" onclick="showDepsGraph()">Deps Graph</button>
                     <button class="btn btn-sm btn-ghost" onclick="expandAll()">Expand All</button>
                     <button class="btn btn-sm btn-ghost" onclick="collapseAll()">Collapse All</button>
@@ -486,7 +514,10 @@
                     <pre class="viewer-file" id="viewer-structured">-</pre>
                 </div>
                 <div class="viewer-card" style="margin-top: 12px;">
-                    <div class="viewer-label">Linked Documents</div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+                        <div class="viewer-label" style="margin-bottom:0">Linked Documents</div>
+                        <button class="btn btn-sm btn-ghost" type="button" onclick="showDocsExplorer()">Open Full Explorer</button>
+                    </div>
                     <div id="viewer-docs">No documents detected.</div>
                 </div>
                 <div class="viewer-card" style="margin-top: 12px;">
@@ -496,6 +527,43 @@
                 <div class="viewer-card" style="margin-top: 12px;">
                     <div class="viewer-label">Document Preview</div>
                     <pre class="viewer-file" id="viewer-file">Select a linked document to preview.</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Documentation Explorer Modal -->
+    <div class="modal-overlay" id="modal-docs-explorer">
+        <div class="modal" style="max-width: 1200px;">
+            <div class="modal-header">
+                <span class="modal-title">Project Documentation Explorer</span>
+                <button class="modal-close" onclick="closeModal('modal-docs-explorer')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="docs-explorer-layout">
+                    <div class="docs-sidebar">
+                        <div class="docs-filters">
+                            <input type="text" class="form-input" id="docs-search" placeholder="Search path, title, summary...">
+                            <select class="form-select" id="docs-category"></select>
+                            <select class="form-select" id="docs-kind"></select>
+                            <div style="display:flex;gap:8px">
+                                <button class="btn btn-sm btn-primary" type="button" onclick="reloadDocsIndex()">Search</button>
+                                <button class="btn btn-sm btn-ghost" type="button" onclick="resetDocsFilters()">Reset</button>
+                            </div>
+                        </div>
+                        <div class="docs-stats" id="docs-stats">Loading...</div>
+                        <div class="docs-list" id="docs-list"></div>
+                    </div>
+                    <div class="docs-main">
+                        <div class="docs-main-head">
+                            <div>
+                                <div class="docs-main-title" id="docs-selected-title">Select a document</div>
+                                <div class="docs-main-meta" id="docs-selected-meta">-</div>
+                            </div>
+                            <button class="btn btn-sm btn-ghost" type="button" id="docs-reload-selected" onclick="reloadSelectedDoc()" disabled>Reload</button>
+                        </div>
+                        <pre class="viewer-file" id="docs-preview">Select a document from the list to preview.</pre>
+                    </div>
                 </div>
             </div>
         </div>
@@ -558,6 +626,8 @@
         let gridApi = null;
         let wbsData = { areas: [], packets: [], deps: {}, counts: {} };
         let selectedArea = null;
+        let docsIndex = { documents: [], categories: [], kinds: [], total: 0 };
+        let docsSelectedPath = '';
 
         // Toast
         function toast(msg, type = '') {
@@ -565,6 +635,22 @@
             t.textContent = msg;
             t.className = 'toast show ' + type;
             setTimeout(() => t.className = 'toast', 3000);
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function formatBytes(bytes) {
+            const n = Number(bytes || 0);
+            if (n < 1024) return `${n} B`;
+            if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
+            return `${(n / (1024 * 1024)).toFixed(1)} MB`;
         }
 
         // Modal
@@ -671,9 +757,11 @@
             try {
                 const res = await fetch('/api/status');
                 const data = await res.json();
+                const refreshedAt = new Date();
 
                 document.getElementById('project-name').textContent = data.metadata?.project_name || 'Untitled Project';
-                document.getElementById('project-meta').textContent = `Last updated: ${new Date().toLocaleString()}`;
+                document.getElementById('project-meta').textContent = `Last updated: ${refreshedAt.toLocaleString()}`;
+                document.getElementById('last-refresh').textContent = `Last refresh: ${refreshedAt.toLocaleTimeString()}`;
 
                 wbsData.areas = data.areas || [];
                 wbsData.deps = data.dependencies || {};
@@ -1058,8 +1146,8 @@
             refreshData();
         }
 
-        async function previewFile(path) {
-            const filePanel = document.getElementById('viewer-file');
+        async function loadFileContent(path, targetElementId) {
+            const filePanel = document.getElementById(targetElementId);
             filePanel.textContent = `Loading ${path}...`;
 
             const res = await fetch(`/api/file?path=${encodeURIComponent(path)}`);
@@ -1072,19 +1160,209 @@
             }
             if (!res.ok || !data) {
                 filePanel.textContent = `Failed to load file: HTTP ${res.status}.`;
-                return;
+                return null;
             }
             if (!data.success) {
                 filePanel.textContent = `Failed to load file: ${data.message || 'unknown error'}`;
-                return;
+                return data;
             }
             filePanel.textContent = data.content + (data.truncated ? '\n\n[truncated]' : '');
+            return data;
+        }
+
+        async function previewFile(path) {
+            await loadFileContent(path, 'viewer-file');
         }
 
         function previewFileFromButton(button) {
             const encodedPath = button?.dataset?.path || '';
             if (!encodedPath) return;
             previewFile(decodeURIComponent(encodedPath));
+        }
+
+        async function openInDocsExplorerFromButton(button) {
+            const encodedPath = button?.dataset?.path || '';
+            if (!encodedPath) return;
+            await showDocsExplorer(decodeURIComponent(encodedPath));
+        }
+
+        function selectDocFromList(el) {
+            const encodedPath = el?.dataset?.path || '';
+            if (!encodedPath) return;
+            selectDocForPreview(decodeURIComponent(encodedPath));
+        }
+
+        async function selectDocForPreview(path) {
+            if (!path) return;
+            docsSelectedPath = path;
+
+            document.querySelectorAll('#docs-list .docs-item').forEach(node => {
+                const encoded = node?.dataset?.path || '';
+                const itemPath = encoded ? decodeURIComponent(encoded) : '';
+                node.classList.toggle('active', itemPath === path);
+            });
+
+            const doc = docsIndex.documents.find(d => d.path === path);
+            if (doc) {
+                document.getElementById('docs-selected-title').textContent = doc.title || doc.path;
+                document.getElementById('docs-selected-meta').textContent =
+                    `${doc.path} | ${doc.kind} | ${formatBytes(doc.size)} | ${doc.updated_at || '-'}`;
+            } else {
+                document.getElementById('docs-selected-title').textContent = path;
+                document.getElementById('docs-selected-meta').textContent = '-';
+            }
+            document.getElementById('docs-reload-selected').disabled = false;
+            await loadFileContent(path, 'docs-preview');
+        }
+
+        function renderDocsList(preferredPath = '') {
+            const listEl = document.getElementById('docs-list');
+            const statsEl = document.getElementById('docs-stats');
+            const docs = docsIndex.documents || [];
+            if (statsEl) {
+                statsEl.textContent = `Showing ${docs.length} of ${docsIndex.total || 0} documents`;
+            }
+
+            if (!docs.length) {
+                listEl.innerHTML = '<div class="docs-empty">No documents match the current filters.</div>';
+                document.getElementById('docs-selected-title').textContent = 'No document selected';
+                document.getElementById('docs-selected-meta').textContent = '-';
+                document.getElementById('docs-preview').textContent = 'No matching documents found.';
+                document.getElementById('docs-reload-selected').disabled = true;
+                docsSelectedPath = '';
+                return;
+            }
+
+            listEl.innerHTML = docs.map(d => {
+                const active = (preferredPath || docsSelectedPath) === d.path ? 'active' : '';
+                const encodedPath = encodeURIComponent(d.path);
+                const summary = d.summary ? `<div class="docs-item-summary">${escapeHtml(d.summary)}</div>` : '';
+                return `
+                    <div class="docs-item ${active}" data-path="${encodedPath}" onclick="selectDocFromList(this)">
+                        <div class="docs-item-title">${escapeHtml(d.title || d.path)}</div>
+                        <div class="docs-item-meta">${escapeHtml(d.path)} | ${escapeHtml(d.kind)} | ${formatBytes(d.size)}</div>
+                        ${summary}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function resetDocsFilters() {
+            document.getElementById('docs-search').value = '';
+            document.getElementById('docs-category').value = 'all';
+            document.getElementById('docs-kind').value = 'all';
+            reloadDocsIndex();
+        }
+
+        async function reloadSelectedDoc() {
+            if (!docsSelectedPath) return;
+            await selectDocForPreview(docsSelectedPath);
+        }
+
+        async function reloadDocsIndex(preferredPath = '') {
+            const searchInput = document.getElementById('docs-search');
+            const categorySelect = document.getElementById('docs-category');
+            const kindSelect = document.getElementById('docs-kind');
+
+            const q = (searchInput?.value || '').trim();
+            const category = (categorySelect?.value || 'all').trim();
+            const kind = (kindSelect?.value || 'all').trim();
+
+            const params = new URLSearchParams();
+            params.set('limit', '5000');
+            if (q) params.set('q', q);
+            if (category && category !== 'all') params.set('category', category);
+            if (kind && kind !== 'all') params.set('kind', kind);
+
+            const listEl = document.getElementById('docs-list');
+            if (listEl) {
+                listEl.innerHTML = '<div class="docs-empty">Loading documentation index...</div>';
+            }
+
+            const res = await fetch(`/api/docs-index?${params.toString()}`);
+            const raw = await res.text();
+            let data = null;
+            try {
+                data = raw ? JSON.parse(raw) : null;
+            } catch (_) {
+                data = null;
+            }
+            if (!res.ok || !data || !data.success) {
+                const msg = data?.message || `Failed to load docs index (HTTP ${res.status})`;
+                if (listEl) {
+                    listEl.innerHTML = `<div class="docs-empty">${escapeHtml(msg)}</div>`;
+                }
+                toast(msg, 'error');
+                return;
+            }
+
+            docsIndex = {
+                documents: data.documents || [],
+                categories: data.categories || [],
+                kinds: data.kinds || [],
+                total: Number(data.total || 0)
+            };
+
+            const priorCategory = categorySelect?.value || 'all';
+            const priorKind = kindSelect?.value || 'all';
+            if (categorySelect) {
+                const options = ['all', ...docsIndex.categories];
+                categorySelect.innerHTML = options.map(opt => (
+                    `<option value="${escapeHtml(opt)}">${opt === 'all' ? 'All categories' : escapeHtml(opt)}</option>`
+                )).join('');
+                categorySelect.value = options.includes(priorCategory) ? priorCategory : 'all';
+            }
+            if (kindSelect) {
+                const options = ['all', ...docsIndex.kinds];
+                kindSelect.innerHTML = options.map(opt => (
+                    `<option value="${escapeHtml(opt)}">${opt === 'all' ? 'All kinds' : escapeHtml(opt)}</option>`
+                )).join('');
+                kindSelect.value = options.includes(priorKind) ? priorKind : 'all';
+            }
+
+            renderDocsList(preferredPath);
+
+            const selectedPath = preferredPath || docsSelectedPath;
+            const existing = docsIndex.documents.find(d => d.path === selectedPath);
+            if (existing) {
+                await selectDocForPreview(existing.path);
+                return;
+            }
+            if (docsIndex.documents.length > 0) {
+                await selectDocForPreview(docsIndex.documents[0].path);
+            }
+        }
+
+        async function showDocsExplorer(initialPath = '') {
+            const searchInput = document.getElementById('docs-search');
+            const categorySelect = document.getElementById('docs-category');
+            const kindSelect = document.getElementById('docs-kind');
+            if (searchInput && !searchInput.dataset.bound) {
+                searchInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        reloadDocsIndex();
+                    }
+                });
+                searchInput.dataset.bound = '1';
+            }
+            if (categorySelect && !categorySelect.dataset.bound) {
+                categorySelect.addEventListener('change', () => reloadDocsIndex());
+                categorySelect.dataset.bound = '1';
+            }
+            if (kindSelect && !kindSelect.dataset.bound) {
+                kindSelect.addEventListener('change', () => reloadDocsIndex());
+                kindSelect.dataset.bound = '1';
+            }
+
+            if (initialPath) {
+                if (searchInput) searchInput.value = '';
+                if (categorySelect) categorySelect.value = 'all';
+                if (kindSelect) kindSelect.value = 'all';
+            }
+
+            showModal('modal-docs-explorer');
+            await reloadDocsIndex(initialPath);
         }
 
         async function showDepsGraph() {
@@ -1175,8 +1453,11 @@
             } else {
                 docsEl.innerHTML = docs.map(d => `
                     <div class="viewer-doc">
-                        <div class="viewer-value">${d.path} ${d.exists ? '' : '(missing)'}</div>
-                        <button class="grid-btn grid-btn-edit" ${d.exists ? '' : 'disabled'} data-path="${encodeURIComponent(d.path)}" onclick="previewFileFromButton(this)">Preview</button>
+                        <div class="viewer-value">${escapeHtml(d.path)} ${d.exists ? '' : '(missing)'}</div>
+                        <div style="display:flex;gap:6px">
+                            <button class="grid-btn grid-btn-edit" ${d.exists ? '' : 'disabled'} data-path="${encodeURIComponent(d.path)}" onclick="previewFileFromButton(this)">Preview</button>
+                            <button class="grid-btn grid-btn-claim" ${d.exists ? '' : 'disabled'} data-path="${encodeURIComponent(d.path)}" onclick="openInDocsExplorerFromButton(this)">Open</button>
+                        </div>
                     </div>
                 `).join('');
             }
@@ -1201,7 +1482,7 @@
         // Init
         initGrid();
         refreshData();
-        setInterval(refreshData, 30000);
+        setInterval(refreshData, 5000);
     </script>
 </body>
 </html>

@@ -15,9 +15,25 @@ from typing import Dict, List
 from urllib.parse import parse_qs, urlparse
 
 from wbs_common import GOV, WBS_DEF, load_definition, load_state, get_counts
+from governed_platform.governance.file_lock import atomic_write_json
+from governed_platform.governance.status import normalize_runtime_status
 
 STATIC = GOV / "static"
 CLI = GOV / "wbs_cli.py"
+
+DOC_INCLUDED_TOP_LEVEL = {"docs", "prompts", "templates", "examples", ".governance", "skills"}
+DOC_SKIP_PARTS = {"__pycache__", ".git", "dist", "node_modules", ".venv", "venv"}
+DOC_EXTENSIONS = {".md", ".markdown", ".txt", ".rst", ".adoc", ".json", ".yml", ".yaml", ".csv", ".log"}
+DOC_MARKDOWN_EXTENSIONS = {".md", ".markdown"}
+DOC_ROOT_HINT_FILES = {
+    "README.md",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "GEMINI.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "constitution.md",
+}
 
 
 def _build_logger() -> logging.Logger:
@@ -41,12 +57,8 @@ LOGGER = _build_logger()
 
 
 def save_definition(defn: dict):
-    """Save WBS definition with atomic write."""
-    tmp = WBS_DEF.with_suffix(".tmp")
-    with open(tmp, "w") as f:
-        json.dump(defn, f, indent=2)
-        f.write("\n")
-    tmp.replace(WBS_DEF)
+    """Save WBS definition with cross-platform lock + atomic replace."""
+    atomic_write_json(WBS_DEF, defn)
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -72,6 +84,7 @@ class Handler(BaseHTTPRequestHandler):
             "/api/log": lambda: self.api_log(int(query.get("limit", [20])[0])),
             "/api/packet": lambda: self.api_packet(query.get("id", [""])[0]),
             "/api/file": lambda: self.api_file(query.get("path", [""])[0]),
+            "/api/docs-index": lambda: self.api_docs_index(query),
             "/api/deps-graph": self.api_deps_graph,
         }
         if path in routes:
@@ -159,7 +172,7 @@ class Handler(BaseHTTPRequestHandler):
                     pkts.append({
                         "id": p["id"], "wbs_ref": p["wbs_ref"], "title": p["title"],
                         "scope": p.get("scope", ""),
-                        "status": ps.get("status", "pending"),
+                        "status": normalize_runtime_status(ps.get("status", "pending")),
                         "assigned_to": ps.get("assigned_to"),
                         "notes": ps.get("notes")
                     })
@@ -211,8 +224,11 @@ class Handler(BaseHTTPRequestHandler):
         ready = []
         for p in defn.get("packets", []):
             pid = p["id"]
-            if state["packets"].get(pid, {}).get("status", "pending") == "pending":
-                ok = all(state["packets"].get(d, {}).get("status") == "done" for d in deps.get(pid, []))
+            if normalize_runtime_status(state["packets"].get(pid, {}).get("status", "pending")) == "pending":
+                ok = all(
+                    normalize_runtime_status(state["packets"].get(d, {}).get("status")) == "done"
+                    for d in deps.get(pid, [])
+                )
                 if ok:
                     ready.append({"id": pid, "wbs_ref": p["wbs_ref"], "title": p["title"]})
         return {"ready": ready}
@@ -239,7 +255,7 @@ class Handler(BaseHTTPRequestHandler):
                     "id": pid,
                     "title": packet.get("title", ""),
                     "wbs_ref": packet.get("wbs_ref", ""),
-                    "status": pstate.get("status", "pending"),
+                    "status": normalize_runtime_status(pstate.get("status", "pending")),
                 }
             )
 
@@ -255,6 +271,144 @@ class Handler(BaseHTTPRequestHandler):
         state = load_state()
         entries = state.get("log", [])[-limit:]
         return {"log": entries}
+
+    def _scan_document_files(self, repo_root: Path) -> List[Path]:
+        """Discover documentation-related files from curated top-level locations."""
+        out = []
+        for root, dirs, files in os.walk(repo_root):
+            root_path = Path(root)
+            rel_root = root_path.relative_to(repo_root)
+            rel_parts = rel_root.parts
+            top = rel_parts[0] if rel_parts else ""
+
+            # Prune ignored directories at every level.
+            dirs[:] = [d for d in dirs if d not in DOC_SKIP_PARTS]
+
+            # Keep traversal limited to curated top-level documentation areas.
+            if rel_parts and top not in DOC_INCLUDED_TOP_LEVEL:
+                dirs[:] = []
+                continue
+
+            for fname in files:
+                fpath = root_path / fname
+                rel_file = fpath.relative_to(repo_root)
+                rel_file_parts = rel_file.parts
+                ext = fpath.suffix.lower()
+
+                if any(part in DOC_SKIP_PARTS for part in rel_file_parts):
+                    continue
+
+                if not rel_parts:
+                    if fname in DOC_ROOT_HINT_FILES or ext in DOC_EXTENSIONS:
+                        out.append(fpath)
+                    continue
+
+                if ext in DOC_EXTENSIONS:
+                    out.append(fpath)
+        return out
+
+    def _doc_kind(self, ext: str) -> str:
+        ext = (ext or "").lower()
+        if ext in DOC_MARKDOWN_EXTENSIONS:
+            return "markdown"
+        if ext == ".json":
+            return "json"
+        if ext in {".yml", ".yaml"}:
+            return "yaml"
+        if ext == ".csv":
+            return "csv"
+        if ext == ".log":
+            return "log"
+        return "text"
+
+    def _doc_title_and_summary(self, path: Path, ext: str) -> Dict:
+        title = path.stem.replace("-", " ").replace("_", " ").strip().title() or path.name
+        summary = ""
+        try:
+            text = path.read_text(errors="replace")[:12_000]
+        except Exception:
+            return {"title": title, "summary": summary}
+
+        lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
+        if not lines:
+            return {"title": title, "summary": summary}
+
+        if ext in DOC_MARKDOWN_EXTENSIONS:
+            heading = next((ln for ln in lines if ln.startswith("#")), "")
+            if heading:
+                title = heading.lstrip("#").strip() or title
+            body = next((ln for ln in lines if not ln.startswith("#")), "")
+            if body:
+                summary = body[:180]
+        else:
+            summary = lines[0][:180]
+        return {"title": title, "summary": summary}
+
+    def api_docs_index(self, query: Dict[str, List[str]]) -> Dict:
+        """Return project documentation index metadata for documentation explorer UI."""
+        repo_root = GOV.parent.resolve()
+
+        q = (query.get("q", [""])[0] or "").strip().lower()
+        kind_filter = (query.get("kind", [""])[0] or "").strip().lower()
+        category_filter = (query.get("category", [""])[0] or "").strip()
+        try:
+            limit = int((query.get("limit", ["800"])[0] or "800").strip())
+        except ValueError:
+            limit = 800
+        limit = max(1, min(limit, 5000))
+
+        docs = []
+        for file_path in self._scan_document_files(repo_root):
+            rel = file_path.relative_to(repo_root).as_posix()
+            ext = file_path.suffix.lower()
+            kind = self._doc_kind(ext)
+            category = rel.split("/", 1)[0] if "/" in rel else "root"
+
+            if kind_filter and kind != kind_filter:
+                continue
+            if category_filter and category != category_filter:
+                continue
+
+            title_meta = self._doc_title_and_summary(file_path, ext)
+            stat = file_path.stat()
+            item = {
+                "path": rel,
+                "name": file_path.name,
+                "title": title_meta["title"],
+                "summary": title_meta["summary"],
+                "category": category,
+                "kind": kind,
+                "ext": ext or "",
+                "size": stat.st_size,
+                "updated_at": datetime.fromtimestamp(stat.st_mtime).isoformat(),
+            }
+            haystack = " ".join(
+                [item["path"], item["name"], item["title"], item["summary"], item["category"], item["kind"]]
+            ).lower()
+            if q and q not in haystack:
+                continue
+            docs.append(item)
+
+        docs.sort(key=lambda d: (d["category"].lower(), d["path"].lower()))
+        total = len(docs)
+        categories = sorted({d["category"] for d in docs})
+        limited_docs = docs[:limit]
+        kinds = sorted({d["kind"] for d in docs})
+
+        return {
+            "success": True,
+            "query": {
+                "q": q,
+                "kind": kind_filter,
+                "category": category_filter,
+                "limit": limit,
+            },
+            "total": total,
+            "returned": len(limited_docs),
+            "categories": categories,
+            "kinds": kinds,
+            "documents": limited_docs,
+        }
 
     def _extract_doc_paths(self, *texts: str) -> List[Dict]:
         """Extract repository-relative file paths from free-form packet text fields."""
@@ -344,7 +498,7 @@ class Handler(BaseHTTPRequestHandler):
                 "area_title": area.get("title", ""),
                 "title": pkt.get("title", ""),
                 "scope": pkt.get("scope", ""),
-                "status": pkt_state.get("status", "pending"),
+                "status": normalize_runtime_status(pkt_state.get("status", "pending")),
                 "assigned_to": pkt_state.get("assigned_to"),
                 "started_at": pkt_state.get("started_at"),
                 "completed_at": pkt_state.get("completed_at"),
@@ -429,11 +583,7 @@ class Handler(BaseHTTPRequestHandler):
                 "completed_at": None,
                 "notes": None
             }
-            tmp = WBS_STATE.with_suffix(".tmp")
-            with open(tmp, "w") as f:
-                json.dump(state, f, indent=2)
-                f.write("\n")
-            tmp.replace(WBS_STATE)
+            atomic_write_json(WBS_STATE, state)
 
         return {"success": True, "message": f"Packet {pid} added"}
 
@@ -583,8 +733,9 @@ class Handler(BaseHTTPRequestHandler):
 
         # Check status
         pkt_state = state["packets"].get(pid, {})
-        if pkt_state.get("status") in ("in_progress", "done"):
-            return {"success": False, "message": f"Cannot delete {pkt_state.get('status')} packet"}
+        packet_status = normalize_runtime_status(pkt_state.get("status"))
+        if packet_status in ("in_progress", "done"):
+            return {"success": False, "message": f"Cannot delete {packet_status} packet"}
 
         # Remove packet
         defn["packets"] = [p for p in defn["packets"] if p["id"] != pid]
@@ -605,12 +756,7 @@ class Handler(BaseHTTPRequestHandler):
         if pid in state["packets"]:
             del state["packets"][pid]
             from wbs_common import WBS_STATE
-            import json
-            tmp = WBS_STATE.with_suffix(".tmp")
-            with open(tmp, "w") as f:
-                json.dump(state, f, indent=2)
-                f.write("\n")
-            tmp.replace(WBS_STATE)
+            atomic_write_json(WBS_STATE, state)
 
         return {"success": True, "message": f"Packet {pid} deleted"}
 
@@ -648,11 +794,7 @@ class Handler(BaseHTTPRequestHandler):
                 del state["packets"][pid]
 
         # Save state
-        tmp = WBS_STATE.with_suffix(".tmp")
-        with open(tmp, "w") as f:
-            json.dump(state, f, indent=2)
-            f.write("\n")
-        tmp.replace(WBS_STATE)
+        atomic_write_json(WBS_STATE, state)
 
         return {"success": True, "message": f"Saved {len(body.get('work_areas', []))} areas, {len(body.get('packets', []))} packets"}
 

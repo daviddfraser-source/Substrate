@@ -6,6 +6,11 @@
       "path": ".governance/packet-schema.json"
     },
     {
+      "name": "wbs_definition",
+      "version": "1.0",
+      "path": ".governance/wbs-schema.json"
+    },
+    {
       "name": "scaffold_config",
       "version": "1.0",
       "path": ".governance/scaffold-config.schema.json"

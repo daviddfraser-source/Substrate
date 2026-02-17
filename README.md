@@ -1,12 +1,15 @@
 # Substrate
 
-[![Tests](https://img.shields.io/badge/tests-python%20unittest-informational)](#testing)
+[![CI](https://github.com/daviddfraser-source/Substrate/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/daviddfraser-source/Substrate/actions/workflows/test.yml)
+[![Python](https://img.shields.io/badge/python-3.8%2B-blue.svg)](#get-started)
 [![Open in GitHub Codespaces](https://img.shields.io/badge/dev-GitHub%20Codespaces-24292f?logo=github)](https://codespaces.new/daviddfraser-source/Substrate)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 Formal packet/state-machine orchestration for multi-agent software delivery, with dependency gating, file-backed state, and auditable lifecycle logs.
 
 Constitutional governance baseline: `constitution.md`.
+
+![WBS Dashboard](docs/assets/wbs-dashboard.png)
 
 ## Why This Exists
 
@@ -82,6 +85,7 @@ This template separates **governance tooling** from **user code**:
 - `src/governed_platform/`: Contains the core Substrate logic (CLI, Server, State Machine). **Do not modify** unless you are upgrading the governance system itself.
 - `src/app/`: **[YOUR CODE HERE]**. This is where your application logic, business rules, and agent implementations should reside.
 - `tests/`: Add your application tests here.
+- `.meta/`: Local workspace/session artifacts. **Delete before publishing** template forks or release bundles.
 
 
 ## Commands

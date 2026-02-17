@@ -5,7 +5,26 @@ PASS=0; FAIL=0
 pass() { echo "PASS: $1"; PASS=$((PASS+1)); return 0; }
 fail() { echo "FAIL: $1"; FAIL=$((FAIL+1)); return 0; }
 
-rm -f .governance/wbs-state.json
+STATE_FILE=".governance/wbs-state.json"
+ORIG_STATE_EXISTS=0
+STATE_BACKUP=""
+if [ -f "$STATE_FILE" ]; then
+  ORIG_STATE_EXISTS=1
+  STATE_BACKUP="$(mktemp -t wbs-state-backup.XXXXXX.json)"
+  cp "$STATE_FILE" "$STATE_BACKUP"
+fi
+
+cleanup() {
+  if [ "$ORIG_STATE_EXISTS" -eq 1 ] && [ -n "$STATE_BACKUP" ] && [ -f "$STATE_BACKUP" ]; then
+    cp "$STATE_BACKUP" "$STATE_FILE"
+    rm -f "$STATE_BACKUP"
+  else
+    rm -f "$STATE_FILE"
+  fi
+}
+trap cleanup EXIT
+
+rm -f "$STATE_FILE"
 
 echo "WBS Smoke Tests"
 echo "==============="
@@ -38,6 +57,5 @@ echo '{"metadata":{},"work_areas":[{"id":"T","title":"T"}],"packets":[{"id":"A",
 python3 .governance/wbs_cli.py init /tmp/c.json 2>&1 | grep -q "Circular" && pass "circular" || fail "circular"
 rm -f /tmp/c.json
 
-rm -f .governance/wbs-state.json
 echo ""; echo "Results: $PASS passed, $FAIL failed"
 [ $FAIL -eq 0 ] && exit 0 || exit 1

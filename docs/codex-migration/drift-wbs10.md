@@ -1,41 +1,64 @@
-# Drift Assessment: WBS 10.0 Codex Skills Platform and Automation
+# Drift Assessment: WBS 10.0 Session Continuity and Guided Planning
 
 ## Scope Reviewed
-- Level-2 area: 10.0
-- Included packet IDs: CDX-10-1 through CDX-10-20
-- Excluded/out-of-scope: post-initial optimization and deep production hardening of each external tool
+- Level-2 area: `10.0`
+- Packet range: `UPG-044` through `UPG-051`
+- Included streams: briefing/context contracts, handover/resume lifecycle, capability profiles, guided planning, markdown import, rollout hardening docs
+- Excluded: legacy L1-L5 packet backlog outside `10.0`
 
 ## Expected vs Delivered
-- Planned outcomes: build and validate eight custom skills plus integrated readiness closeout.
-- Delivered outcomes: all 20 WBS 10 packets marked done with evidence, CI wiring added, and readiness artifacts published.
-- Variance summary: no packet-level scope miss; practical runtime execution of some tools remains environment-dependent.
+- Expected:
+  - contract-stable briefing/context outputs
+  - governed handover/resume continuity
+  - capability-aware claim enforcement
+  - guided planning workflow with non-interactive test path
+  - experimental markdown import with explicit uncertainty controls
+  - measurable rollout KPIs and operator runbook
+- Delivered:
+  - `briefing`, `context`, `handover`, `resume`, `agent-*`, and `plan` command paths implemented and tested
+  - planner module added with deterministic normalization and cycle guidance
+  - markdown import path added with `import_confidence` markers and ambiguity gate for `--apply`
+  - rollout metrics/runbook/checklists documented and linked
+- Variance:
+  - no packet-level scope expansion beyond approved `10.0` stream
+  - markdown import remains explicitly experimental and intentionally guarded
 
 ## Drift Assessment
-- Process drift observed: low; packet lifecycle and evidence flow stayed aligned with governance.
-- Requirements drift observed: low; requested skill set and order were delivered.
-- Implementation drift observed: low to medium; some skills provide scaffold/integration paths where full external execution depends on tool availability.
+- Process drift: low
+  - packet lifecycle updates were consistently recorded through CLI transitions.
+- Requirements drift: low
+  - requested findings-driven hardening tasks were implemented as scoped packets.
+- Implementation drift: low to medium
+  - planner metadata instrumentation (`planning_source`, `planning_generated_at`) was added to make adoption KPI measurable; this is additive and non-breaking.
 - Overall drift rating: low
 
 ## Evidence Reviewed
-- WBS state/log references: `.governance/wbs-state.json` (CDX-10-1..20 completion and logs).
-- Artifacts/documents reviewed:
-  - `docs/skills-roadmap.md`
-  - `docs/skills-contract.md`
-  - `docs/codex-migration/skills-readiness-report.md`
-  - `docs/skills/*.md`
-  - `skills/*`
-- Test/validation evidence:
-  - `python3 -m unittest discover -s tests -v` passed (15 tests)
-  - script syntax and smoke wiring checks completed for added skill scripts
+- Governance evidence:
+  - `.governance/wbs-state.json` (`UPG-044`..`UPG-051` transition history)
+  - `.governance/wbs.json` (`10.0` packet definitions and acceptance checks)
+- Key artifacts:
+  - `.governance/planner.py`
+  - `.governance/agents.json`
+  - `.governance/packet-schema.json`
+  - `.governance/wbs_cli.py`
+  - `docs/codex-migration/briefing-context-schema.md`
+  - `docs/codex-migration/enhancement-rollout.md`
+  - `docs/governance-workflow-codex.md`
+  - `docs/release-checklist-codex.md`
+  - `docs/DESIGNING_WBS.md`
+- Validation commands (latest run):
+  - `pytest -q tests/test_planner_mode.py tests/test_planner_import_markdown.py tests/test_cli_contract.py tests/test_agent_capabilities.py tests/test_cli_briefing.py` (20 passed)
+  - `python3 .governance/wbs_cli.py validate` (passed)
 
 ## Residual Risks
-- External-tool dependency risk: CI/local environments must provide promptfoo, semgrep, trivy, gitleaks, reviewdog, and playwright runtime dependencies.
-- Operational drift risk: skill contracts may diverge if future skills skip template/lint checks.
+- Advisory capability mode can mask repeated mismatch behavior if logs are not reviewed routinely.
+- Markdown import may produce low-confidence task decomposition on loosely structured source docs.
+- Downstream tooling that assumes fixed metadata keys may need updates for planner metadata fields.
 
 ## Immediate Next Actions
-- Enforce periodic `scripts/skills-smoke.sh` and CI job review to keep skills operational.
-- Add periodic governance review packet for skills version pinning and dependency updates.
-- Track skill execution outcomes in delivery reports to detect drift early.
+- Run weekly KPI evidence commands from `docs/codex-migration/enhancement-rollout.md`.
+- Review and triage `capability_warning` events before moving enforcement mode to `strict`.
+- Keep markdown import usage gated to draft workflows until observed ambiguity rate is acceptable.
 
 ## Notes
-- Cryptographic hashing is not required for this assessment.
+- Cryptographic hashing is not required for this drift assessment in this governance model.

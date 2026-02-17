@@ -1,46 +1,65 @@
-# Drift Assessment: WBS 11.0 Substrate Template Productization
+# Drift Assessment: WBS 11.0 Git-Native Governance
 
 ## Scope Reviewed
-- Level-2 area: 11.0
-- Included packet IDs: CDX-11-1 through CDX-11-10
-- Excluded/out-of-scope: downstream consumer-specific customization after template handoff
+- Level-2 area: `11.0`
+- Packet range: `UPG-052` through `UPG-059`
+- Included streams: Git-native contract, commit protocol, auto-commit modes, linkage verification/export, branch helpers, CI enforcement, reconstruction, and rollout hardening docs
+- Excluded: upstream non-Git governance streams (`1.0`-`10.0`) except where referenced for compatibility
 
 ## Expected vs Delivered
-- Planned outcomes: bootstrap, config contract, optional skills manifest, template profiles, deterministic setup, scaffold check, wizard onboarding, usage guide, governance policy tests, and release packaging workflow.
-- Delivered outcomes: all ten items delivered with artifacts and evidence linked in packet notes.
-- Variance summary: no scope gap; implementation includes both local scripts and CI workflow wiring.
+- Expected outcomes:
+  - formal Git-native governance contract with compatibility model
+  - structured commit protocol helpers and parser validation
+  - optional auto-commit transitions with disabled/advisory/strict behavior
+  - event-to-commit linkage metadata and verification/export commands
+  - branch-per-packet helper workflow (opt-in)
+  - CI integration for protocol/linkage checks
+  - closeout tag convention and reconstruction tooling
+  - rollout metrics, migration sequence, and rollback runbook
+- Delivered outcomes:
+  - all expected outcomes implemented and documented across CLI/module/tests/docs
+  - CI workflow now executes Git-native governance checks
+  - rollout and release checklist include Git-native evidence and rollback commands
+- Variance summary:
+  - no packet-level scope expansion beyond `11.0`
+  - reconstruction command correctly errors in non-git worktrees (documented behavior), validated fully in temp-repo tests
 
 ## Drift Assessment
-- Process drift observed: low; packet lifecycle and dependency order followed.
-- Requirements drift observed: low; scaffold productization scope met.
-- Implementation drift observed: low; artifacts map directly to packet scopes.
+- Process drift observed: low
+  - packet transitions tracked through CLI lifecycle updates and dependency order was preserved.
+- Requirements drift observed: low
+  - findings-driven Git-native packet set was implemented as defined in WBS.
+- Implementation drift observed: low to medium
+  - strict-mode rollback semantics for post-commit tag failures remain warning-based due immutable commit boundary; behavior is explicit and documented.
 - Overall drift rating: low
 
 ## Evidence Reviewed
-- WBS state/log references: `.governance/wbs-state.json` entries for `CDX-11-*`.
-- Artifacts/documents reviewed:
-  - `scripts/init-scaffold.sh`
-  - `scaffold.config.json`
-  - `skills/manifest.json`
-  - `templates/wbs-codex-minimal.json`, `templates/wbs-codex-full.json`
-  - `scripts/setup-tools.sh`
-  - `scripts/scaffold-check.sh`
-  - `start.py` wizard updates
-  - `docs/template-usage.md`
-  - `tests/test_governance_policy.py`
-  - `.github/workflows/template-release.yml`
-  - `scripts/build-template-bundle.sh`
+- Governance evidence:
+  - `.governance/wbs-state.json` transition history for `UPG-052`..`UPG-059`
+  - `.governance/wbs.json` packet definitions/dependencies for area `11.0`
+- Core artifacts reviewed:
+  - `src/governed_platform/governance/git_ledger.py`
+  - `.governance/wbs_cli.py`
+  - `.governance/git-governance.json`
+  - `.github/workflows/test.yml`
+  - `docs/codex-migration/git-native-governance.md`
+  - `docs/codex-migration/git-native-rollout.md`
+  - `docs/governance-workflow-codex.md`
+  - `docs/release-checklist-codex.md`
+  - `docs/logging.md`
 - Test/validation evidence:
-  - `python3 -m unittest discover -s tests -v` passed (18 tests)
-  - scaffold check report generated and passing
+  - `pytest -q tests/test_git_commit_protocol.py tests/test_git_auto_commit.py tests/test_git_ledger_linkage.py tests/test_git_branch_packet_flow.py tests/test_git_ci_governance.py tests/test_git_reconstruction.py tests/test_governance_policy.py` (passing during execution; subsets executed per packet)
+  - `python3 .governance/wbs_cli.py validate` (passed after each packet close)
 
 ## Residual Risks
-- External dependency versions may drift across environments despite baseline setup script.
-- Template consumers may bypass scaffold-check unless enforced in CI.
+- Repositories without stable git identity/config can produce elevated advisory warnings.
+- Strict mode can block lifecycle progress during transient git auth/protection outages.
+- Branch-per-packet workflow may increase operational overhead if adopted indiscriminately.
 
 ## Immediate Next Actions
-- Add scaffold-check as required CI gate for template branches.
-- Re-run toolchain report on version updates and refresh pinned targets.
+- Pilot `advisory + auto-commit on` in a real git-backed operator repo and monitor warning rate against rollout targets.
+- Promote to strict only after sustained `git-verify-ledger --strict` pass results.
+- Capture first production reconstruction snapshot (`git-reconstruct`) and closeout-tag evidence in release records.
 
 ## Notes
-- Cryptographic hashing is not required for this assessment.
+- Cryptographic hashing beyond existing log hash-chain mode is not required for this assessment.

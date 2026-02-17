@@ -18,6 +18,16 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Governance runtime state guard
+        run: |
+          chmod +x scripts/governance-state-guard.sh
+          ./scripts/governance-state-guard.sh --ci
+
+      - name: Git-native governance protocol checks
+        run: |
+          python3 .governance/wbs_cli.py git-protocol --json >/tmp/git-protocol.json
+          python3 .governance/wbs_cli.py --json git-verify-ledger --strict >/tmp/git-ledger-verify.json
+
       - name: Run quality gates
         run: |
           chmod +x scripts/quality-gates.sh

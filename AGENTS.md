@@ -13,10 +13,13 @@ Use this file as executable governance, not background documentation.
 
 ## How To Use This File
 - At session start:
+  - run `python3 .governance/wbs_cli.py briefing --format json` and review summary before claiming
   - confirm active WBS scope and ready packet(s)
+  - after claim, load packet context with `python3 .governance/wbs_cli.py context <packet_id> --format json`
   - confirm owner and expected output artifact
 - During execution:
   - follow packet lifecycle (`claim` -> execute -> `done`/`fail` -> `note`)
+  - if session transfer is required, use governed continuity commands (`handover` -> `resume`)
   - keep evidence paths current in packet notes
 - At closeout:
   - provide full delivery report in chat
@@ -27,6 +30,7 @@ Use this file as executable governance, not background documentation.
 - Do not create or modify packets unless explicitly requested by the user.
 - Prefer explicit commands over assistant-specific slash commands.
 - Use `.governance/packet-schema.json` as the canonical packet content schema.
+- Use `.governance/agents.json` for declared agent capability profiles and enforcement mode.
 - Ensure packet definitions include required governance fields (not only title/scope).
 - Packet viewer behavior should present the full packet object plus runtime state.
 

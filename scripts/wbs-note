@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+if [ "$#" -lt 3 ]; then
+  echo "Usage: scripts/wbs-note <packet_id> <agent> <notes>" >&2
+  exit 1
+fi
+python3 .governance/wbs_cli.py note "$1" "$2" "$3"

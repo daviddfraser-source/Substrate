@@ -1,0 +1,83 @@
+{
+  "metadata": {
+    "project_name": "Bug Campaign: [DESCRIPTION]",
+    "approved_by": "[YOUR NAME]",
+    "approved_at": "[DATE]"
+  },
+  "work_areas": [
+    {
+      "id": "1.0",
+      "title": "Triage",
+      "description": "Identify and prioritize bugs to fix"
+    },
+    {
+      "id": "2.0",
+      "title": "Fix & Verify",
+      "description": "Fix each bug and verify the fix"
+    },
+    {
+      "id": "3.0",
+      "title": "Wrap-up",
+      "description": "Final validation and documentation"
+    }
+  ],
+  "packets": [
+    {
+      "id": "BUG-001",
+      "wbs_ref": "1.1",
+      "area_id": "1.0",
+      "title": "Collect and document all bugs",
+      "scope": "Gather all bugs to fix. Document each: description, reproduction steps, severity, affected area. Output: bugs.md"
+    },
+    {
+      "id": "BUG-002",
+      "wbs_ref": "1.2",
+      "area_id": "1.0",
+      "title": "Prioritize and sequence",
+      "scope": "Order bugs by priority. Consider: severity, dependencies between fixes, risk. Update bugs.md with priority order."
+    },
+    {
+      "id": "BUG-003",
+      "wbs_ref": "2.1",
+      "area_id": "2.0",
+      "title": "Fix bug batch 1 (critical)",
+      "scope": "Fix highest priority bugs. For each: reproduce, find root cause, fix, add regression test, verify fix. Commit each fix separately."
+    },
+    {
+      "id": "BUG-004",
+      "wbs_ref": "2.2",
+      "area_id": "2.0",
+      "title": "Fix bug batch 2 (high)",
+      "scope": "Fix next priority bugs. Same process: reproduce, root cause, fix, test, verify. Commit separately."
+    },
+    {
+      "id": "BUG-005",
+      "wbs_ref": "2.3",
+      "area_id": "2.0",
+      "title": "Fix bug batch 3 (medium/low)",
+      "scope": "Fix remaining bugs. Same process. May include 'nice to fix' items if time allows."
+    },
+    {
+      "id": "BUG-006",
+      "wbs_ref": "3.1",
+      "area_id": "3.0",
+      "title": "Full regression test",
+      "scope": "Run complete test suite. Manual testing of fixed areas. Verify no new bugs introduced."
+    },
+    {
+      "id": "BUG-007",
+      "wbs_ref": "3.2",
+      "area_id": "3.0",
+      "title": "Update bug tracker and docs",
+      "scope": "Close fixed bugs in tracker. Document any known issues remaining. Update changelog if applicable."
+    }
+  ],
+  "dependencies": {
+    "BUG-002": ["BUG-001"],
+    "BUG-003": ["BUG-002"],
+    "BUG-004": ["BUG-003"],
+    "BUG-005": ["BUG-004"],
+    "BUG-006": ["BUG-005"],
+    "BUG-007": ["BUG-006"]
+  }
+}

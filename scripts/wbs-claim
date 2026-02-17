@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+if [ "$#" -lt 2 ]; then
+  echo "Usage: scripts/wbs-claim <packet_id> <agent>" >&2
+  exit 1
+fi
+python3 .governance/wbs_cli.py claim "$1" "$2"

@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WBS Manager</title>
+    <script src="https://unpkg.com/ag-grid-enterprise@31.0.0/dist/ag-grid-enterprise.min.js"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --success: #059669;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--gray-100); color: var(--gray-900); }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--gray-900) 0%, var(--gray-800) 100%);
+            color: white;
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        .logo { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+        .logo span { color: var(--primary); }
+        .header-divider { width: 1px; height: 32px; background: var(--gray-700); }
+        .project-info { flex: 1; }
+        .project-name { font-size: 16px; font-weight: 600; }
+        .project-meta { font-size: 12px; color: var(--gray-400); }
+
+        .header-stats { display: flex; gap: 32px; }
+        .stat { text-align: center; }
+        .stat-value { font-size: 24px; font-weight: 700; }
+        .stat-value.pending { color: var(--warning); }
+        .stat-value.progress { color: var(--primary); }
+        .stat-value.done { color: var(--success); }
+        .stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gray-400); }
+
+        .header-actions { display: flex; gap: 12px; }
+        .refresh-indicator {
+            align-self: center;
+            color: var(--gray-400);
+            font-size: 12px;
+            min-width: 130px;
+            text-align: right;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.15s;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+        .btn-secondary { background: var(--gray-700); color: white; }
+        .btn-secondary:hover { background: var(--gray-600); }
+        .btn-success { background: var(--success); color: white; }
+        .btn-ghost { background: transparent; color: var(--gray-400); }
+        .btn-ghost:hover { color: white; background: var(--gray-700); }
+        .btn-sm { padding: 6px 12px; font-size: 13px; }
+        .btn-icon { width: 36px; height: 36px; padding: 0; justify-content: center; border-radius: 8px; }
+
+        /* Main Layout */
+        .main { display: flex; height: calc(100vh - 64px); }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: white;
+            border-right: 1px solid var(--gray-200);
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .sidebar-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gray-500); }
+        .sidebar-list { flex: 1; overflow-y: auto; padding: 12px; }
+        .sidebar-item {
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 4px;
+            transition: all 0.15s;
+        }
+        .sidebar-item:hover { background: var(--gray-50); }
+        .sidebar-item.active { background: var(--primary); color: white; }
+        .sidebar-item-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--gray-100); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; }
+        .sidebar-item.active .sidebar-item-icon { background: rgba(255,255,255,0.2); }
+        .sidebar-item-content { flex: 1; min-width: 0; }
+        .sidebar-item-title { font-weight: 500; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .sidebar-item-meta { font-size: 12px; color: var(--gray-400); }
+        .sidebar-item.active .sidebar-item-meta { color: rgba(255,255,255,0.7); }
+        .sidebar-item-count { background: var(--gray-200); padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: 500; }
+        .sidebar-item.active .sidebar-item-count { background: rgba(255,255,255,0.2); }
+        .sidebar-footer { padding: 16px; border-top: 1px solid var(--gray-200); }
+
+        /* Content */
+        .content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .content-header {
+            padding: 20px 24px;
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .content-title { font-size: 20px; font-weight: 600; flex: 1; }
+        .content-body { flex: 1; padding: 24px; overflow: hidden; }
+
+        /* Grid Container */
+        .grid-wrapper {
+            height: 100%;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        /* AG Grid Customization */
+        .ag-theme-alpine {
+            --ag-header-background-color: var(--gray-50);
+            --ag-header-foreground-color: var(--gray-600);
+            --ag-row-hover-color: var(--gray-50);
+            --ag-selected-row-background-color: #eff6ff;
+            --ag-font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --ag-font-size: 14px;
+            --ag-row-height: 52px;
+            --ag-header-height: 48px;
+        }
+        .ag-theme-alpine .ag-header-cell-label { font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .ag-theme-alpine .ag-row { border-bottom: 1px solid var(--gray-100); }
+        .ag-theme-alpine .ag-cell { display: flex; align-items: center; }
+
+        /* WBS Number Cell */
+        .wbs-number { font-family: 'SF Mono', Monaco, monospace; font-size: 13px; color: var(--primary); font-weight: 600; }
+
+        /* Status Badge */
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-in_progress { background: #dbeafe; color: #1e40af; }
+        .status-done { background: #d1fae5; color: #065f46; }
+        .status-blocked { background: var(--gray-100); color: var(--gray-500); }
+
+        /* Row Type Styling */
+        .row-category { background: var(--gray-50) !important; font-weight: 600; }
+        .row-category .ag-cell { font-weight: 600; }
+
+        /* Action Buttons in Grid */
+        .grid-actions { display: flex; gap: 8px; }
+        .grid-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .grid-btn-claim { background: var(--primary); color: white; }
+        .grid-btn-claim:hover { background: var(--primary-dark); }
+        .grid-btn-done { background: var(--success); color: white; }
+        .grid-btn-edit { background: var(--gray-100); color: var(--gray-600); }
+        .grid-btn-edit:hover { background: var(--gray-200); }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.show { display: flex; }
+        .modal {
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 560px;
+            max-height: 90vh;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+        }
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .modal-title { font-size: 18px; font-weight: 600; }
+        .modal-close { background: none; border: none; font-size: 24px; color: var(--gray-400); cursor: pointer; }
+        .modal-close:hover { color: var(--gray-600); }
+        .modal-body { padding: 24px; overflow-y: auto; }
+        .modal-footer { padding: 20px 24px; border-top: 1px solid var(--gray-200); display: flex; justify-content: flex-end; gap: 12px; }
+
+        /* Form */
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; font-size: 14px; font-weight: 500; color: var(--gray-700); margin-bottom: 8px; }
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.15s;
+        }
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+        }
+        .form-textarea { min-height: 100px; resize: vertical; }
+        .form-hint { font-size: 12px; color: var(--gray-500); margin-top: 6px; }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 16px 24px;
+            background: var(--gray-900);
+            color: white;
+            border-radius: 12px;
+            font-weight: 500;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s;
+            z-index: 2000;
+        }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast.error { background: var(--danger); }
+        .toast.success { background: var(--success); }
+        .packet-viewer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .viewer-card { border: 1px solid var(--gray-200); border-radius: 8px; padding: 10px; background: var(--gray-50); }
+        .viewer-label { font-size: 12px; color: var(--gray-500); margin-bottom: 4px; }
+        .viewer-value { font-size: 13px; color: var(--gray-800); word-break: break-word; }
+        .viewer-doc { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--gray-200); }
+        .viewer-doc:last-child { border-bottom: none; }
+        .viewer-events { max-height: 220px; overflow: auto; border: 1px solid var(--gray-200); border-radius: 8px; }
+        .viewer-event { padding: 8px 10px; border-bottom: 1px solid var(--gray-200); font-size: 12px; }
+        .viewer-event:last-child { border-bottom: none; }
+        .viewer-file { width: 100%; min-height: 180px; border: 1px solid var(--gray-200); border-radius: 8px; padding: 10px; background: #0b1020; color: #d6def8; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; white-space: pre-wrap; overflow: auto; }
+        .docs-explorer-layout { display: grid; grid-template-columns: 340px 1fr; gap: 12px; min-height: 540px; }
+        .docs-sidebar { border: 1px solid var(--gray-200); border-radius: 10px; padding: 12px; background: var(--gray-50); display: flex; flex-direction: column; gap: 10px; min-height: 0; }
+        .docs-filters { display: grid; gap: 8px; }
+        .docs-list { border: 1px solid var(--gray-200); border-radius: 8px; background: white; overflow: auto; min-height: 0; flex: 1; }
+        .docs-item { padding: 10px 12px; border-bottom: 1px solid var(--gray-100); cursor: pointer; }
+        .docs-item:last-child { border-bottom: none; }
+        .docs-item:hover { background: var(--gray-50); }
+        .docs-item.active { background: #e0e7ff; border-left: 3px solid var(--primary); padding-left: 9px; }
+        .docs-item-title { font-size: 13px; font-weight: 600; color: var(--gray-800); margin-bottom: 2px; }
+        .docs-item-meta { font-size: 11px; color: var(--gray-500); }
+        .docs-item-summary { font-size: 12px; color: var(--gray-600); margin-top: 4px; }
+        .docs-main { border: 1px solid var(--gray-200); border-radius: 10px; background: var(--gray-50); padding: 12px; display: flex; flex-direction: column; gap: 10px; min-height: 0; }
+        .docs-main-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+        .docs-main-title { font-size: 14px; font-weight: 600; color: var(--gray-800); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .docs-main-meta { font-size: 12px; color: var(--gray-500); }
+        .docs-empty { padding: 20px 12px; color: var(--gray-500); font-size: 13px; text-align: center; }
+        .docs-stats { font-size: 12px; color: var(--gray-500); }
+
+        /* Progress Ring */
+        .progress-ring { position: relative; width: 80px; height: 80px; }
+        .progress-ring svg { transform: rotate(-90deg); }
+        .progress-ring-bg { fill: none; stroke: var(--gray-200); stroke-width: 8; }
+        .progress-ring-fill { fill: none; stroke: var(--success); stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 0.5s; }
+        .progress-ring-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 18px; font-weight: 700; }
+
+        /* Empty State */
+        .empty-state { text-align: center; padding: 80px 40px; }
+        .empty-state-icon { font-size: 64px; margin-bottom: 24px; }
+        .empty-state-title { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
+        .empty-state-desc { color: var(--gray-500); margin-bottom: 24px; }
+        @media (max-width: 1024px) {
+            .packet-viewer-grid { grid-template-columns: 1fr; }
+            .docs-explorer-layout { grid-template-columns: 1fr; }
+            .docs-sidebar { max-height: 320px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">WBS<span>Manager</span></div>
+        <div class="header-divider"></div>
+        <div class="project-info">
+            <div class="project-name" id="project-name">Loading...</div>
+            <div class="project-meta" id="project-meta"></div>
+        </div>
+        <div class="header-stats">
+            <div class="stat">
+                <div class="stat-value pending" id="stat-pending">0</div>
+                <div class="stat-label">Pending</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value progress" id="stat-progress">0</div>
+                <div class="stat-label">In Progress</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value done" id="stat-done">0</div>
+                <div class="stat-label">Complete</div>
+            </div>
+        </div>
+        <div class="header-actions">
+            <span class="refresh-indicator" id="last-refresh">Last refresh: --</span>
+            <button class="btn btn-ghost btn-icon" onclick="refreshData()" title="Refresh">↻</button>
+            <button class="btn btn-success" onclick="showCloseoutL2()">L2 Closeout</button>
+            <button class="btn btn-secondary" onclick="showAddCategory()">+ Category</button>
+            <button class="btn btn-primary" onclick="showAddPacket()">+ Work Item</button>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <span class="sidebar-title">Work Areas</span>
+            </div>
+            <div class="sidebar-list" id="sidebar-list"></div>
+            <div class="sidebar-footer">
+                <button class="btn btn-secondary" style="width:100%" onclick="showAddCategory()">+ Add Work Area</button>
+            </div>
+        </div>
+        <div class="content">
+            <div class="content-header">
+                <div class="content-title" id="content-title">All Work Items</div>
+                <div style="display:flex;gap:8px">
+                    <button class="btn btn-sm btn-ghost" onclick="showDocsExplorer()">Docs Explorer</button>
+                    <button class="btn btn-sm btn-ghost" onclick="showDepsGraph()">Deps Graph</button>
+                    <button class="btn btn-sm btn-ghost" onclick="expandAll()">Expand All</button>
+                    <button class="btn btn-sm btn-ghost" onclick="collapseAll()">Collapse All</button>
+                </div>
+            </div>
+            <div class="content-body">
+                <div class="grid-wrapper">
+                    <div id="wbs-grid" class="ag-theme-alpine" style="height:100%;width:100%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Category Modal -->
+    <div class="modal-overlay" id="modal-category">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title">Add Work Area</span>
+                <button class="modal-close" onclick="closeModal('modal-category')">&times;</button>
+            </div>
+            <form onsubmit="saveCategory(event)">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Area ID</label>
+                        <input type="text" class="form-input" id="cat-id" required placeholder="e.g., BACKEND, UI, TESTING">
+                        <div class="form-hint">Short identifier (auto-uppercased)</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Title</label>
+                        <input type="text" class="form-input" id="cat-title" required placeholder="e.g., Backend Development">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-textarea" id="cat-desc" placeholder="What work belongs in this area?"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-category')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Work Area</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Packet Modal -->
+    <div class="modal-overlay" id="modal-packet">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title" id="packet-modal-title">Add Work Item</span>
+                <button class="modal-close" onclick="closeModal('modal-packet')">&times;</button>
+            </div>
+            <form onsubmit="savePacket(event)">
+                <input type="hidden" id="pkt-edit-mode">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Work Area</label>
+                        <select class="form-select" id="pkt-area" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Title</label>
+                        <input type="text" class="form-input" id="pkt-title" required placeholder="What needs to be delivered?">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Scope / Description</label>
+                        <textarea class="form-textarea" id="pkt-scope" placeholder="Describe the deliverable, acceptance criteria, and expected output..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Dependencies (optional)</label>
+                        <select class="form-select" id="pkt-deps" multiple style="height:100px"></select>
+                        <div class="form-hint">Hold Ctrl/Cmd to select multiple items this depends on</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-packet')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Action Modal -->
+    <div class="modal-overlay" id="modal-action">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title" id="action-title">Claim Work Item</span>
+                <button class="modal-close" onclick="closeModal('modal-action')">&times;</button>
+            </div>
+            <form onsubmit="submitAction(event)">
+                <input type="hidden" id="action-id">
+                <input type="hidden" id="action-type">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Operator Name</label>
+                        <input type="text" class="form-input" id="action-agent" required placeholder="Enter operator name">
+                    </div>
+                    <div class="form-group" id="action-notes-group">
+                        <label class="form-label">Completion Notes</label>
+                        <textarea class="form-textarea" id="action-notes" placeholder="What was completed? Include evidence file paths."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-action')">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="action-submit">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Packet Viewer Modal -->
+    <div class="modal-overlay" id="modal-packet-viewer">
+        <div class="modal" style="max-width: 960px;">
+            <div class="modal-header">
+                <span class="modal-title" id="viewer-title">Packet Viewer</span>
+                <button class="modal-close" onclick="closeModal('modal-packet-viewer')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="packet-viewer-grid">
+                    <div class="viewer-card">
+                        <div class="viewer-label">Summary</div>
+                        <div class="viewer-value" id="viewer-summary">-</div>
+                    </div>
+                    <div class="viewer-card">
+                        <div class="viewer-label">Status</div>
+                        <div class="viewer-value" id="viewer-status">-</div>
+                    </div>
+                    <div class="viewer-card">
+                        <div class="viewer-label">Notes</div>
+                        <div class="viewer-value" id="viewer-notes">-</div>
+                    </div>
+                    <div class="viewer-card">
+                        <div class="viewer-label">Dependencies / Dependents</div>
+                        <div class="viewer-value" id="viewer-deps">-</div>
+                    </div>
+                </div>
+                <div class="viewer-card" style="margin-top: 12px;">
+                    <div class="viewer-label">Scope</div>
+                    <div class="viewer-value" id="viewer-scope">-</div>
+                </div>
+                <div class="viewer-card" style="margin-top: 12px;">
+                    <div class="viewer-label">Canonical Packet JSON</div>
+                    <pre class="viewer-file" id="viewer-packet-json">-</pre>
+                </div>
+                <div class="viewer-card" style="margin-top: 12px;">
+                    <div class="viewer-label">Structured Fields</div>
+                    <pre class="viewer-file" id="viewer-structured">-</pre>
+                </div>
+                <div class="viewer-card" style="margin-top: 12px;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+                        <div class="viewer-label" style="margin-bottom:0">Linked Documents</div>
+                        <button class="btn btn-sm btn-ghost" type="button" onclick="showDocsExplorer()">Open Full Explorer</button>
+                    </div>
+                    <div id="viewer-docs">No documents detected.</div>
+                </div>
+                <div class="viewer-card" style="margin-top: 12px;">
+                    <div class="viewer-label">Packet Events</div>
+                    <div class="viewer-events" id="viewer-events"></div>
+                </div>
+                <div class="viewer-card" style="margin-top: 12px;">
+                    <div class="viewer-label">Document Preview</div>
+                    <pre class="viewer-file" id="viewer-file">Select a linked document to preview.</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Documentation Explorer Modal -->
+    <div class="modal-overlay" id="modal-docs-explorer">
+        <div class="modal" style="max-width: 1200px;">
+            <div class="modal-header">
+                <span class="modal-title">Project Documentation Explorer</span>
+                <button class="modal-close" onclick="closeModal('modal-docs-explorer')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="docs-explorer-layout">
+                    <div class="docs-sidebar">
+                        <div class="docs-filters">
+                            <input type="text" class="form-input" id="docs-search" placeholder="Search path, title, summary...">
+                            <select class="form-select" id="docs-category"></select>
+                            <select class="form-select" id="docs-kind"></select>
+                            <div style="display:flex;gap:8px">
+                                <button class="btn btn-sm btn-primary" type="button" onclick="reloadDocsIndex()">Search</button>
+                                <button class="btn btn-sm btn-ghost" type="button" onclick="resetDocsFilters()">Reset</button>
+                            </div>
+                        </div>
+                        <div class="docs-stats" id="docs-stats">Loading...</div>
+                        <div class="docs-list" id="docs-list"></div>
+                    </div>
+                    <div class="docs-main">
+                        <div class="docs-main-head">
+                            <div>
+                                <div class="docs-main-title" id="docs-selected-title">Select a document</div>
+                                <div class="docs-main-meta" id="docs-selected-meta">-</div>
+                            </div>
+                            <button class="btn btn-sm btn-ghost" type="button" id="docs-reload-selected" onclick="reloadSelectedDoc()" disabled>Reload</button>
+                        </div>
+                        <pre class="viewer-file" id="docs-preview">Select a document from the list to preview.</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dependency Graph Modal -->
+    <div class="modal-overlay" id="modal-deps-graph">
+        <div class="modal" style="max-width: 960px;">
+            <div class="modal-header">
+                <span class="modal-title">Dependency Graph</span>
+                <button class="modal-close" onclick="closeModal('modal-deps-graph')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <pre class="viewer-file" id="deps-graph-content">Loading...</pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- Level-2 Closeout Modal -->
+    <div class="modal-overlay" id="modal-closeout-l2">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title">Level-2 Drift Closeout</span>
+                <button class="modal-close" onclick="closeModal('modal-closeout-l2')">&times;</button>
+            </div>
+            <form onsubmit="submitCloseoutL2(event)">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Level-2 Area</label>
+                        <select class="form-select" id="l2-area" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Operator Name</label>
+                        <input type="text" class="form-input" id="l2-agent" required placeholder="Enter operator name">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Drift Assessment Path</label>
+                        <input type="text" class="form-input" id="l2-assessment-path" required placeholder="docs/codex-migration/drift-wbs2.md">
+                        <div class="form-hint">Must include all required sections (Scope Reviewed, Expected vs Delivered, Drift Assessment, Evidence Reviewed, Residual Risks, Immediate Next Actions).</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Closeout Notes (optional)</label>
+                        <textarea class="form-textarea" id="l2-notes" placeholder="Summary of closeout decision and any follow-up context."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-closeout-l2')">Cancel</button>
+                    <button type="submit" class="btn btn-success">Record Closeout</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Suppress license warning for demo
+        agGrid.LicenseManager?.setLicenseKey?.('');
+
+        let gridApi = null;
+        let wbsData = { areas: [], packets: [], deps: {}, counts: {} };
+        let selectedArea = null;
+        let docsIndex = { documents: [], categories: [], kinds: [], total: 0 };
+        let docsSelectedPath = '';
+
+        // Toast
+        function toast(msg, type = '') {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = 'toast show ' + type;
+            setTimeout(() => t.className = 'toast', 3000);
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function formatBytes(bytes) {
+            const n = Number(bytes || 0);
+            if (n < 1024) return `${n} B`;
+            if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
+            return `${(n / (1024 * 1024)).toFixed(1)} MB`;
+        }
+
+        // Modal
+        function showModal(id) { document.getElementById(id).classList.add('show'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+        // Initialize Grid
+        function initGrid() {
+            const columnDefs = [
+                {
+                    field: 'wbs_ref',
+                    headerName: 'WBS #',
+                    width: 120,
+                    cellRenderer: 'agGroupCellRenderer',
+                    cellRendererParams: { suppressCount: true },
+                    cellClass: 'wbs-number'
+                },
+                { field: 'title', headerName: 'Title', flex: 2, editable: true },
+                { field: 'scope', headerName: 'Scope', flex: 3, editable: true, cellEditor: 'agLargeTextCellEditor' },
+                {
+                    field: 'status',
+                    headerName: 'Status',
+                    width: 140,
+                    cellRenderer: params => {
+                        if (!params.value || params.data.type === 'area') return '';
+                        return `<span class="status-badge status-${params.value}">${params.value.replace('_', ' ')}</span>`;
+                    }
+                },
+                { field: 'assigned_to', headerName: 'Assigned', width: 120 },
+                {
+                    headerName: 'Actions',
+                    width: 360,
+                    cellRenderer: params => {
+                        if (params.data.type === 'area') {
+                            const areaData = wbsData.areas.find(a => a.id === params.data.id) || {};
+                            const closeoutLabel = areaData.closeout ? 'Re-close L2' : 'Closeout L2';
+                            return `<button class="grid-btn grid-btn-edit" onclick="showAddPacketToArea('${params.data.id}')">+ Add Item</button> <button class="grid-btn grid-btn-done" onclick="showCloseoutL2('${params.data.id}')">${closeoutLabel}</button>`;
+                        }
+                        const status = params.data.status;
+                        if (status === 'pending') {
+                            const blocked = isBlocked(params.data.id);
+                            if (blocked) {
+                                return `<span style="color:var(--gray-400);margin-right:8px;">Blocked</span><button class="grid-btn grid-btn-edit" onclick="showPacketViewer('${params.data.id}')">View</button>`;
+                            }
+                            return `<button class="grid-btn grid-btn-claim" onclick="showAction('${params.data.id}', 'claim')">Claim</button> <button class="grid-btn grid-btn-edit" onclick="showPacketViewer('${params.data.id}')">View</button>`;
+                        }
+                        if (status === 'in_progress') {
+                            return `<button class="grid-btn grid-btn-done" onclick="showAction('${params.data.id}', 'done')">Complete</button> <button class="grid-btn grid-btn-edit" onclick="showPacketViewer('${params.data.id}')">View</button>`;
+                        }
+                        return `<button class="grid-btn grid-btn-edit" onclick="showPacketViewer('${params.data.id}')">View</button>`;
+                    }
+                }
+            ];
+
+            const gridOptions = {
+                columnDefs,
+                defaultColDef: {
+                    resizable: true,
+                    sortable: true
+                },
+                treeData: true,
+                getDataPath: data => data.path,
+                groupDefaultExpanded: 1,
+                animateRows: true,
+                rowSelection: 'multiple',
+                getRowId: params => params.data.id,
+                getRowClass: params => params.data.type === 'area' ? 'row-category' : '',
+                onCellValueChanged: onCellEdit
+            };
+
+            gridApi = agGrid.createGrid(document.getElementById('wbs-grid'), gridOptions);
+        }
+
+        // Check if packet is blocked
+        function isBlocked(packetId) {
+            const deps = wbsData.deps[packetId] || [];
+            return deps.some(depId => {
+                const pkt = wbsData.packets.find(p => p.id === depId);
+                return pkt && pkt.status !== 'done';
+            });
+        }
+
+        // Cell edit handler
+        async function onCellEdit(event) {
+            const { data, colDef, newValue } = event;
+            if (data.type === 'area') {
+                await fetch('/api/edit-area', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: data.id, field: colDef.field, value: newValue })
+                });
+            } else {
+                await fetch('/api/edit-packet', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: data.id, field: colDef.field, value: newValue })
+                });
+            }
+            toast('Saved');
+        }
+
+        // Load data
+        async function refreshData() {
+            try {
+                const res = await fetch('/api/status');
+                const data = await res.json();
+                const refreshedAt = new Date();
+
+                document.getElementById('project-name').textContent = data.metadata?.project_name || 'Untitled Project';
+                document.getElementById('project-meta').textContent = `Last updated: ${refreshedAt.toLocaleString()}`;
+                document.getElementById('last-refresh').textContent = `Last refresh: ${refreshedAt.toLocaleTimeString()}`;
+
+                wbsData.areas = data.areas || [];
+                wbsData.deps = data.dependencies || {};
+                wbsData.packets = [];
+                wbsData.counts = data.counts || {};
+
+                // Build flat list with paths for tree
+                const rowData = [];
+                let areaNum = 0;
+
+                wbsData.areas.forEach(area => {
+                    areaNum++;
+                    const areaWbs = `${areaNum}.0`;
+
+                    rowData.push({
+                        id: area.id,
+                        type: 'area',
+                        wbs_ref: areaWbs,
+                        title: area.title,
+                        scope: area.description || '',
+                        status: '',
+                        assigned_to: '',
+                        path: [area.id],
+                        packet_count: (area.packets || []).length
+                    });
+
+                    (area.packets || []).forEach((pkt, i) => {
+                        const pktWbs = `${areaNum}.${i + 1}`;
+                        wbsData.packets.push({ ...pkt, area_id: area.id, wbs_ref: pktWbs });
+
+                        rowData.push({
+                            id: pkt.id,
+                            type: 'packet',
+                            wbs_ref: pktWbs,
+                            title: pkt.title,
+                            scope: pkt.scope || '',
+                            status: pkt.status || 'pending',
+                            assigned_to: pkt.assigned_to || '',
+                            path: [area.id, pkt.id]
+                        });
+                    });
+                });
+
+                gridApi.setGridOption('rowData', rowData);
+
+                // Update stats
+                const counts = data.counts || {};
+                document.getElementById('stat-pending').textContent = counts.pending || 0;
+                document.getElementById('stat-progress').textContent = counts.in_progress || 0;
+                document.getElementById('stat-done').textContent = counts.done || 0;
+
+                // Update sidebar
+                renderSidebar();
+
+                // Update dropdowns
+                updateDropdowns();
+
+            } catch (e) {
+                console.error(e);
+                toast('Failed to load data', 'error');
+            }
+        }
+
+        // Render sidebar
+        function renderSidebar() {
+            const list = document.getElementById('sidebar-list');
+
+            // All items option
+            let html = `
+                <div class="sidebar-item ${selectedArea === null ? 'active' : ''}" onclick="filterByArea(null)">
+                    <div class="sidebar-item-icon">All</div>
+                    <div class="sidebar-item-content">
+                        <div class="sidebar-item-title">All Work Items</div>
+                        <div class="sidebar-item-meta">${wbsData.packets.length} items</div>
+                    </div>
+                </div>`;
+
+            wbsData.areas.forEach((area, i) => {
+                const count = (area.packets || []).length;
+                const done = (area.packets || []).filter(p => p.status === 'done').length;
+                const closeoutStatus = area.closeout ? ' | L2 closed' : '';
+                html += `
+                    <div class="sidebar-item ${selectedArea === area.id ? 'active' : ''}" onclick="filterByArea('${area.id}')">
+                        <div class="sidebar-item-icon">${i + 1}</div>
+                        <div class="sidebar-item-content">
+                            <div class="sidebar-item-title">${area.title}</div>
+                            <div class="sidebar-item-meta">${done}/${count} complete${closeoutStatus}</div>
+                        </div>
+                        <span class="sidebar-item-count">${count}</span>
+                    </div>`;
+            });
+
+            list.innerHTML = html;
+        }
+
+        // Filter by area
+        function filterByArea(areaId) {
+            selectedArea = areaId;
+            renderSidebar();
+
+            if (areaId === null) {
+                document.getElementById('content-title').textContent = 'All Work Items';
+                gridApi.setGridOption('isExternalFilterPresent', () => false);
+            } else {
+                const area = wbsData.areas.find(a => a.id === areaId);
+                document.getElementById('content-title').textContent = area ? area.title : areaId;
+                gridApi.setGridOption('isExternalFilterPresent', () => true);
+                gridApi.setGridOption('doesExternalFilterPass', node => {
+                    return node.data.path[0] === areaId;
+                });
+            }
+            gridApi.onFilterChanged();
+        }
+
+        // Update dropdowns
+        function updateDropdowns() {
+            // Area dropdown
+            const areaSelect = document.getElementById('pkt-area');
+            areaSelect.innerHTML = wbsData.areas.map(a =>
+                `<option value="${a.id}">${a.title}</option>`
+            ).join('');
+
+            // Dependencies dropdown
+            const depsSelect = document.getElementById('pkt-deps');
+            depsSelect.innerHTML = wbsData.packets.map(p =>
+                `<option value="${p.id}">${p.wbs_ref} - ${p.title}</option>`
+            ).join('');
+
+            const l2AreaSelect = document.getElementById('l2-area');
+            if (l2AreaSelect) {
+                l2AreaSelect.innerHTML = wbsData.areas.map(a => {
+                    const status = a.closeout ? ' (closed)' : '';
+                    return `<option value="${a.id}">${a.id} - ${a.title}${status}</option>`;
+                }).join('');
+            }
+        }
+
+        // Expand/Collapse
+        function expandAll() { gridApi.expandAll(); }
+        function collapseAll() { gridApi.collapseAll(); }
+
+        // Add Category
+        function showAddCategory() {
+            document.getElementById('cat-id').value = '';
+            document.getElementById('cat-title').value = '';
+            document.getElementById('cat-desc').value = '';
+            showModal('modal-category');
+            document.getElementById('cat-id').focus();
+        }
+
+        async function saveCategory(e) {
+            e.preventDefault();
+            const data = {
+                id: document.getElementById('cat-id').value.toUpperCase().replace(/[^A-Z0-9]/g, ''),
+                title: document.getElementById('cat-title').value,
+                description: document.getElementById('cat-desc').value
+            };
+
+            try {
+                const res = await fetch('/api/add-area', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (!res.ok) {
+                    toast(`Server error: ${res.status}`, 'error');
+                    return;
+                }
+
+                const text = await res.text();
+                if (!text) {
+                    toast('Empty response from server', 'error');
+                    return;
+                }
+
+                const result = JSON.parse(text);
+                if (result.success) {
+                    toast('Work area added', 'success');
+                    closeModal('modal-category');
+                    refreshData();
+                } else {
+                    toast(result.message || 'Failed', 'error');
+                }
+            } catch (err) {
+                console.error('Save error:', err);
+                toast('Error: ' + err.message, 'error');
+            }
+        }
+
+        // Add Packet
+        function showAddPacket() {
+            document.getElementById('packet-modal-title').textContent = 'Add Work Item';
+            document.getElementById('pkt-edit-mode').value = '';
+            document.getElementById('pkt-title').value = '';
+            document.getElementById('pkt-scope').value = '';
+            document.getElementById('pkt-deps').selectedIndex = -1;
+            if (selectedArea) {
+                document.getElementById('pkt-area').value = selectedArea;
+            }
+            showModal('modal-packet');
+            document.getElementById('pkt-title').focus();
+        }
+
+        function showAddPacketToArea(areaId) {
+            document.getElementById('pkt-area').value = areaId;
+            showAddPacket();
+        }
+
+        async function savePacket(e) {
+            e.preventDefault();
+            const areaId = document.getElementById('pkt-area').value;
+            const title = document.getElementById('pkt-title').value;
+            const scope = document.getElementById('pkt-scope').value;
+
+            if (!areaId) {
+                toast('Please select a work area first', 'error');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/add-packet', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ area_id: areaId, title, scope })
+                });
+
+                if (!res.ok) {
+                    toast(`Server error: ${res.status}`, 'error');
+                    return;
+                }
+
+                const text = await res.text();
+                const result = text ? JSON.parse(text) : { success: false, message: 'Empty response' };
+
+                if (!result.success) {
+                    toast(result.message || 'Failed', 'error');
+                    return;
+                }
+
+                // Add dependencies
+                const deps = Array.from(document.getElementById('pkt-deps').selectedOptions).map(o => o.value);
+                const packetId = result.message.match(/Packet (\S+) added/)?.[1];
+                for (const dep of deps) {
+                    await fetch('/api/add-dep', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ packet: packetId, depends_on: dep })
+                    });
+                }
+
+                toast('Work item added', 'success');
+                closeModal('modal-packet');
+                refreshData();
+            } catch (err) {
+                console.error('Save error:', err);
+                toast('Error: ' + err.message, 'error');
+            }
+        }
+
+        // Actions (Claim/Done)
+        function showAction(packetId, type) {
+            document.getElementById('action-id').value = packetId;
+            document.getElementById('action-type').value = type;
+            document.getElementById('action-agent').value =
+                localStorage.getItem('wbs-operator') || localStorage.getItem('wbs-agent') || '';
+            document.getElementById('action-notes').value = '';
+
+            if (type === 'claim') {
+                document.getElementById('action-title').textContent = 'Claim Work Item';
+                document.getElementById('action-notes-group').style.display = 'none';
+                document.getElementById('action-submit').textContent = 'Claim';
+            } else {
+                document.getElementById('action-title').textContent = 'Complete Work Item';
+                document.getElementById('action-notes-group').style.display = 'block';
+                document.getElementById('action-submit').textContent = 'Mark Complete';
+            }
+
+            showModal('modal-action');
+        }
+
+        async function submitAction(e) {
+            e.preventDefault();
+            const packetId = document.getElementById('action-id').value;
+            const type = document.getElementById('action-type').value;
+            const agent = document.getElementById('action-agent').value;
+            const notes = document.getElementById('action-notes').value;
+
+            localStorage.setItem('wbs-operator', agent);
+            localStorage.setItem('wbs-agent', agent); // Backward compatible key
+
+            const data = { packet_id: packetId, agent_name: agent };
+            if (type === 'done') data.notes = notes;
+
+            const res = await fetch(`/api/${type}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await res.json();
+
+            if (result.success) {
+                toast(type === 'claim' ? 'Work item claimed by operator' : 'Work item completed', 'success');
+                closeModal('modal-action');
+                refreshData();
+            } else {
+                toast(result.message || 'Failed', 'error');
+            }
+        }
+
+        function defaultDriftPathForArea(areaId) {
+            if (!areaId) return 'docs/codex-migration/drift-wbs?.md';
+            const match = String(areaId).match(/^(\d+)/);
+            const n = match ? match[1] : areaId;
+            return `docs/codex-migration/drift-wbs${n}.md`;
+        }
+
+        function showCloseoutL2(areaId = null) {
+            const select = document.getElementById('l2-area');
+            if (!wbsData.areas.length) {
+                toast('No Level-2 areas available', 'error');
+                return;
+            }
+            const targetArea = areaId || selectedArea || (wbsData.areas[0] && wbsData.areas[0].id);
+            if (select) {
+                select.value = targetArea;
+            }
+
+            const agent = localStorage.getItem('wbs-operator') || localStorage.getItem('wbs-agent') || '';
+            document.getElementById('l2-agent').value = agent;
+            document.getElementById('l2-assessment-path').value = defaultDriftPathForArea(targetArea);
+            document.getElementById('l2-notes').value = '';
+
+            showModal('modal-closeout-l2');
+            document.getElementById('l2-agent').focus();
+        }
+
+        async function submitCloseoutL2(e) {
+            e.preventDefault();
+            const areaId = document.getElementById('l2-area').value;
+            const agent = document.getElementById('l2-agent').value.trim();
+            const assessmentPath = document.getElementById('l2-assessment-path').value.trim();
+            const notes = document.getElementById('l2-notes').value.trim();
+
+            if (!areaId || !agent || !assessmentPath) {
+                toast('Area, operator, and assessment path are required', 'error');
+                return;
+            }
+
+            localStorage.setItem('wbs-operator', agent);
+            localStorage.setItem('wbs-agent', agent);
+
+            const res = await fetch('/api/closeout-l2', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    area_id: areaId,
+                    agent_name: agent,
+                    assessment_path: assessmentPath,
+                    notes
+                })
+            });
+            const raw = await res.text();
+            let result = null;
+            try {
+                result = raw ? JSON.parse(raw) : null;
+            } catch (_) {
+                result = null;
+            }
+
+            if (!res.ok || !result) {
+                toast(`Closeout API error (HTTP ${res.status})`, 'error');
+                return;
+            }
+            if (!result.success) {
+                toast(result.message || 'Closeout failed', 'error');
+                return;
+            }
+
+            toast('Level-2 closeout recorded', 'success');
+            closeModal('modal-closeout-l2');
+            refreshData();
+        }
+
+        async function loadFileContent(path, targetElementId) {
+            const filePanel = document.getElementById(targetElementId);
+            filePanel.textContent = `Loading ${path}...`;
+
+            const res = await fetch(`/api/file?path=${encodeURIComponent(path)}`);
+            const raw = await res.text();
+            let data = null;
+            try {
+                data = raw ? JSON.parse(raw) : null;
+            } catch (_) {
+                data = null;
+            }
+            if (!res.ok || !data) {
+                filePanel.textContent = `Failed to load file: HTTP ${res.status}.`;
+                return null;
+            }
+            if (!data.success) {
+                filePanel.textContent = `Failed to load file: ${data.message || 'unknown error'}`;
+                return data;
+            }
+            filePanel.textContent = data.content + (data.truncated ? '\n\n[truncated]' : '');
+            return data;
+        }
+
+        async function previewFile(path) {
+            await loadFileContent(path, 'viewer-file');
+        }
+
+        function previewFileFromButton(button) {
+            const encodedPath = button?.dataset?.path || '';
+            if (!encodedPath) return;
+            previewFile(decodeURIComponent(encodedPath));
+        }
+
+        async function openInDocsExplorerFromButton(button) {
+            const encodedPath = button?.dataset?.path || '';
+            if (!encodedPath) return;
+            await showDocsExplorer(decodeURIComponent(encodedPath));
+        }
+
+        function selectDocFromList(el) {
+            const encodedPath = el?.dataset?.path || '';
+            if (!encodedPath) return;
+            selectDocForPreview(decodeURIComponent(encodedPath));
+        }
+
+        async function selectDocForPreview(path) {
+            if (!path) return;
+            docsSelectedPath = path;
+
+            document.querySelectorAll('#docs-list .docs-item').forEach(node => {
+                const encoded = node?.dataset?.path || '';
+                const itemPath = encoded ? decodeURIComponent(encoded) : '';
+                node.classList.toggle('active', itemPath === path);
+            });
+
+            const doc = docsIndex.documents.find(d => d.path === path);
+            if (doc) {
+                document.getElementById('docs-selected-title').textContent = doc.title || doc.path;
+                document.getElementById('docs-selected-meta').textContent =
+                    `${doc.path} | ${doc.kind} | ${formatBytes(doc.size)} | ${doc.updated_at || '-'}`;
+            } else {
+                document.getElementById('docs-selected-title').textContent = path;
+                document.getElementById('docs-selected-meta').textContent = '-';
+            }
+            document.getElementById('docs-reload-selected').disabled = false;
+            await loadFileContent(path, 'docs-preview');
+        }
+
+        function renderDocsList(preferredPath = '') {
+            const listEl = document.getElementById('docs-list');
+            const statsEl = document.getElementById('docs-stats');
+            const docs = docsIndex.documents || [];
+            if (statsEl) {
+                statsEl.textContent = `Showing ${docs.length} of ${docsIndex.total || 0} documents`;
+            }
+
+            if (!docs.length) {
+                listEl.innerHTML = '<div class="docs-empty">No documents match the current filters.</div>';
+                document.getElementById('docs-selected-title').textContent = 'No document selected';
+                document.getElementById('docs-selected-meta').textContent = '-';
+                document.getElementById('docs-preview').textContent = 'No matching documents found.';
+                document.getElementById('docs-reload-selected').disabled = true;
+                docsSelectedPath = '';
+                return;
+            }
+
+            listEl.innerHTML = docs.map(d => {
+                const active = (preferredPath || docsSelectedPath) === d.path ? 'active' : '';
+                const encodedPath = encodeURIComponent(d.path);
+                const summary = d.summary ? `<div class="docs-item-summary">${escapeHtml(d.summary)}</div>` : '';
+                return `
+                    <div class="docs-item ${active}" data-path="${encodedPath}" onclick="selectDocFromList(this)">
+                        <div class="docs-item-title">${escapeHtml(d.title || d.path)}</div>
+                        <div class="docs-item-meta">${escapeHtml(d.path)} | ${escapeHtml(d.kind)} | ${formatBytes(d.size)}</div>
+                        ${summary}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function resetDocsFilters() {
+            document.getElementById('docs-search').value = '';
+            document.getElementById('docs-category').value = 'all';
+            document.getElementById('docs-kind').value = 'all';
+            reloadDocsIndex();
+        }
+
+        async function reloadSelectedDoc() {
+            if (!docsSelectedPath) return;
+            await selectDocForPreview(docsSelectedPath);
+        }
+
+        async function reloadDocsIndex(preferredPath = '') {
+            const searchInput = document.getElementById('docs-search');
+            const categorySelect = document.getElementById('docs-category');
+            const kindSelect = document.getElementById('docs-kind');
+
+            const q = (searchInput?.value || '').trim();
+            const category = (categorySelect?.value || 'all').trim();
+            const kind = (kindSelect?.value || 'all').trim();
+
+            const params = new URLSearchParams();
+            params.set('limit', '5000');
+            if (q) params.set('q', q);
+            if (category && category !== 'all') params.set('category', category);
+            if (kind && kind !== 'all') params.set('kind', kind);
+
+            const listEl = document.getElementById('docs-list');
+            if (listEl) {
+                listEl.innerHTML = '<div class="docs-empty">Loading documentation index...</div>';
+            }
+
+            const res = await fetch(`/api/docs-index?${params.toString()}`);
+            const raw = await res.text();
+            let data = null;
+            try {
+                data = raw ? JSON.parse(raw) : null;
+            } catch (_) {
+                data = null;
+            }
+            if (!res.ok || !data || !data.success) {
+                const msg = data?.message || `Failed to load docs index (HTTP ${res.status})`;
+                if (listEl) {
+                    listEl.innerHTML = `<div class="docs-empty">${escapeHtml(msg)}</div>`;
+                }
+                toast(msg, 'error');
+                return;
+            }
+
+            docsIndex = {
+                documents: data.documents || [],
+                categories: data.categories || [],
+                kinds: data.kinds || [],
+                total: Number(data.total || 0)
+            };
+
+            const priorCategory = categorySelect?.value || 'all';
+            const priorKind = kindSelect?.value || 'all';
+            if (categorySelect) {
+                const options = ['all', ...docsIndex.categories];
+                categorySelect.innerHTML = options.map(opt => (
+                    `<option value="${escapeHtml(opt)}">${opt === 'all' ? 'All categories' : escapeHtml(opt)}</option>`
+                )).join('');
+                categorySelect.value = options.includes(priorCategory) ? priorCategory : 'all';
+            }
+            if (kindSelect) {
+                const options = ['all', ...docsIndex.kinds];
+                kindSelect.innerHTML = options.map(opt => (
+                    `<option value="${escapeHtml(opt)}">${opt === 'all' ? 'All kinds' : escapeHtml(opt)}</option>`
+                )).join('');
+                kindSelect.value = options.includes(priorKind) ? priorKind : 'all';
+            }
+
+            renderDocsList(preferredPath);
+
+            const selectedPath = preferredPath || docsSelectedPath;
+            const existing = docsIndex.documents.find(d => d.path === selectedPath);
+            if (existing) {
+                await selectDocForPreview(existing.path);
+                return;
+            }
+            if (docsIndex.documents.length > 0) {
+                await selectDocForPreview(docsIndex.documents[0].path);
+            }
+        }
+
+        async function showDocsExplorer(initialPath = '') {
+            const searchInput = document.getElementById('docs-search');
+            const categorySelect = document.getElementById('docs-category');
+            const kindSelect = document.getElementById('docs-kind');
+            if (searchInput && !searchInput.dataset.bound) {
+                searchInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        reloadDocsIndex();
+                    }
+                });
+                searchInput.dataset.bound = '1';
+            }
+            if (categorySelect && !categorySelect.dataset.bound) {
+                categorySelect.addEventListener('change', () => reloadDocsIndex());
+                categorySelect.dataset.bound = '1';
+            }
+            if (kindSelect && !kindSelect.dataset.bound) {
+                kindSelect.addEventListener('change', () => reloadDocsIndex());
+                kindSelect.dataset.bound = '1';
+            }
+
+            if (initialPath) {
+                if (searchInput) searchInput.value = '';
+                if (categorySelect) categorySelect.value = 'all';
+                if (kindSelect) kindSelect.value = 'all';
+            }
+
+            showModal('modal-docs-explorer');
+            await reloadDocsIndex(initialPath);
+        }
+
+        async function showDepsGraph() {
+            const content = document.getElementById('deps-graph-content');
+            content.textContent = 'Loading dependency graph...';
+            showModal('modal-deps-graph');
+            try {
+                const res = await fetch('/api/deps-graph');
+                const raw = await res.text();
+                const data = raw ? JSON.parse(raw) : null;
+                if (!res.ok || !data) {
+                    content.textContent = `Failed to load dependency graph (HTTP ${res.status}).`;
+                    return;
+                }
+                const nodes = data.nodes || [];
+                const edges = data.edges || [];
+                const statusById = Object.fromEntries(nodes.map(n => [n.id, n.status || 'pending']));
+                const lines = [];
+                lines.push(`nodes=${nodes.length}, edges=${edges.length}`);
+                lines.push('');
+                lines.push('Edges:');
+                for (const edge of edges) {
+                    lines.push(`  ${edge.from} (${statusById[edge.from] || '-'}) -> ${edge.to} (${statusById[edge.to] || '-'})`);
+                }
+                if (edges.length === 0) {
+                    lines.push('  (no dependency edges)');
+                }
+                lines.push('');
+                lines.push('Nodes:');
+                for (const node of nodes) {
+                    lines.push(`  ${node.id} [${node.status}] ${node.wbs_ref} ${node.title}`);
+                }
+                content.textContent = lines.join('\n');
+            } catch (e) {
+                content.textContent = `Failed to load dependency graph: ${e.message}`;
+            }
+        }
+
+        async function showPacketViewer(packetId) {
+            const res = await fetch(`/api/packet?id=${encodeURIComponent(packetId)}`);
+            const raw = await res.text();
+            let data = null;
+            try {
+                data = raw ? JSON.parse(raw) : null;
+            } catch (_) {
+                data = null;
+            }
+            if (!res.ok || !data) {
+                toast(`Packet viewer requires /api/packet on ${location.origin} (HTTP ${res.status}). Wrong port or outdated server.`, 'error');
+                return;
+            }
+            if (!data.success) {
+                toast(data.message || 'Failed to load packet details', 'error');
+                return;
+            }
+
+            const p = data.packet || {};
+            document.getElementById('viewer-title').textContent = `Packet Viewer: ${p.id || '-'}`;
+            document.getElementById('viewer-summary').textContent =
+                `${p.wbs_ref || '-'} - ${p.title || '-'} (${p.area_title || p.area_id || '-'})`;
+            document.getElementById('viewer-status').textContent =
+                `status=${p.status || '-'}, owner=${p.assigned_to || '-'}, started=${p.started_at || '-'}, completed=${p.completed_at || '-'}`;
+            document.getElementById('viewer-notes').textContent = p.notes || '-';
+            document.getElementById('viewer-scope').textContent = p.scope || '-';
+            document.getElementById('viewer-deps').textContent =
+                `depends on: ${(p.dependencies || []).join(', ') || '-'} | dependents: ${(p.dependents || []).join(', ') || '-'}`;
+            document.getElementById('viewer-packet-json').textContent =
+                JSON.stringify(data.packet_definition || p, null, 2);
+            const full = data.packet_definition || {};
+            const structured = {
+                packet_id: full.packet_id || p.id,
+                wbs_refs: full.wbs_refs || [],
+                purpose: full.purpose || '',
+                priority: full.priority || '',
+                owner: full.owner || p.assigned_to || '',
+                required_actions: full.required_actions || [],
+                required_outputs: full.required_outputs || [],
+                validation_checks: full.validation_checks || [],
+                exit_criteria: full.exit_criteria || [],
+                halt_conditions: full.halt_conditions || []
+            };
+            document.getElementById('viewer-structured').textContent = JSON.stringify(structured, null, 2);
+
+            const docsEl = document.getElementById('viewer-docs');
+            const docs = data.documents || [];
+            if (docs.length === 0) {
+                docsEl.innerHTML = 'No documents detected.';
+            } else {
+                docsEl.innerHTML = docs.map(d => `
+                    <div class="viewer-doc">
+                        <div class="viewer-value">${escapeHtml(d.path)} ${d.exists ? '' : '(missing)'}</div>
+                        <div style="display:flex;gap:6px">
+                            <button class="grid-btn grid-btn-edit" ${d.exists ? '' : 'disabled'} data-path="${encodeURIComponent(d.path)}" onclick="previewFileFromButton(this)">Preview</button>
+                            <button class="grid-btn grid-btn-claim" ${d.exists ? '' : 'disabled'} data-path="${encodeURIComponent(d.path)}" onclick="openInDocsExplorerFromButton(this)">Open</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            const eventsEl = document.getElementById('viewer-events');
+            const events = data.events || [];
+            if (events.length === 0) {
+                eventsEl.innerHTML = '<div class="viewer-event">No events recorded.</div>';
+            } else {
+                eventsEl.innerHTML = events.map(e => `
+                    <div class="viewer-event">
+                        <strong>${e.event || '-'}</strong> | ${e.timestamp || '-'} | ${e.agent || '-'}<br>
+                        ${e.notes || ''}
+                    </div>
+                `).join('');
+            }
+
+            document.getElementById('viewer-file').textContent = 'Select a linked document to preview.';
+            showModal('modal-packet-viewer');
+        }
+
+        // Init
+        initGrid();
+        refreshData();
+        setInterval(refreshData, 5000);
+    </script>
+</body>
+</html>

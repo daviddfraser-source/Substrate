@@ -1,0 +1,8 @@
+{
+  "event_id": "string",
+  "event_type": "string",
+  "occurred_at": "ISO-8601",
+  "source": "service-name",
+  "payload": {},
+  "trace_id": "string"
+}

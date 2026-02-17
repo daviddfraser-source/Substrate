@@ -1,0 +1,20 @@
+{
+  "metadata": {
+    "project_name": "Parallel Workflow",
+    "approved_by": "example",
+    "approved_at": "2026-02-13T00:00:00",
+    "version": "1.0"
+  },
+  "work_areas": [
+    {"id": "1.0", "title": "Parallel Streams"}
+  ],
+  "packets": [
+    {"id": "PAR-001", "wbs_ref": "1.1", "area_id": "1.0", "title": "Auth component", "scope": "Build auth component."},
+    {"id": "PAR-002", "wbs_ref": "1.2", "area_id": "1.0", "title": "Billing component", "scope": "Build billing component."},
+    {"id": "PAR-003", "wbs_ref": "1.3", "area_id": "1.0", "title": "Notification component", "scope": "Build notification component."},
+    {"id": "PAR-004", "wbs_ref": "1.4", "area_id": "1.0", "title": "Integration verification", "scope": "Verify integrated behavior and evidence."}
+  ],
+  "dependencies": {
+    "PAR-004": ["PAR-001", "PAR-002", "PAR-003"]
+  }
+}

@@ -1,0 +1,209 @@
+{
+  "metadata": {
+    "project_name": "Substrate Minimal",
+    "approved_by": "substrate-lead",
+    "approved_at": "2026-02-13",
+    "version": "1.0"
+  },
+  "work_areas": [
+    {
+      "id": "1.0",
+      "title": "Scaffold Init",
+      "description": "Initialize scaffold and baseline governance."
+    },
+    {
+      "id": "2.0",
+      "title": "Core Workflow",
+      "description": "Establish packet lifecycle and reporting."
+    },
+    {
+      "id": "3.0",
+      "title": "Quality Baseline",
+      "description": "Add minimal tests and checks."
+    },
+    {
+      "id": "4.0",
+      "title": "Closeout",
+      "description": "Deliver report and drift closeout."
+    }
+  ],
+  "wbs_level_3": [
+    {
+      "wbs_ref": "1.1",
+      "area_id": "1.0",
+      "title": "Initialize governance files"
+    },
+    {
+      "wbs_ref": "2.1",
+      "area_id": "2.0",
+      "title": "Execute first packet lifecycle"
+    },
+    {
+      "wbs_ref": "3.1",
+      "area_id": "3.0",
+      "title": "Run baseline validation"
+    },
+    {
+      "wbs_ref": "4.1",
+      "area_id": "4.0",
+      "title": "Closeout with drift assessment"
+    }
+  ],
+  "packets": [
+    {
+      "id": "MIN-1-1",
+      "wbs_ref": "1.1",
+      "wbs_l3_ref": "1.1",
+      "area_id": "1.0",
+      "title": "Initialize governance files",
+      "scope": "Implement WBS item 1.1: Initialize governance files.",
+      "packet_id": "MIN-1-1",
+      "wbs_refs": [
+        "1.1"
+      ],
+      "purpose": "Deliver Initialize governance files.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "MEDIUM",
+      "preconditions": [],
+      "required_inputs": [],
+      "required_actions": [
+        "Implement WBS item 1.1: Initialize governance files."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Evidence path included in packet notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with evidence references"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Evidence missing for completion claim"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "MIN-2-1",
+      "wbs_ref": "2.1",
+      "wbs_l3_ref": "2.1",
+      "area_id": "2.0",
+      "title": "Execute first packet lifecycle",
+      "scope": "Implement WBS item 2.1: Execute first packet lifecycle.",
+      "packet_id": "MIN-2-1",
+      "wbs_refs": [
+        "2.1"
+      ],
+      "purpose": "Deliver Execute first packet lifecycle.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "MEDIUM",
+      "preconditions": [],
+      "required_inputs": [],
+      "required_actions": [
+        "Implement WBS item 2.1: Execute first packet lifecycle."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Evidence path included in packet notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with evidence references"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Evidence missing for completion claim"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "MIN-3-1",
+      "wbs_ref": "3.1",
+      "wbs_l3_ref": "3.1",
+      "area_id": "3.0",
+      "title": "Run baseline validation",
+      "scope": "Implement WBS item 3.1: Run baseline validation.",
+      "packet_id": "MIN-3-1",
+      "wbs_refs": [
+        "3.1"
+      ],
+      "purpose": "Deliver Run baseline validation.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "MEDIUM",
+      "preconditions": [],
+      "required_inputs": [],
+      "required_actions": [
+        "Implement WBS item 3.1: Run baseline validation."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Evidence path included in packet notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with evidence references"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Evidence missing for completion claim"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "MIN-4-1",
+      "wbs_ref": "4.1",
+      "wbs_l3_ref": "4.1",
+      "area_id": "4.0",
+      "title": "Closeout with drift assessment",
+      "scope": "Implement WBS item 4.1: Closeout with drift assessment.",
+      "packet_id": "MIN-4-1",
+      "wbs_refs": [
+        "4.1"
+      ],
+      "purpose": "Deliver Closeout with drift assessment.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "MEDIUM",
+      "preconditions": [],
+      "required_inputs": [],
+      "required_actions": [
+        "Implement WBS item 4.1: Closeout with drift assessment."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Evidence path included in packet notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with evidence references"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Evidence missing for completion claim"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    }
+  ],
+  "dependencies": {
+    "MIN-2-1": [
+      "MIN-1-1"
+    ],
+    "MIN-3-1": [
+      "MIN-2-1"
+    ],
+    "MIN-4-1": [
+      "MIN-3-1"
+    ]
+  }
+}

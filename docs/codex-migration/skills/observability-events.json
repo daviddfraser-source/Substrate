@@ -1,0 +1,352 @@
+[
+  {
+    "packet_id": "CDX-8-1",
+    "event": "started",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T09:13:46.184805",
+    "notes": "Claimed by codex-lead"
+  },
+  {
+    "packet_id": "CDX-8-1",
+    "event": "completed",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T09:13:46.375977",
+    "notes": "Evidence: docs/codex-migration/dry-run.md"
+  },
+  {
+    "packet_id": "CDX-8-2",
+    "event": "started",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T09:13:46.619499",
+    "notes": "Claimed by codex-lead"
+  },
+  {
+    "packet_id": "CDX-8-2",
+    "event": "completed",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T09:13:46.782764",
+    "notes": "Evidence: docs/codex-migration/pilot-report.md"
+  },
+  {
+    "packet_id": "CDX-8-3",
+    "event": "started",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T09:13:46.968762",
+    "notes": "Claimed by codex-lead"
+  },
+  {
+    "packet_id": "CDX-8-3",
+    "event": "completed",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T09:13:47.182632",
+    "notes": "Evidence: tests/test_server_api.py (test_note_endpoint_updates_notes)"
+  },
+  {
+    "packet_id": "CDX-8-4",
+    "event": "started",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T09:13:47.288598",
+    "notes": "Claimed by codex-lead"
+  },
+  {
+    "packet_id": "CDX-8-4",
+    "event": "completed",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T09:13:47.410858",
+    "notes": "Evidence: docs/codex-migration/final-summary.md"
+  },
+  {
+    "packet_id": "CDX-8-5",
+    "event": "started",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T09:13:47.531045",
+    "notes": "Claimed by codex-lead"
+  },
+  {
+    "packet_id": "CDX-8-5",
+    "event": "completed",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T09:13:47.649198",
+    "notes": "Evidence: docs/codex-migration/handoff.md"
+  },
+  {
+    "packet_id": "CDX-8-6",
+    "event": "started",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T09:13:47.789858",
+    "notes": "Claimed by codex-lead"
+  },
+  {
+    "packet_id": "CDX-8-6",
+    "event": "completed",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T09:13:47.924204",
+    "notes": "Evidence: docs/codex-migration/post-launch-kpis.md"
+  },
+  {
+    "packet_id": "CDX-2-1",
+    "event": "noted",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T09:59:47.212288",
+    "notes": "Evidence: .governance/packet-schema.json, docs/codex-migration/packet-standard.md, AGENTS.md, CLAUDE.md, docs/codex-migration/guide.md"
+  },
+  {
+    "packet_id": "AREA-1.0",
+    "event": "area_closed",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:15:20.974846",
+    "notes": "Drift assessment: docs/codex-migration/drift-wbs1.md | Level-2 drift closeout recorded"
+  },
+  {
+    "packet_id": "AREA-2.0",
+    "event": "area_closed",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:15:21.151121",
+    "notes": "Drift assessment: docs/codex-migration/drift-wbs2.md | Level-2 drift closeout recorded"
+  },
+  {
+    "packet_id": "AREA-3.0",
+    "event": "area_closed",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:15:21.330697",
+    "notes": "Drift assessment: docs/codex-migration/drift-wbs3.md | Level-2 drift closeout recorded"
+  },
+  {
+    "packet_id": "AREA-4.0",
+    "event": "area_closed",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:15:21.493267",
+    "notes": "Drift assessment: docs/codex-migration/drift-wbs4.md | Level-2 drift closeout recorded"
+  },
+  {
+    "packet_id": "AREA-5.0",
+    "event": "area_closed",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:15:21.712591",
+    "notes": "Drift assessment: docs/codex-migration/drift-wbs5.md | Level-2 drift closeout recorded"
+  },
+  {
+    "packet_id": "AREA-6.0",
+    "event": "area_closed",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:15:21.926289",
+    "notes": "Drift assessment: docs/codex-migration/drift-wbs6.md | Level-2 drift closeout recorded"
+  },
+  {
+    "packet_id": "AREA-7.0",
+    "event": "area_closed",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:15:22.128635",
+    "notes": "Drift assessment: docs/codex-migration/drift-wbs7.md | Level-2 drift closeout recorded"
+  },
+  {
+    "packet_id": "AREA-8.0",
+    "event": "area_closed",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:15:22.302306",
+    "notes": "Drift assessment: docs/codex-migration/drift-wbs8.md | Level-2 drift closeout recorded"
+  },
+  {
+    "packet_id": "CDX-10-1",
+    "event": "started",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:41:32.131919",
+    "notes": "Claimed by codex-lead"
+  },
+  {
+    "packet_id": "CDX-10-1",
+    "event": "completed",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:41:49.339166",
+    "notes": "Evidence: docs/skills-roadmap.md"
+  },
+  {
+    "packet_id": "CDX-10-2",
+    "event": "started",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:41:53.557207",
+    "notes": "Claimed by codex-lead"
+  },
+  {
+    "packet_id": "CDX-10-2",
+    "event": "completed",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:42:14.733486",
+    "notes": "Evidence: skills/TEMPLATE/SKILL.md, docs/skills-contract.md"
+  },
+  {
+    "packet_id": "CDX-10-3",
+    "event": "started",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:42:21.347148",
+    "notes": "Claimed by codex-lead"
+  },
+  {
+    "packet_id": "CDX-10-3",
+    "event": "completed",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:42:52.346212",
+    "notes": "Evidence: scripts/skills-smoke.sh, scripts/README.md"
+  },
+  {
+    "packet_id": "CDX-10-4",
+    "event": "started",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:42:59.890123",
+    "notes": "Claimed by codex-lead"
+  },
+  {
+    "packet_id": "CDX-10-4",
+    "event": "completed",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:43:56.402409",
+    "notes": "Evidence: skills/agent-eval/SKILL.md, skills/agent-eval/README.md, skills/agent-eval/assets/promptfooconfig.yaml, skills/agent-eval/scripts/run.sh"
+  },
+  {
+    "packet_id": "CDX-10-5",
+    "event": "started",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:44:07.761295",
+    "notes": "Claimed by codex-lead"
+  },
+  {
+    "packet_id": "CDX-10-5",
+    "event": "completed",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:44:33.787366",
+    "notes": "Evidence: .github/workflows/test.yml (skills-agent-eval-smoke), docs/skills/agent-eval.md"
+  },
+  {
+    "packet_id": "CDX-10-6",
+    "event": "started",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:44:43.544050",
+    "notes": "Claimed by codex-lead"
+  },
+  {
+    "packet_id": "CDX-10-6",
+    "event": "completed",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:45:47.507366",
+    "notes": "Evidence: skills/security-gates/SKILL.md, skills/security-gates/scripts/run.sh, skills/security-gates/README.md"
+  },
+  {
+    "packet_id": "CDX-10-7",
+    "event": "started",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:46:10.410619",
+    "notes": "Claimed by codex-lead"
+  },
+  {
+    "packet_id": "CDX-10-7",
+    "event": "completed",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:46:44.912428",
+    "notes": "Evidence: .github/workflows/test.yml (skills-security-gates-ci), docs/skills/security-gates.md"
+  },
+  {
+    "packet_id": "CDX-10-8",
+    "event": "started",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:46:54.001753",
+    "notes": "Claimed by codex-lead"
+  },
+  {
+    "packet_id": "CDX-10-8",
+    "event": "completed",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:48:04.243582",
+    "notes": "Evidence: skills/pr-review-automation/SKILL.md, skills/pr-review-automation/scripts/run.sh, skills/pr-review-automation/README.md"
+  },
+  {
+    "packet_id": "CDX-10-9",
+    "event": "started",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:48:15.243097",
+    "notes": "Claimed by codex-lead"
+  },
+  {
+    "packet_id": "CDX-10-9",
+    "event": "completed",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:48:50.160486",
+    "notes": "Evidence: .github/workflows/test.yml (skills-pr-review-smoke), docs/skills/pr-review-automation.md"
+  },
+  {
+    "packet_id": "CDX-10-10",
+    "event": "started",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:49:00.109679",
+    "notes": "Claimed by codex-lead"
+  },
+  {
+    "packet_id": "CDX-10-10",
+    "event": "completed",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:50:49.523750",
+    "notes": "Evidence: skills/precommit-governance/SKILL.md, skills/precommit-governance/assets/pre-commit-config.yaml, skills/precommit-governance/scripts/install.sh"
+  },
+  {
+    "packet_id": "CDX-10-11",
+    "event": "started",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:51:02.563809",
+    "notes": "Claimed by codex-lead"
+  },
+  {
+    "packet_id": "CDX-10-11",
+    "event": "completed",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:51:52.666696",
+    "notes": "Evidence: .github/workflows/test.yml (skills-precommit-governance), docs/skills/precommit-governance.md"
+  },
+  {
+    "packet_id": "CDX-10-12",
+    "event": "started",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:52:08.693316",
+    "notes": "Claimed by codex-lead"
+  },
+  {
+    "packet_id": "CDX-10-12",
+    "event": "completed",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:54:16.433878",
+    "notes": "Evidence: skills/ui-regression/SKILL.md, skills/ui-regression/tests/critical.spec.ts, skills/ui-regression/scripts/run.sh"
+  },
+  {
+    "packet_id": "CDX-10-13",
+    "event": "started",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:54:33.387182",
+    "notes": "Claimed by codex-lead"
+  },
+  {
+    "packet_id": "CDX-10-13",
+    "event": "completed",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:55:33.072021",
+    "notes": "Evidence: .github/workflows/test.yml (skills-ui-regression), docs/skills/ui-regression.md"
+  },
+  {
+    "packet_id": "CDX-10-14",
+    "event": "started",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:55:45.241988",
+    "notes": "Claimed by codex-lead"
+  },
+  {
+    "packet_id": "CDX-10-14",
+    "event": "completed",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:58:17.292429",
+    "notes": "Evidence: skills/observability-baseline/SKILL.md, skills/observability-baseline/assets/otel-collector.yaml, skills/observability-baseline/scripts/run.sh"
+  },
+  {
+    "packet_id": "CDX-10-15",
+    "event": "started",
+    "agent": "codex-lead",
+    "timestamp": "2026-02-13T10:58:32.784804",
+    "notes": "Claimed by codex-lead"
+  }
+]

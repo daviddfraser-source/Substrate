@@ -1,0 +1,26 @@
+{
+  "metadata": {
+    "project_name": "Complex Dependency DAG",
+    "approved_by": "example",
+    "approved_at": "2026-02-13T00:00:00",
+    "version": "1.0"
+  },
+  "work_areas": [
+    {"id": "1.0", "title": "DAG Execution"}
+  ],
+  "packets": [
+    {"id": "DAG-001", "wbs_ref": "1.1", "area_id": "1.0", "title": "Architecture baseline", "scope": "Define architecture and interfaces."},
+    {"id": "DAG-002", "wbs_ref": "1.2", "area_id": "1.0", "title": "Core domain module", "scope": "Implement domain module."},
+    {"id": "DAG-003", "wbs_ref": "1.3", "area_id": "1.0", "title": "API module", "scope": "Implement API layer."},
+    {"id": "DAG-004", "wbs_ref": "1.4", "area_id": "1.0", "title": "UI module", "scope": "Implement UI components."},
+    {"id": "DAG-005", "wbs_ref": "1.5", "area_id": "1.0", "title": "Integration tests", "scope": "Implement integration suite."},
+    {"id": "DAG-006", "wbs_ref": "1.6", "area_id": "1.0", "title": "Release gate", "scope": "Finalize release artifacts and signoff."}
+  ],
+  "dependencies": {
+    "DAG-002": ["DAG-001"],
+    "DAG-003": ["DAG-001"],
+    "DAG-004": ["DAG-002", "DAG-003"],
+    "DAG-005": ["DAG-002", "DAG-003"],
+    "DAG-006": ["DAG-004", "DAG-005"]
+  }
+}

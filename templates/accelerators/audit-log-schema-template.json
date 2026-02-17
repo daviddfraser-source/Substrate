@@ -1,0 +1,9 @@
+{
+  "timestamp": "ISO-8601",
+  "actor": "user-or-agent-id",
+  "action": "string",
+  "resource": "string",
+  "result": "allow|deny|success|failure",
+  "reason": "string",
+  "trace_id": "string"
+}

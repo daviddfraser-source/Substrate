@@ -1,0 +1,21 @@
+description: Agent Eval Baseline
+
+prompts:
+  - |
+    You are an agent execution assistant.
+    Return JSON with keys: plan, risks, next_actions.
+    Task: {{task}}
+
+providers:
+  - id: openai:gpt-4.1-mini
+
+tests:
+  - vars:
+      task: "Create a WBS for migrating CI from legacy scripts to CLI workflows."
+    assert:
+      - type: contains
+        value: "plan"
+      - type: contains
+        value: "risks"
+      - type: contains
+        value: "next_actions"

@@ -1,0 +1,8 @@
+[
+  { "path": "templates/ai-substrate/prisma/schema.prisma", "purpose": "Canonical data model for Prisma" },
+  { "path": "templates/ai-substrate/lib/validation/env.ts", "purpose": "Required Zod schema for env vars" },
+  { "path": "templates/ai-substrate/app/api/items/route.ts", "purpose": "Example server action plus Zod validation" },
+  { "path": "templates/ai-substrate/lib/db/adapter.ts", "purpose": "Adapter seam for data access" },
+  { "path": "templates/ai-substrate/components/ui/button.tsx", "purpose": "Editable UI primitive" },
+  { "path": "templates/ai-substrate/lib/auth/policy.ts", "purpose": "Permission helpers and contracts" }
+]

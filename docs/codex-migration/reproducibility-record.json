@@ -1,0 +1,8 @@
+{
+  "execution_fingerprint": "de18ec17f987d9202f5f36cb6febba5a51be83feffafdc43024c329bb6dd187d",
+  "state_fingerprint": "60dc629b9ce019dd2ee04f3e2d4f9a50ff0e8aea72a1f2870ecc0faf0511d0f0",
+  "artifact_fingerprints": {
+    "/mnt/c/Users/User/OneDrive/Work/orchestrated_codex/AGENTS.md": "e3136ddc2da4847d4f3287e9fdfa376327050d6138be7c76c870bacfefa4c23f",
+    "/mnt/c/Users/User/OneDrive/Work/orchestrated_codex/.governance/wbs.json": "67db7890e76f2d7a7ed69555082cf64f6962b6e7402caef01e7d7a436982c2b5"
+  }
+}

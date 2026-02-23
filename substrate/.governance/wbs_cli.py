@@ -14,8 +14,20 @@ from pathlib import Path
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
+sys.path.insert(0, str(Path(__file__).parent)) # Add .governance to sys.path
+
+
 from wbs_common import (
-    GOV, WBS_DEF, WBS_STATE,
+    GOV,
+    green, red, yellow, bold, dim,
+    load_definition, load_state, get_counts
+)
+
+sys.path.insert(0, str(Path(__file__).parent)) # Add .governance to sys.path
+
+
+from wbs_common import (
+    GOV,
     green, red, yellow, bold, dim,
     load_definition, load_state, get_counts
 )
@@ -100,6 +112,14 @@ from planner import (
     validate_definition as validate_planned_definition,
     write_definition as write_planned_definition,
 )
+from paths import (
+    DEFAULT_PROJECT_ID,
+    PROJECTS_DIR,
+    get_active_project_id,
+    normalize_project_id,
+    resolve_runtime_paths,
+    set_active_project_id,
+)
 
 try:
     from jsonschema import Draft202012Validator
@@ -110,12 +130,16 @@ except Exception:
 JSON_OUTPUT = False
 PACKET_SCHEMA_PATH = GOV / "packet-schema.json"
 WBS_SCHEMA_PATH = GOV / "wbs-schema.json"
-RESIDUAL_RISK_SCHEMA_PATH = GOV / "residual-risk-register.schema.json"
-RESIDUAL_RISK_REGISTER_PATH = GOV / "residual-risk-register.json"
-BREAK_FIX_STORE_PATH = GOV / "break-fix-log.json"
 SCHEMA_REGISTRY_PATH = GOV / "schema-registry.json"
 AGENTS_REGISTRY_PATH = GOV / "agents.json"
 GIT_GOVERNANCE_PATH = GOV / "git-governance.json"
+WBS_MUTATION_POLICY_PATH = GOV / "wbs-mutation-policy.json"
+WBS_APPROVAL_ENV = "WBS_CHANGE_APPROVAL"
+WBS_APPROVAL_FLAG = "--wbs-approval"
+DEFAULT_WBS_MUTATION_POLICY = {
+    "mode": "strict",
+    "approval_prefix": "WBS-APPROVED:",
+}
 
 REQUIRED_PACKET_FIELDS = [
     "packet_id",
@@ -177,6 +201,107 @@ MODE_PROFILES = {
     },
 }
 DEFAULT_MODE_PROFILE = "balanced"
+WBS_APPROVAL_TOKEN = ""
+
+# ---------------------------------------------------------------------------
+# Use-time runtime path accessors
+# ---------------------------------------------------------------------------
+# These helpers replace stale module-level path constants (WBS_DEF, WBS_STATE,
+# RESIDUAL_RISK_REGISTER_PATH, BREAK_FIX_STORE_PATH).  Each call goes through
+# resolve_runtime_paths() so the correct project-scoped path is always returned,
+# even if apply_runtime_project() was invoked after module import.
+#
+# Convention:
+#   - Reference these names directly in each function that needs a path.
+#   - They are implemented as callables that always resolve at call-time.
+# ---------------------------------------------------------------------------
+
+def _wbs_def_path() -> "Path":
+    """Return the active project's wbs.json path (resolved at call-time)."""
+    return resolve_runtime_paths()["wbs_def"]
+
+
+def _residual_risk_register_path() -> "Path":
+    """Return the active project's residual-risk-register.json path (resolved at call-time)."""
+    return resolve_runtime_paths()["residual_risk_register"]
+
+
+def _break_fix_log_path() -> "Path":
+    """Return the active project's break-fix-log.json path (resolved at call-time)."""
+    return resolve_runtime_paths()["break_fix_log"]
+
+
+# Module-level names used throughout this file.
+# Each evaluates to the correct project-scoped path by calling the accessor.
+# Using a _PathAccessor class so bare-name usage (e.g. WBS_DEF) acts like a Path
+# for the common operations (exists, open, str, etc.) while resolving at call-time.
+
+class _PathAccessor(os.PathLike):
+    """Proxy that resolves a runtime path at call-time and delegates all Path/os operations.
+
+    Implements os.PathLike so it is accepted by open(), Path(), os.fspath(),
+    and all stdlib functions that consume path-like objects.
+    The underlying Path is resolved fresh on every attribute access, which means
+    project context set by apply_runtime_project() is always reflected correctly.
+    """
+    def __init__(self, resolver):
+        self._resolver = resolver
+
+    def __fspath__(self) -> str:
+        return str(self._resolver())
+
+    def __str__(self) -> str:
+        return str(self._resolver())
+
+    def __repr__(self) -> str:
+        return repr(self._resolver())
+
+    def __eq__(self, other) -> bool:
+        p = self._resolver()
+        if isinstance(other, _PathAccessor):
+            return p == other._resolver()
+        return p == other
+
+    def __hash__(self):
+        return hash(self._resolver())
+
+    def __truediv__(self, other):
+        return self._resolver() / other
+
+    def __rtruediv__(self, other):
+        return Path(other) / self._resolver()
+
+    def __getattr__(self, name):
+        # Delegate any unknown attribute to the resolved Path object.
+        # This covers exists(), read_text(), write_text(), open(), unlink(),
+        # resolve(), stat(), parent, name, suffix, etc.
+        return getattr(self._resolver(), name)
+
+
+WBS_DEF = _PathAccessor(_wbs_def_path)
+RESIDUAL_RISK_REGISTER_PATH = _PathAccessor(_residual_risk_register_path)
+BREAK_FIX_STORE_PATH = _PathAccessor(_break_fix_log_path)
+
+
+def apply_runtime_project(project_id: str, persist: bool = False) -> str:
+    """Apply project context to runtime path globals for this CLI process.
+
+    Path resolution strategy: all governance paths (WBS_STATE, WBS_DEF, etc.)
+    are resolved at use-time by calling resolve_runtime_paths() inside each
+    function that needs them.  This function writes the selected project id
+    into os.environ["WBS_PROJECT"] so that any subsequent resolve_runtime_paths()
+    call automatically picks up the correct project-scoped paths.  No module-level
+    path constants are used; this avoids stale-path bugs when project context
+    changes mid-process.
+    """
+    pid = normalize_project_id(project_id)
+    if persist:
+        pid = set_active_project_id(pid)
+    os.environ["WBS_PROJECT"] = pid
+    # resolve_runtime_paths is called here to validate the project paths exist;
+    # the return value is intentionally unused — callers resolve at use-time.
+    resolve_runtime_paths(pid)
+    return pid
 
 PACKET_PRESETS = {
     "api-change": {
@@ -211,6 +336,60 @@ def output_json(data):
     if JSON_OUTPUT:
         print(json.dumps(data, indent=2, default=str))
         return True
+    return False
+
+
+def _load_wbs_mutation_policy() -> dict:
+    policy = dict(DEFAULT_WBS_MUTATION_POLICY)
+    if not WBS_MUTATION_POLICY_PATH.exists():
+        return policy
+    try:
+        loaded = json.loads(WBS_MUTATION_POLICY_PATH.read_text())
+    except Exception:
+        return policy
+    if isinstance(loaded, dict):
+        policy.update({k: v for k, v in loaded.items() if v is not None})
+    policy["mode"] = str(policy.get("mode") or "strict").strip().lower()
+    if policy["mode"] not in {"strict", "advisory", "disabled"}:
+        policy["mode"] = "strict"
+    policy["approval_prefix"] = str(policy.get("approval_prefix") or "WBS-APPROVED:")
+    return policy
+
+
+def _approval_candidate(explicit_token: str = "") -> str:
+    token = str(explicit_token or "").strip()
+    if token:
+        return token
+    if str(WBS_APPROVAL_TOKEN or "").strip():
+        return str(WBS_APPROVAL_TOKEN).strip()
+    return str(os.environ.get(WBS_APPROVAL_ENV, "")).strip()
+
+
+def _approval_token_valid(token: str, prefix: str) -> bool:
+    if not token or not prefix or not token.startswith(prefix):
+        return False
+    tail = token[len(prefix):].strip()
+    return bool(re.fullmatch(r"[A-Za-z0-9._:/-]{3,128}", tail))
+
+
+def require_wbs_mutation_approval(action: str, explicit_token: str = "") -> bool:
+    """Enforce approval policy for structural WBS mutations."""
+    policy = _load_wbs_mutation_policy()
+    mode = policy.get("mode", "strict")
+    if mode == "disabled":
+        return True
+    prefix = str(policy.get("approval_prefix") or "WBS-APPROVED:")
+    token = _approval_candidate(explicit_token)
+    if _approval_token_valid(token, prefix):
+        return True
+    message = (
+        f"WBS mutation approval required for {action}. "
+        f"Provide {WBS_APPROVAL_FLAG} {prefix}<change-id> or set {WBS_APPROVAL_ENV}."
+    )
+    if mode == "advisory":
+        print(yellow(message))
+        return True
+    print(red(message))
     return False
 
 
@@ -274,14 +453,23 @@ def get_mode_config(state: dict = None) -> dict:
 
 
 def save_state(state: dict):
-    """Save state with cross-platform lock + atomic replace."""
-    atomic_write_json(WBS_STATE, state)
+    """Save state with cross-platform lock + atomic replace.
+
+    Resolves the state path at call-time via resolve_runtime_paths() so that
+    the correct project-scoped path is always used, even if apply_runtime_project()
+    was called after module import.
+    """
+    atomic_write_json(resolve_runtime_paths()["wbs_state"], state)
 
 
 def governance_engine() -> GovernanceEngine:
-    """Build governance engine from current definition and state path."""
+    """Build governance engine from current definition and state path.
+
+    Resolves paths at call-time so project context set by apply_runtime_project()
+    is respected.
+    """
     definition = load_definition()
-    sm = StateManager(WBS_STATE)
+    sm = StateManager(resolve_runtime_paths()["wbs_state"])
     state = sm.load()
     changed = False
     # Ensure all packets in definition exist in state
@@ -340,7 +528,7 @@ def detect_circular(dependencies: dict) -> Optional[list]:
     return None
 
 
-def cmd_init(wbs_path: str) -> bool:
+def cmd_init(wbs_path: str, approval_token: str = "") -> bool:
     """Initialize state from WBS definition."""
     ok, msg = enforce_schema_contracts()
     if not ok:
@@ -364,8 +552,14 @@ def cmd_init(wbs_path: str) -> bool:
         return False
 
     # Copy definition to .governance/wbs.json if different path
-    if Path(wbs_path).resolve() != WBS_DEF.resolve():
-        with open(WBS_DEF, "w") as f:
+    runtime = resolve_runtime_paths()
+    wbs_def = runtime["wbs_def"]
+    if Path(wbs_path).resolve() != wbs_def.resolve():
+        policy = _load_wbs_mutation_policy()
+        if bool(policy.get("enforce_init_replace", False)):
+            if not require_wbs_mutation_approval("init_replace", approval_token):
+                return False
+        with open(wbs_def, "w") as f:
             json.dump(definition, f, indent=2)
             f.write("\n")
 
@@ -434,12 +628,14 @@ def cmd_init_wizard() -> bool:
     definition["metadata"]["approved_by"] = os.environ.get("USER", "wizard")
     definition["metadata"]["approved_at"] = datetime.now().isoformat()
 
-    with open(WBS_DEF, "w") as f:
+    runtime = resolve_runtime_paths()
+    wbs_def = runtime["wbs_def"]
+    with open(wbs_def, "w") as f:
         json.dump(definition, f, indent=2)
         f.write("\n")
 
-    print(green(f"\nCreated {WBS_DEF}"))
-    return cmd_init(str(WBS_DEF))
+    print(green(f"\nCreated {wbs_def}"))
+    return cmd_init(str(wbs_def), approval_token=WBS_APPROVAL_TOKEN)
 
 
 def cmd_plan(
@@ -500,7 +696,8 @@ def cmd_plan(
             if not target.is_absolute():
                 target = GOV.parent / target
         elif apply:
-            target = WBS_DEF
+            runtime = resolve_runtime_paths()
+            target = runtime["wbs_def"]
         else:
             target = GOV / "wbs-planned.json"
 
@@ -508,7 +705,7 @@ def cmd_plan(
         print(green(f"Planner exported WBS: {written}"))
 
         if apply:
-            return cmd_init(str(written))
+            return cmd_init(str(written), approval_token=WBS_APPROVAL_TOKEN)
         return True
     except FileNotFoundError as e:
         print(red(f"Planner input not found: {e}"))
@@ -738,7 +935,8 @@ def cmd_prd(
             if not wbs_target.is_absolute():
                 wbs_target = GOV.parent / wbs_target
         elif apply:
-            wbs_target = WBS_DEF
+            runtime = resolve_runtime_paths()
+            wbs_target = runtime["wbs_def"]
         else:
             wbs_target = GOV / "wbs-from-prd.json"
 
@@ -746,7 +944,7 @@ def cmd_prd(
         print(green(f"PRD->WBS exported: {written}"))
 
         if apply:
-            return cmd_init(str(written))
+            return cmd_init(str(written), approval_token=WBS_APPROVAL_TOKEN)
         return True
     except FileNotFoundError as e:
         print(red(f"PRD input not found: {e}"))
@@ -1077,16 +1275,18 @@ def cmd_git_branch_close(packet_id: str, agent: str, base_branch: str = "main", 
 
 
 def _snapshot_state_bytes():
-    if WBS_STATE.exists():
-        return WBS_STATE.read_bytes()
+    wbs_state = resolve_runtime_paths()["wbs_state"]
+    if wbs_state.exists():
+        return wbs_state.read_bytes()
     return None
 
 
 def _restore_state_bytes(snapshot) -> None:
+    wbs_state = resolve_runtime_paths()["wbs_state"]
     if snapshot is None:
-        WBS_STATE.unlink(missing_ok=True)
+        wbs_state.unlink(missing_ok=True)
     else:
-        WBS_STATE.write_bytes(snapshot)
+        wbs_state.write_bytes(snapshot)
 
 
 def _annotate_git_link(
@@ -1390,12 +1590,15 @@ def _auto_commit_residual_risk_update(packet_id: str, actor: str) -> tuple:
     if not auto_commit or mode == GIT_MODE_DISABLED:
         return True, "", ""
 
+    runtime = resolve_runtime_paths()
+    risk_register_path = runtime["residual_risk_register"]
+    
     ok, msg, commit_hash, _event_id = run_governance_auto_commit(
         repo_root=GOV.parent,
         packet_id=packet_id,
         action="note",
         actor=actor or "system",
-        stage_files=[str(RESIDUAL_RISK_REGISTER_PATH.relative_to(GOV.parent))],
+        stage_files=[str(risk_register_path.relative_to(GOV.parent))],
         protocol_version=config.get("commit_protocol_version", GIT_PROTOCOL_VERSION),
     )
     if ok:
@@ -1597,6 +1800,108 @@ def cmd_resume(packet_id: str, agent: str) -> bool:
     else:
         print(red(_format_error(msg)))
     return ok
+
+
+def cmd_project_show() -> bool:
+    active_project_id = get_active_project_id()
+    runtime = resolve_runtime_paths(active_project_id)
+    payload = {
+        "active_project": active_project_id,
+        "default_project": DEFAULT_PROJECT_ID,
+        "current_project_file": str(runtime["current_project"]),
+    }
+    if output_json(payload):
+        return True
+    print(f"Active project: {active_project_id}")
+    print(f"Default project: {DEFAULT_PROJECT_ID}")
+    print(f"Current project file: {runtime['current_project']}")
+    return True
+
+
+def cmd_project_list() -> bool:
+    projects = [DEFAULT_PROJECT_ID]
+    active_project_id = get_active_project_id()
+    if PROJECTS_DIR.exists():
+        for item in sorted(PROJECTS_DIR.iterdir()):
+            if item.is_dir():
+                projects.append(normalize_project_id(item.name))
+    projects = sorted(set(projects))
+    payload = {"active_project": active_project_id, "projects": projects}
+    if output_json(payload):
+        return True
+    print("Projects:")
+    for project in projects:
+        marker = "*" if project == active_project_id else " "
+        print(f"{marker} {project}")
+    return True
+
+
+def cmd_project_set(project_id: str, approval_token: str = "") -> bool:
+    if not require_wbs_mutation_approval("project-set", approval_token):
+        return False
+    pid = apply_runtime_project(project_id, persist=True)
+    print(green(f"Active project set to {pid}"))
+    return True
+
+
+def cmd_project_create(project_id: str, source_path: str = "", approval_token: str = "") -> bool:
+    if not require_wbs_mutation_approval("project-create", approval_token):
+        return False
+    pid = normalize_project_id(project_id)
+    if pid == DEFAULT_PROJECT_ID:
+        print(red("project-create: 'main' already exists as default project"))
+        return False
+    runtime = resolve_runtime_paths(pid)
+    wbs_path = runtime["wbs_def"]
+    state_path = runtime["wbs_state"]
+    if wbs_path.exists():
+        print(red(f"Project already exists: {pid} ({wbs_path})"))
+        return False
+    source_runtime = resolve_runtime_paths()
+    source_wbs_def = source_runtime["wbs_def"]
+    source = Path(source_path).expanduser() if source_path else source_wbs_def
+    if not source.is_absolute():
+        source = source.resolve()
+    if not source.exists():
+        print(red(f"Project source WBS not found: {source}"))
+        return False
+    try:
+        definition = json.loads(source.read_text())
+    except json.JSONDecodeError as e:
+        print(red(f"Project source WBS invalid JSON: {e}"))
+        return False
+    errors = validate_planned_definition(definition)
+    if errors:
+        print(red("Project source WBS failed validation:"))
+        for err in errors:
+            print(f"  - {err}")
+        return False
+    wbs_path.parent.mkdir(parents=True, exist_ok=True)
+    atomic_write_json(wbs_path, definition)
+    now = datetime.now().isoformat()
+    state = {
+        "version": "1.0",
+        "created_at": now,
+        "updated_at": now,
+        "packets": {},
+        "log": [],
+        "area_closeouts": {},
+        "log_integrity_mode": "plain",
+        "operator_mode": DEFAULT_MODE_PROFILE,
+        "mode_overrides": {},
+    }
+    for packet in definition.get("packets", []):
+        pid_packet = packet["id"]
+        state["packets"][pid_packet] = {
+            "status": "pending",
+            "assigned_to": None,
+            "started_at": None,
+            "completed_at": None,
+            "notes": None,
+        }
+    atomic_write_json(state_path, state)
+    print(green(f"Created project {pid}: {wbs_path}"))
+    return True
 
 
 def _ensure_agent_registry_exists() -> dict:
@@ -2758,20 +3063,25 @@ def cmd_closeout_l2(area_id: str, agent: str, assessment_path: str, notes: str =
 
 
 def require_state():
-    """Check state file exists."""
-    if not WBS_STATE.exists():
+    """Check state file exists. Resolves path at call-time."""
+    if not resolve_runtime_paths()["wbs_state"].exists():
         print(red("Not initialized. Run: python3 .governance/wbs_cli.py init .governance/wbs.json"))
         return False
     return True
 
 
 def save_definition(defn: dict):
-    """Save WBS definition with cross-platform lock + atomic replace."""
-    atomic_write_json(WBS_DEF, defn)
+    """Save WBS definition with cross-platform lock + atomic replace.
+
+    Resolves the definition path at call-time via resolve_runtime_paths().
+    """
+    atomic_write_json(resolve_runtime_paths()["wbs_def"], defn)
 
 
-def cmd_add_area(area_id: str, title: str, description: str = "") -> bool:
+def cmd_add_area(area_id: str, title: str, description: str = "", approval_token: str = "") -> bool:
     """Add a work area."""
+    if not require_wbs_mutation_approval("add-area", approval_token):
+        return False
     defn = load_definition()
 
     if any(a["id"] == area_id for a in defn.get("work_areas", [])):
@@ -2795,8 +3105,11 @@ def cmd_add_packet(
     scope: str,
     wbs_ref: str = None,
     preset: str = "",
+    approval_token: str = "",
 ) -> bool:
     """Add a packet."""
+    if not require_wbs_mutation_approval("add-packet", approval_token):
+        return False
     defn = load_definition()
 
     if any(p["id"] == packet_id for p in defn.get("packets", [])):
@@ -2848,8 +3161,10 @@ def cmd_add_packet(
     return True
 
 
-def cmd_add_dep(packet_id: str, depends_on: str) -> bool:
+def cmd_add_dep(packet_id: str, depends_on: str, approval_token: str = "") -> bool:
     """Add a dependency."""
+    if not require_wbs_mutation_approval("add-dep", approval_token):
+        return False
     if packet_id == depends_on:
         print(red("Packet cannot depend on itself"))
         return False
@@ -2885,8 +3200,10 @@ def cmd_add_dep(packet_id: str, depends_on: str) -> bool:
     return True
 
 
-def cmd_remove(item_id: str, force: bool = False) -> bool:
+def cmd_remove(item_id: str, force: bool = False, approval_token: str = "") -> bool:
     """Remove a packet or area."""
+    if not require_wbs_mutation_approval("remove", approval_token):
+        return False
     defn = load_definition()
 
     # Check if it's a packet
@@ -3258,12 +3575,73 @@ def cmd_validate_packet(path: str = "") -> bool:
         print(green(f"Packet validation passed: {len(packets)} packets"))
         print(dim(f"Schema: {PACKET_SCHEMA_PATH}"))
         return True
-
     print(red(f"Packet validation failed ({len(all_errors)} issues):"))
     for err in all_errors:
         print(f"  - {err}")
     print(dim(f"Schema: {PACKET_SCHEMA_PATH}"))
     return False
+
+
+def cmd_draft_create(source_path: str = "", output_path: str = "") -> bool:
+    """Create a WBS draft file from active definition or explicit source."""
+    source = Path(source_path).expanduser() if source_path else WBS_DEF
+    if not source.is_absolute():
+        source = source.resolve()
+    if not source.exists():
+        print(red(f"Draft source not found: {source}"))
+        return False
+    target = Path(output_path).expanduser() if output_path else (GOV / "wbs.draft.json")
+    if not target.is_absolute():
+        target = target.resolve()
+    try:
+        payload = json.loads(source.read_text())
+    except json.JSONDecodeError as e:
+        print(red(f"Draft source is invalid JSON: {e}"))
+        return False
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(json.dumps(payload, indent=2) + "\n")
+    print(green(f"Draft created: {target}"))
+    return True
+
+
+def cmd_draft_apply(draft_path: str, actor: str, notes: str = "", approval_token: str = "") -> bool:
+    """Apply draft WBS into active definition under explicit mutation approval."""
+    if not require_wbs_mutation_approval("draft-apply", approval_token):
+        return False
+    draft = Path(draft_path).expanduser()
+    if not draft.is_absolute():
+        draft = draft.resolve()
+    if not draft.exists():
+        print(red(f"Draft not found: {draft}"))
+        return False
+    try:
+        definition = json.loads(draft.read_text())
+    except json.JSONDecodeError as e:
+        print(red(f"Draft is invalid JSON: {e}"))
+        return False
+    plan_errors = validate_planned_definition(definition)
+    if plan_errors:
+        print(red("Draft definition validation failed:"))
+        for err in plan_errors:
+            print(f"  - {err}")
+        return False
+    cycle = detect_circular(definition.get("dependencies", {}))
+    if cycle:
+        print(red(f"Circular dependency in draft: {' -> '.join(cycle)}"))
+        return False
+    if not cmd_init(str(draft), approval_token=approval_token):
+        return False
+    state = ensure_state_shape(load_state())
+    log_event(
+        state,
+        "WBS-DRAFT",
+        "draft_applied",
+        agent=actor,
+        notes=f"path={draft} notes={notes}".strip(),
+    )
+    save_state(state)
+    print(green(f"Draft applied: {draft}"))
+    return True
 
 
 def cmd_graph(output_path: str = ""):
@@ -3527,6 +3905,8 @@ def print_help():
     print("  validate [--strict]   Check WBS structure (strict enforces packet contract)")
     print("  template-validate     Run template integrity checks")
     print("  validate-packet [path] Validate packets against packet schema")
+    print("  draft-create [source] [--output path] Create a draft WBS from active/source definition")
+    print("  draft-apply <draft> <actor> [notes] Apply draft WBS to active definition (approval required)")
     print("  closeout-l2 <area> <agent> <drift-md> [notes] Close level-2 area with drift assessment")
     print()
     print("  claim <id> <agent>    Claim a packet")
@@ -3559,6 +3939,10 @@ def print_help():
     print("  packet-presets                     List optional packet presets")
     print("  add-dep <packet> <depends-on>      Add dependency")
     print("  remove <id> [--force]              Remove packet or area")
+    print("  project-show                       Show active project context")
+    print("  project-list                       List known projects")
+    print("  project-set <id>                   Set active project (approval required)")
+    print("  project-create <id> [source]       Create project namespace from source WBS (approval required)")
     print("  agent-list                         Show registered agent profiles and mode")
     print("  agent-mode <disabled|advisory|strict> Set capability enforcement mode")
     print("  agent-register <id> <type> <caps>  Register/update agent (caps comma-separated)")
@@ -3573,6 +3957,8 @@ def print_help():
     print()
     print("Options:")
     print("  --json              Output as JSON (for scripting)")
+    print(f"  {WBS_APPROVAL_FLAG} <token>  Approval token for structural WBS mutations")
+    print("  --project <id>      Execute command against selected project context")
     print()
     print("Examples:")
     print("  python3 .governance/wbs_cli.py ready")
@@ -3605,6 +3991,8 @@ def print_help():
     print("  python3 .governance/wbs_cli.py done CDX-3-1 codex-lead \"Implemented changes\" --risk none")
     print("  python3 .governance/wbs_cli.py done CDX-3-2 codex-lead \"Implemented changes\" --risk declared --risk-file docs/risks/rsk-3-2.json")
     print("  python3 .governance/wbs_cli.py risk-list --status open")
+    print("  python3 .governance/wbs_cli.py draft-create --output .governance/wbs.draft.json")
+    print("  python3 .governance/wbs_cli.py --wbs-approval WBS-APPROVED:GOV-13-4 draft-apply .governance/wbs.draft.json codex \"approved apply\"")
     print("  python3 .governance/wbs_cli.py break-fix-open codex \"Fix flaky smoke\" \"Intermittent server API timeout\" --severity high --packet E2E-6-4")
     print("  python3 .governance/wbs_cli.py break-fix-resolve BFIX-0003 codex \"Adjusted timeout + retries\" --evidence substrate/tests/test_server_api.py,substrate/.governance/wbs_server.py")
     print("  python3 .governance/wbs_cli.py note CDX-3-1 codex-lead \"Evidence: docs/path.md\"")
@@ -3616,13 +4004,30 @@ def print_help():
 
 
 def main():
-    global JSON_OUTPUT
+    global JSON_OUTPUT, WBS_APPROVAL_TOKEN
 
     # Parse --json flag
     args = sys.argv[1:]
     if "--json" in args:
         JSON_OUTPUT = True
         args.remove("--json")
+    if "--project" in args:
+        idx = args.index("--project")
+        if idx + 1 >= len(args):
+            print("Usage: --project <id>")
+            sys.exit(1)
+        selected_project = args[idx + 1]
+        del args[idx:idx + 2]
+        apply_runtime_project(selected_project, persist=False)
+    else:
+        apply_runtime_project(get_active_project_id(), persist=False)
+    if WBS_APPROVAL_FLAG in args:
+        idx = args.index(WBS_APPROVAL_FLAG)
+        if idx + 1 >= len(args):
+            print(f"Usage: {WBS_APPROVAL_FLAG} <token>")
+            sys.exit(1)
+        WBS_APPROVAL_TOKEN = args[idx + 1]
+        del args[idx:idx + 2]
 
     if len(args) < 1:
         print_help()
@@ -3638,7 +4043,7 @@ def main():
                 success = cmd_init_wizard()
             else:
                 init_source = args[1] if len(args) >= 2 else str(WBS_DEF)
-                success = cmd_init(init_source)
+                success = cmd_init(init_source, approval_token=WBS_APPROVAL_TOKEN)
             if not success:
                 sys.exit(1)
         elif cmd == "plan":
@@ -4385,6 +4790,34 @@ def main():
             target = args[1] if len(args) > 1 else ""
             if not cmd_validate_packet(target):
                 sys.exit(1)
+        elif cmd == "draft-create":
+            source = ""
+            output = ""
+            extra = args[1:]
+            i = 0
+            while i < len(extra):
+                token = extra[i]
+                if token == "--output":
+                    if i + 1 >= len(extra):
+                        print("Usage: wbs_cli.py draft-create [source] [--output path]")
+                        sys.exit(1)
+                    output = extra[i + 1]
+                    i += 2
+                    continue
+                if source:
+                    print("Usage: wbs_cli.py draft-create [source] [--output path]")
+                    sys.exit(1)
+                source = token
+                i += 1
+            if not cmd_draft_create(source_path=source, output_path=output):
+                sys.exit(1)
+        elif cmd == "draft-apply":
+            if len(args) < 3:
+                print("Usage: wbs_cli.py draft-apply <draft_path> <actor> [notes]")
+                sys.exit(1)
+            notes = args[3] if len(args) > 3 else ""
+            if not cmd_draft_apply(args[1], args[2], notes=notes, approval_token=WBS_APPROVAL_TOKEN):
+                sys.exit(1)
         elif cmd == "closeout-l2":
             if len(args) < 4:
                 print("Usage: wbs_cli.py closeout-l2 <area_id|n> <agent> <drift_assessment.md> [notes]")
@@ -4403,7 +4836,7 @@ def main():
                 print("Usage: wbs_cli.py add-area <id> <title> [description]")
                 sys.exit(1)
             desc = args[3] if len(args) > 3 else ""
-            if not cmd_add_area(args[1], args[2], desc):
+            if not cmd_add_area(args[1], args[2], desc, approval_token=WBS_APPROVAL_TOKEN):
                 sys.exit(1)
         elif cmd == "add-packet":
             if len(args) < 4:
@@ -4431,7 +4864,7 @@ def main():
                     scope = sys.stdin.read().strip()
                 except:
                     scope = ""
-            if not cmd_add_packet(pid, area, title, scope, preset=preset):
+            if not cmd_add_packet(pid, area, title, scope, preset=preset, approval_token=WBS_APPROVAL_TOKEN):
                 sys.exit(1)
         elif cmd == "packet-presets":
             if not cmd_packet_presets():
@@ -4440,14 +4873,33 @@ def main():
             if len(args) < 3:
                 print("Usage: wbs_cli.py add-dep <packet> <depends-on>")
                 sys.exit(1)
-            if not cmd_add_dep(args[1], args[2]):
+            if not cmd_add_dep(args[1], args[2], approval_token=WBS_APPROVAL_TOKEN):
                 sys.exit(1)
         elif cmd == "remove":
             if len(args) < 2:
                 print("Usage: wbs_cli.py remove <id> [--force]")
                 sys.exit(1)
             force = "--force" in args
-            if not cmd_remove(args[1], force):
+            if not cmd_remove(args[1], force, approval_token=WBS_APPROVAL_TOKEN):
+                sys.exit(1)
+        elif cmd == "project-show":
+            if not cmd_project_show():
+                sys.exit(1)
+        elif cmd == "project-list":
+            if not cmd_project_list():
+                sys.exit(1)
+        elif cmd == "project-set":
+            if len(args) < 2:
+                print("Usage: wbs_cli.py project-set <project_id>")
+                sys.exit(1)
+            if not cmd_project_set(args[1], approval_token=WBS_APPROVAL_TOKEN):
+                sys.exit(1)
+        elif cmd == "project-create":
+            if len(args) < 2:
+                print("Usage: wbs_cli.py project-create <project_id> [source_wbs_path]")
+                sys.exit(1)
+            source = args[2] if len(args) > 2 else ""
+            if not cmd_project_create(args[1], source_path=source, approval_token=WBS_APPROVAL_TOKEN):
                 sys.exit(1)
         elif cmd == "agent-list":
             if not cmd_agent_list():

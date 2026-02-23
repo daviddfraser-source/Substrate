@@ -77,46 +77,6 @@
       "wbs_ref": "4.1",
       "area_id": "4.0",
       "title": "Closeout with drift assessment"
-    },
-    {
-      "wbs_ref": "13.1",
-      "area_id": "13.0",
-      "title": "Design mutation-control contract"
-    },
-    {
-      "wbs_ref": "13.2",
-      "area_id": "13.0",
-      "title": "Implement WBS mutation guard"
-    },
-    {
-      "wbs_ref": "13.3",
-      "area_id": "13.0",
-      "title": "Enforce git governance for WBS changes"
-    },
-    {
-      "wbs_ref": "13.4",
-      "area_id": "13.0",
-      "title": "Add draft/apply WBS workflow"
-    },
-    {
-      "wbs_ref": "13.5",
-      "area_id": "13.0",
-      "title": "Introduce project-scoped governance model"
-    },
-    {
-      "wbs_ref": "13.6",
-      "area_id": "13.0",
-      "title": "Implement project-aware CLI and APIs"
-    },
-    {
-      "wbs_ref": "13.7",
-      "area_id": "13.0",
-      "title": "Viewer support for multi-project context"
-    },
-    {
-      "wbs_ref": "13.8",
-      "area_id": "13.0",
-      "title": "Migration, docs, and rollout hardening"
     }
   ],
   "packets": [
@@ -1206,401 +1166,66 @@
     },
     {
       "id": "GOV-13-1",
-      "packet_id": "GOV-13-1",
-      "wbs_ref": "13.1",
-      "wbs_l3_ref": "13.1",
-      "wbs_refs": [
-        "13.1"
-      ],
+      "wbs_ref": "9.1",
       "area_id": "13.0",
       "title": "Design mutation-control contract",
-      "scope": "Define authoritative mutation policy for WBS artifacts: allowed commands, approval token format, commit trailer rules, and rejection conditions. Output: substrate/docs/codex-migration/wbs-mutation-policy.md",
-      "purpose": "Deliver Design mutation-control contract.",
-      "status": "PENDING",
-      "owner": "unassigned",
-      "priority": "HIGH",
-      "preconditions": [],
-      "required_inputs": [
-        "Current WBS governance model and mutation patterns",
-        "Git commit protocol requirements"
-      ],
-      "required_actions": [
-        "Define authoritative mutation policy for WBS artifacts: allowed commands, approval token format, commit trailer rules, and rejection conditions",
-        "Document policy in substrate/docs/codex-migration/wbs-mutation-policy.md"
-      ],
-      "required_outputs": [
-        "substrate/docs/codex-migration/wbs-mutation-policy.md"
-      ],
-      "validation_checks": [
-        "Implementation aligns with packet scope",
-        "Tests or smoke checks executed for impacted behavior",
-        "Evidence paths included in completion notes"
-      ],
-      "exit_criteria": [
-        "Packet marked done with concrete evidence and validation results"
-      ],
-      "halt_conditions": [
-        "Required dependencies unresolved",
-        "Contract-breaking change detected without remediation plan"
-      ],
-      "authority": "Repository packet governance",
-      "type": "WBS_PACKET",
-      "references": []
+      "scope": "Define authoritative mutation policy for WBS artifacts: allowed commands, approval token format, commit trailer rules, and rejection conditions. Output: substrate/docs/codex-migration/wbs-mutation-policy.md"
     },
     {
       "id": "GOV-13-2",
-      "packet_id": "GOV-13-2",
-      "wbs_ref": "13.2",
-      "wbs_l3_ref": "13.2",
-      "wbs_refs": [
-        "13.2"
-      ],
+      "wbs_ref": "9.2",
       "area_id": "13.0",
       "title": "Implement WBS mutation guard",
-      "scope": "Implement guard that blocks direct writes/replacements of active WBS without explicit approval signal; enforce in CLI pathways and add defensive checks in helper scripts. Output: guarded mutation logic + tests.",
-      "purpose": "Deliver Implement WBS mutation guard.",
-      "status": "PENDING",
-      "owner": "unassigned",
-      "priority": "HIGH",
-      "preconditions": [],
-      "required_inputs": [
-        "Mutation policy from GOV-13-1",
-        "Current CLI command pathways",
-        "Helper scripts that modify WBS"
-      ],
-      "required_actions": [
-        "Implement guard that blocks direct writes/replacements of active WBS without explicit approval signal",
-        "Enforce in CLI pathways",
-        "Add defensive checks in helper scripts",
-        "Create tests for guarded mutation logic"
-      ],
-      "required_outputs": [
-        "Guarded mutation logic implementation",
-        "Tests validating mutation guard behavior"
-      ],
-      "validation_checks": [
-        "Implementation aligns with packet scope",
-        "Tests or smoke checks executed for impacted behavior",
-        "Evidence paths included in completion notes"
-      ],
-      "exit_criteria": [
-        "Packet marked done with concrete evidence and validation results"
-      ],
-      "halt_conditions": [
-        "Required dependencies unresolved",
-        "Contract-breaking change detected without remediation plan"
-      ],
-      "authority": "Repository packet governance",
-      "type": "WBS_PACKET",
-      "references": []
+      "scope": "Implement guard that blocks direct writes/replacements of active WBS without explicit approval signal; enforce in CLI pathways and add defensive checks in helper scripts. Output: guarded mutation logic + tests."
     },
     {
       "id": "GOV-13-3",
-      "packet_id": "GOV-13-3",
-      "wbs_ref": "13.3",
-      "wbs_l3_ref": "13.3",
-      "wbs_refs": [
-        "13.3"
-      ],
+      "wbs_ref": "9.3",
       "area_id": "13.0",
       "title": "Enforce git governance for WBS changes",
-      "scope": "Add pre-commit/commit-protocol enforcement so commits touching WBS/governance files require WBS change approval trailer and policy-compliant metadata. Output: hook/config + docs + tests.",
-      "purpose": "Deliver Enforce git governance for WBS changes.",
-      "status": "PENDING",
-      "owner": "unassigned",
-      "priority": "HIGH",
-      "preconditions": [],
-      "required_inputs": [
-        "Mutation policy from GOV-13-1",
-        "Existing pre-commit hooks configuration",
-        "Git commit protocol requirements"
-      ],
-      "required_actions": [
-        "Add pre-commit/commit-protocol enforcement for commits touching WBS/governance files",
-        "Require WBS change approval trailer and policy-compliant metadata",
-        "Create hook configuration",
-        "Document enforcement approach",
-        "Create tests validating git governance"
-      ],
-      "required_outputs": [
-        "Pre-commit hook configuration",
-        "Documentation for git governance enforcement",
-        "Tests validating enforcement behavior"
-      ],
-      "validation_checks": [
-        "Implementation aligns with packet scope",
-        "Tests or smoke checks executed for impacted behavior",
-        "Evidence paths included in completion notes"
-      ],
-      "exit_criteria": [
-        "Packet marked done with concrete evidence and validation results"
-      ],
-      "halt_conditions": [
-        "Required dependencies unresolved",
-        "Contract-breaking change detected without remediation plan"
-      ],
-      "authority": "Repository packet governance",
-      "type": "WBS_PACKET",
-      "references": []
+      "scope": "Add pre-commit/commit-protocol enforcement so commits touching WBS/governance files require WBS change approval trailer and policy-compliant metadata. Output: hook/config + docs + tests."
     },
     {
       "id": "GOV-13-4",
-      "packet_id": "GOV-13-4",
-      "wbs_ref": "13.4",
-      "wbs_l3_ref": "13.4",
-      "wbs_refs": [
-        "13.4"
-      ],
+      "wbs_ref": "9.4",
       "area_id": "13.0",
       "title": "Add draft/apply WBS workflow",
-      "scope": "Introduce draft WBS path and explicit apply command so agents can propose changes without mutating active WBS until approved apply step. Output: CLI commands + state/log entries + tests.",
-      "purpose": "Deliver Add draft/apply WBS workflow.",
-      "status": "PENDING",
-      "owner": "unassigned",
-      "priority": "HIGH",
-      "preconditions": [],
-      "required_inputs": [
-        "Mutation guard implementation from GOV-13-2",
-        "Current CLI command structure",
-        "WBS state management model"
-      ],
-      "required_actions": [
-        "Introduce draft WBS path for proposed changes",
-        "Implement explicit apply command for activating draft WBS",
-        "Add state/log entries tracking draft workflow",
-        "Create CLI commands for draft management",
-        "Create tests validating draft/apply workflow"
-      ],
-      "required_outputs": [
-        "CLI commands for draft/apply workflow",
-        "State/log entries for draft tracking",
-        "Tests validating draft/apply behavior"
-      ],
-      "validation_checks": [
-        "Implementation aligns with packet scope",
-        "Tests or smoke checks executed for impacted behavior",
-        "Evidence paths included in completion notes"
-      ],
-      "exit_criteria": [
-        "Packet marked done with concrete evidence and validation results"
-      ],
-      "halt_conditions": [
-        "Required dependencies unresolved",
-        "Contract-breaking change detected without remediation plan"
-      ],
-      "authority": "Repository packet governance",
-      "type": "WBS_PACKET",
-      "references": []
+      "scope": "Introduce draft WBS path and explicit apply command so agents can propose changes without mutating active WBS until approved apply step. Output: CLI commands + state/log entries + tests."
     },
     {
       "id": "GOV-13-5",
-      "packet_id": "GOV-13-5",
-      "wbs_ref": "13.5",
-      "wbs_l3_ref": "13.5",
-      "wbs_refs": [
-        "13.5"
-      ],
+      "wbs_ref": "9.5",
       "area_id": "13.0",
       "title": "Introduce project-scoped governance model",
-      "scope": "Define project abstraction above WBS and project-aware path layout (projects/<id>/wbs.json, wbs-state.json, artifacts). Include current-project pointer and compatibility strategy. Output: design doc + schema/path updates.",
-      "purpose": "Deliver Introduce project-scoped governance model.",
-      "status": "PENDING",
-      "owner": "unassigned",
-      "priority": "HIGH",
-      "preconditions": [],
-      "required_inputs": [
-        "Mutation policy from GOV-13-1",
-        "Current governance path structure",
-        "Existing WBS and state file patterns"
-      ],
-      "required_actions": [
-        "Define project abstraction above WBS",
-        "Design project-aware path layout (projects/<id>/wbs.json, wbs-state.json, artifacts)",
-        "Define current-project pointer mechanism",
-        "Design compatibility strategy for migration",
-        "Create design documentation",
-        "Update schema definitions and path handling"
-      ],
-      "required_outputs": [
-        "Design documentation for project-scoped governance",
-        "Updated schema definitions",
-        "Path layout specification"
-      ],
-      "validation_checks": [
-        "Implementation aligns with packet scope",
-        "Tests or smoke checks executed for impacted behavior",
-        "Evidence paths included in completion notes"
-      ],
-      "exit_criteria": [
-        "Packet marked done with concrete evidence and validation results"
-      ],
-      "halt_conditions": [
-        "Required dependencies unresolved",
-        "Contract-breaking change detected without remediation plan"
-      ],
-      "authority": "Repository packet governance",
-      "type": "WBS_PACKET",
-      "references": []
+      "scope": "Define project abstraction above WBS and project-aware path layout (projects/<id>/wbs.json, wbs-state.json, artifacts). Include current-project pointer and compatibility strategy. Output: design doc + schema/path updates."
     },
     {
       "id": "GOV-13-6",
-      "packet_id": "GOV-13-6",
-      "wbs_ref": "13.6",
-      "wbs_l3_ref": "13.6",
-      "wbs_refs": [
-        "13.6"
-      ],
+      "wbs_ref": "9.6",
       "area_id": "13.0",
       "title": "Implement project-aware CLI and APIs",
-      "scope": "Add --project resolution and active project context to CLI/server APIs; ensure packet lifecycle and reports operate in selected project namespace without cross-project overwrite. Output: implementation + tests.",
-      "purpose": "Deliver Implement project-aware CLI and APIs.",
-      "status": "PENDING",
-      "owner": "unassigned",
-      "priority": "HIGH",
-      "preconditions": [],
-      "required_inputs": [
-        "Project-scoped governance model from GOV-13-5",
-        "Draft/apply workflow from GOV-13-4",
-        "Current CLI and server API implementation"
-      ],
-      "required_actions": [
-        "Add --project resolution to CLI commands",
-        "Implement active project context tracking",
-        "Update server APIs for project-aware operations",
-        "Ensure packet lifecycle operates in selected project namespace",
-        "Prevent cross-project overwrites",
-        "Create tests validating project isolation"
-      ],
-      "required_outputs": [
-        "Project-aware CLI implementation",
-        "Project-aware server API implementation",
-        "Tests validating project isolation and context switching"
-      ],
-      "validation_checks": [
-        "Implementation aligns with packet scope",
-        "Tests or smoke checks executed for impacted behavior",
-        "Evidence paths included in completion notes"
-      ],
-      "exit_criteria": [
-        "Packet marked done with concrete evidence and validation results"
-      ],
-      "halt_conditions": [
-        "Required dependencies unresolved",
-        "Contract-breaking change detected without remediation plan"
-      ],
-      "authority": "Repository packet governance",
-      "type": "WBS_PACKET",
-      "references": []
+      "scope": "Add --project resolution and active project context to CLI/server APIs; ensure packet lifecycle and reports operate in selected project namespace without cross-project overwrite. Output: implementation + tests."
     },
     {
       "id": "GOV-13-7",
-      "packet_id": "GOV-13-7",
-      "wbs_ref": "13.7",
-      "wbs_l3_ref": "13.7",
-      "wbs_refs": [
-        "13.7"
-      ],
+      "wbs_ref": "9.7",
       "area_id": "13.0",
       "title": "Viewer support for multi-project context",
-      "scope": "Update dashboard/viewer to show current project and allow project switching while preserving packet state isolation. Output: UI/API integration + smoke tests.",
-      "purpose": "Deliver Viewer support for multi-project context.",
-      "status": "PENDING",
-      "owner": "unassigned",
-      "priority": "HIGH",
-      "preconditions": [],
-      "required_inputs": [
-        "Project-aware CLI and APIs from GOV-13-6",
-        "Current dashboard/viewer implementation",
-        "Project context API endpoints"
-      ],
-      "required_actions": [
-        "Update dashboard to display current project",
-        "Implement project switching UI controls",
-        "Ensure packet state isolation across projects",
-        "Integrate with project-aware API endpoints",
-        "Create smoke tests for UI/API integration"
-      ],
-      "required_outputs": [
-        "Updated dashboard with project context display",
-        "Project switching UI implementation",
-        "Smoke tests validating UI/API integration"
-      ],
-      "validation_checks": [
-        "Implementation aligns with packet scope",
-        "Tests or smoke checks executed for impacted behavior",
-        "Evidence paths included in completion notes"
-      ],
-      "exit_criteria": [
-        "Packet marked done with concrete evidence and validation results"
-      ],
-      "halt_conditions": [
-        "Required dependencies unresolved",
-        "Contract-breaking change detected without remediation plan"
-      ],
-      "authority": "Repository packet governance",
-      "type": "WBS_PACKET",
-      "references": []
+      "scope": "Update dashboard/viewer to show current project and allow project switching while preserving packet state isolation. Output: UI/API integration + smoke tests."
     },
     {
       "id": "GOV-13-8",
-      "packet_id": "GOV-13-8",
-      "wbs_ref": "13.8",
-      "wbs_l3_ref": "13.8",
-      "wbs_refs": [
-        "13.8"
-      ],
+      "wbs_ref": "9.8",
       "area_id": "13.0",
       "title": "Migration, docs, and rollout hardening",
-      "scope": "Provide migration tooling/docs from single-project state, update bootstrap/start guidance, and add hygiene gates proving unauthorized WBS replacement is blocked. Output: migration script/docs + validation evidence.",
-      "purpose": "Deliver Migration, docs, and rollout hardening.",
-      "status": "PENDING",
-      "owner": "unassigned",
-      "priority": "HIGH",
-      "preconditions": [],
-      "required_inputs": [
-        "Git governance from GOV-13-3",
-        "Viewer support from GOV-13-7",
-        "Project-aware CLI and APIs from GOV-13-6",
-        "Existing single-project state files"
-      ],
-      "required_actions": [
-        "Create migration tooling for single-project to multi-project transition",
-        "Document migration process",
-        "Update bootstrap/start guidance for new project model",
-        "Add hygiene gates proving unauthorized WBS replacement is blocked",
-        "Create validation evidence demonstrating protection"
-      ],
-      "required_outputs": [
-        "Migration script for project transition",
-        "Migration documentation",
-        "Updated bootstrap/start guidance",
-        "Hygiene gates implementation",
-        "Validation evidence"
-      ],
-      "validation_checks": [
-        "Implementation aligns with packet scope",
-        "Tests or smoke checks executed for impacted behavior",
-        "Evidence paths included in completion notes"
-      ],
-      "exit_criteria": [
-        "Packet marked done with concrete evidence and validation results"
-      ],
-      "halt_conditions": [
-        "Required dependencies unresolved",
-        "Contract-breaking change detected without remediation plan"
-      ],
-      "authority": "Repository packet governance",
-      "type": "WBS_PACKET",
-      "references": []
+      "scope": "Provide migration tooling/docs from single-project state, update bootstrap/start guidance, and add hygiene gates proving unauthorized WBS replacement is blocked. Output: migration script/docs + validation evidence."
     },
     {
       "id": "REM-14-1",
       "packet_id": "REM-14-1",
       "wbs_ref": "14.1",
       "wbs_l3_ref": "14.1",
-      "wbs_refs": [
-        "14.1"
-      ],
+      "wbs_refs": ["14.1"],
       "area_id": "14.0",
       "title": "Clean up stray substrate/substrate/ directory",
       "scope": "Remove orphaned substrate/substrate/.governance/ directory tree containing wbs.draft.tmp.json and reports/break-fix/smoke.json left by path resolution bug during GOV-13 execution.",
@@ -1640,9 +1265,7 @@
       "packet_id": "REM-14-2",
       "wbs_ref": "14.2",
       "wbs_l3_ref": "14.2",
-      "wbs_refs": [
-        "14.2"
-      ],
+      "wbs_refs": ["14.2"],
       "area_id": "14.0",
       "title": "Enforce mutation approval in server API project endpoints",
       "scope": "Close enforcement gap where POST /api/project/set in wbs_server.py bypasses require_wbs_mutation_approval() that the CLI enforces. Add approval token validation to server endpoint and update dashboard JS to handle 403 denial.",
@@ -1691,9 +1314,7 @@
       "packet_id": "REM-14-3",
       "wbs_ref": "14.3",
       "wbs_l3_ref": "14.3",
-      "wbs_refs": [
-        "14.3"
-      ],
+      "wbs_refs": ["14.3"],
       "area_id": "14.0",
       "title": "Enable init-replacement mutation guard",
       "scope": "Set enforce_init_replace to true in wbs-mutation-policy.json. Audit and update all scripts and tests that call init with different source to provide approval tokens. Add CLI contract test proving init replacement is blocked without approval.",
@@ -1745,9 +1366,7 @@
       "packet_id": "REM-14-4",
       "wbs_ref": "14.4",
       "wbs_l3_ref": "14.4",
-      "wbs_refs": [
-        "14.4"
-      ],
+      "wbs_refs": ["14.4"],
       "area_id": "14.0",
       "title": "Normalize GOV-13 packets to canonical schema and fix wbs_ref alignment",
       "scope": "Add missing canonical fields to GOV-13-1 through GOV-13-8 in wbs.json (packet_id, purpose, priority, preconditions, required_inputs, required_actions, required_outputs, validation_checks, exit_criteria, halt_conditions, authority, type, references, wbs_refs, wbs_l3_ref, status, owner). Fix wbs_ref values from 9.x to 13.x to match area_id 13.0. Add wbs_level_3 entries for 13.1-13.8.",
@@ -1797,9 +1416,7 @@
       "packet_id": "REM-14-5",
       "wbs_ref": "14.5",
       "wbs_l3_ref": "14.5",
-      "wbs_refs": [
-        "14.5"
-      ],
+      "wbs_refs": ["14.5"],
       "area_id": "14.0",
       "title": "Restore active WBS packet schema validation in scaffold-check",
       "scope": "After REM-14-4 normalizes GOV-13 packets, restore scaffold-check.sh and template-integrity.sh to validate the active .governance/wbs.json against packet schema in addition to template files.",
@@ -1847,9 +1464,7 @@
       "packet_id": "REM-14-6",
       "wbs_ref": "14.6",
       "wbs_l3_ref": "14.6",
-      "wbs_refs": [
-        "14.6"
-      ],
+      "wbs_refs": ["14.6"],
       "area_id": "14.0",
       "title": "Consolidate path resolution pattern in wbs_common.py",
       "scope": "Resolve dual path resolution in wbs_common.py where module-level WBS_DEF/WBS_STATE are set at import time but load_definition()/load_state() call resolve_runtime_paths() again at runtime, creating stale-path risk. Also address apply_runtime_project() in wbs_cli.py which mutates some path globals but not others.",

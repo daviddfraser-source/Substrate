@@ -144,12 +144,18 @@ python3 substrate/.governance/wbs_cli.py status
 
 ## Agent Support
 
+This governance framework supports both programmatic native execution (via MCP) and legacy terminal CLI execution.
+
+### The MCP Server (Recommended)
+For modern Agentic IDEs (VS Code + Antigravity, Cursor, Cline), use the native **Model Context Protocol (MCP)** server included at `substrate/.governance/mcp_server.py`. 
+The server exposes `claim_packet`, `mark_packet_done` and others as native tool calls, drastically simplifying agent configuration.
+
 ### Agent Docs Matrix
 
 | Agent | Primary Doc | Startup Pattern |
 |---|---|---|
 | Claude Code | `CLAUDE.md` | Uses `substrate/scripts/cc-*` wrappers or governance CLI |
-| Gemini | `GEMINI.md` | Uses `substrate/scripts/gc-*` wrappers or governance CLI |
+| Gemini | `GEMINI.md` | Uses MCP Server (via ambient state) or governance CLI |
 | Codex | `codex.md` | Uses governance CLI directly |
 
 ### Claude Code

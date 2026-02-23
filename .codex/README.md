@@ -32,6 +32,15 @@ python3 substrate/.governance/wbs_cli.py log 40
 
 Use `codex` as default agent, or pass an explicit agent id.
 
+## Snippets
+
+Reusable playbooks in `.codex/snippets/`:
+- `claim-execute-done.md` — standard packet execution loop
+- `closeout-l2-template.md` — area closeout with drift assessment
+- `delivery-report-template.md` — formal delivery report structure
+- `blocker-escalation-template.md` — how to escalate when blocked
+- `red-team-review.md` — **adversarial mode**: probe governance for bypass paths, weak evidence, and security gaps
+
 ## Optional Shell Shortcuts
 
 Bash/Zsh (session-only):

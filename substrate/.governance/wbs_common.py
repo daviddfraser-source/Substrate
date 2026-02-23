@@ -8,12 +8,20 @@ import os
 import sys
 from datetime import datetime
 
-from paths import GOV_DIR, SRC_DIR, WBS_DEF_PATH, WBS_STATE_PATH
+from paths import GOV_DIR, SRC_DIR, resolve_runtime_paths
 
 # Paths
 GOV = GOV_DIR
-WBS_DEF = WBS_DEF_PATH
-WBS_STATE = WBS_STATE_PATH
+
+# WBS_DEF and WBS_STATE are resolved at call-time via resolve_runtime_paths()
+# so that project context set by apply_runtime_project() / WBS_PROJECT env var
+# is always respected (module-level constants WBS_DEF_PATH/WBS_STATE_PATH were
+# removed from paths.py as part of the multi-project refactor).
+def _wbs_def() -> "Path":
+    return resolve_runtime_paths()["wbs_def"]
+
+def _wbs_state() -> "Path":
+    return resolve_runtime_paths()["wbs_state"]
 
 SRC_PATH = SRC_DIR
 if str(SRC_PATH) not in sys.path:
@@ -44,15 +52,17 @@ dim = lambda t: c("2", t)
 
 def load_definition() -> dict:
     """Load WBS definition (read-only after init)."""
-    if not WBS_DEF.exists():
+    path = _wbs_def()
+    if not path.exists():
         return {}
-    with open(WBS_DEF) as f:
+    with open(path) as f:
         return json.load(f)
 
 
 def load_state() -> dict:
     """Load current execution state."""
-    if not WBS_STATE.exists():
+    path = _wbs_state()
+    if not path.exists():
         now = datetime.now().isoformat()
         return {
             "version": "1.0",
@@ -63,7 +73,7 @@ def load_state() -> dict:
             "area_closeouts": {},
             "log_integrity_mode": "plain",
         }
-    with open(WBS_STATE) as f:
+    with open(path) as f:
         state = json.load(f)
     now = datetime.now().isoformat()
     state.setdefault("version", "1.0")

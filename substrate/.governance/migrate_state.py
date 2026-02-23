@@ -5,7 +5,7 @@ import json
 import sys
 from pathlib import Path
 
-from paths import SRC_DIR, WBS_STATE_PATH
+from paths import SRC_DIR, resolve_runtime_paths
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = SRC_DIR
@@ -16,7 +16,7 @@ from governed_platform.governance.migrations.runner import migrate_state, LATEST
 
 
 def main():
-    target = Path(sys.argv[1]) if len(sys.argv) > 1 else WBS_STATE_PATH
+    target = Path(sys.argv[1]) if len(sys.argv) > 1 else resolve_runtime_paths()["wbs_state"]
     if not target.exists():
         print(f"State file not found: {target}")
         sys.exit(1)

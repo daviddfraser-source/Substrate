@@ -1,7 +1,8 @@
 ---
 name: red-team-review
 description: Adversarial review that actively probes for governance gaps, circumvention paths, weak evidence, and security issues
-allowed-tools: read_file, grep_search, run_command
+allowed-tools: Bash(python3 substrate/.governance/wbs_cli.py *), Bash(python3 substrate/scripts/sandbox.py *), Read, Grep, Glob
+argument-hint: "[packet-id | area-id | governance | security | evidence | general]"
 ---
 
 # Red Team Review
@@ -15,8 +16,8 @@ The user will provide a **focus area** — a concern, a suspicion, a scope (pack
 ## Step 1: Establish Context
 
 ```bash
-python substrate/.governance/wbs_cli.py status
-python substrate/.governance/wbs_cli.py briefing --format json
+python3 substrate/.governance/wbs_cli.py status
+python3 substrate/.governance/wbs_cli.py briefing --format json
 ```
 
 Read:
@@ -53,7 +54,7 @@ For each area of focus, probe aggressively:
 ### Evidence Quality Checks
 For every completed packet in scope:
 - Read the `notes` field — does it cite real file paths, or is it vague ("did the thing")?
-- Do cited file paths actually exist? `Test-Path` or `ls` each one
+- Do cited file paths actually exist? Check each one
 - Are validation check results documented (tests passed / hygiene passed)?
 - Was `--risk` acknowledged with real reasoning, or just `--risk none` without justification?
 
@@ -69,7 +70,7 @@ For every completed packet in scope:
 - Is there any evidence of direct state file edits (look for `recovery: true` flags or unusual gaps)?
 
 ### Schema and Validation Checks
-- Run `python substrate/.governance/wbs_cli.py validate` — does it pass?
+- Run `python3 substrate/.governance/wbs_cli.py validate` — does it pass?
 - Are all packets schema-compliant? Run `validate-packet` if available
 - Check for packets with missing `required_actions`, `exit_criteria`, or `halt_conditions`
 
@@ -79,24 +80,19 @@ For every completed packet in scope:
 > Run adversarial tests in the sandbox project to avoid corrupting real state.
 
 ```bash
-# Create the isolated sandbox project
-python substrate/scripts/sandbox.py create
+# Create sandbox
+python3 substrate/scripts/sandbox.py create
 
-# Probe the sandbox via the CLI using --project override
-# Try to make a structural WBS mutation without an approval token
-python substrate/.governance/wbs_cli.py --project sandbox add-area GUARD-TEST "Guard Test"
+# Try to bypass approval in sandbox
+python3 substrate/.governance/wbs_cli.py --project sandbox claim <packet_id> red-team-agent
+python3 substrate/.governance/wbs_cli.py --project sandbox done <packet_id> red-team-agent "test" --risk none
+
+# Check if enforcement fires
+python3 substrate/.governance/wbs_cli.py --project sandbox add-area GUARD-TEST "Guard Test"
 # Expect: WBS mutation approval required
 
-# Try to claim and complete in sandbox (enforcement still applies)
-python substrate/.governance/wbs_cli.py --project sandbox claim <packet_id> red-team-agent
-python substrate/.governance/wbs_cli.py --project sandbox done <packet_id> red-team-agent "test" --risk none
-
-# Check sandbox state is isolated from main project
-python substrate/scripts/sandbox.py status
-python substrate/.governance/wbs_cli.py status   # Must still show real project state
-
-# Teardown (cross-platform)
-python substrate/scripts/sandbox.py destroy
+# Teardown
+python3 substrate/scripts/sandbox.py destroy
 ```
 
 ## Step 5: Report Findings
@@ -131,5 +127,5 @@ Output a structured report using this format:
 
 For Critical findings, offer to log them:
 ```bash
-python substrate/.governance/wbs_cli.py break-fix-open RED-TEAM-<N> "gemini" "<finding title>" --severity critical --note "<detail>"
+python3 substrate/.governance/wbs_cli.py break-fix-open RED-TEAM-<N> "claude" "<finding title>" --severity critical --note "<detail>"
 ```

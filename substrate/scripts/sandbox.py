@@ -188,7 +188,14 @@ def cmd_destroy():
         sys.exit(0)
 
     print(f"[sandbox] Destroying: {SANDBOX_DIR}")
-    shutil.rmtree(SANDBOX_DIR)
+    import stat
+
+    def _remove_readonly(func, path, _exc):
+        """Clear read-only bit and retry — required on Windows."""
+        os.chmod(path, stat.S_IWRITE)
+        func(path)
+
+    shutil.rmtree(SANDBOX_DIR, onerror=_remove_readonly)
     print("[sandbox] ✓ Sandbox destroyed.")
 
 

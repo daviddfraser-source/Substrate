@@ -1,5 +1,6 @@
 import subprocess
-from dataclasses import dataclass
+import time
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Optional, Tuple
 
@@ -11,6 +12,8 @@ class SandboxResult:
     returncode: int
     stdout: str
     stderr: str
+    duration_s: float = field(default=0.0)
+    timed_out: bool = field(default=False)
 
 
 class SandboxInterface:
@@ -43,15 +46,33 @@ class SubprocessSandbox(SandboxInterface):
         if not permission_model.is_path_allowed(workdir):
             return False, SandboxResult(1, "", f"Workdir not allowed: {workdir}")
 
-        proc = subprocess.run(
-            command,
-            cwd=workdir,
-            capture_output=True,
-            text=True,
-            timeout=timeout_s,
-            check=False,
-        )
-        return (proc.returncode == 0), SandboxResult(proc.returncode, proc.stdout, proc.stderr)
+        t0 = time.monotonic()
+        try:
+            proc = subprocess.run(
+                command,
+                cwd=workdir,
+                capture_output=True,
+                text=True,
+                timeout=timeout_s,
+                check=False,
+            )
+            duration = time.monotonic() - t0
+            result = SandboxResult(
+                returncode=proc.returncode,
+                stdout=proc.stdout,
+                stderr=proc.stderr,
+                duration_s=round(duration, 3),
+            )
+            return (proc.returncode == 0), result
+        except subprocess.TimeoutExpired:
+            duration = time.monotonic() - t0
+            return False, SandboxResult(
+                returncode=124,
+                stdout="",
+                stderr=f"Command timed out after {timeout_s}s",
+                duration_s=round(duration, 3),
+                timed_out=True,
+            )
 
 
 class ContainerSandbox(SandboxInterface):

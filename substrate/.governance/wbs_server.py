@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Dict, List
 from urllib.parse import parse_qs, urlparse
 
-from wbs_common import GOV, WBS_DEF, load_definition, load_state, get_counts
+from wbs_common import GOV, load_definition, load_state, get_counts
 from governed_platform.governance.file_lock import atomic_write_json
 from governed_platform.governance.break_fix import (
     break_fix_summary,
@@ -27,6 +27,7 @@ from governed_platform.governance.break_fix import (
     start_break_fix,
 )
 from governed_platform.governance.status import normalize_runtime_status
+from paths import resolve_runtime_paths
 
 STATIC = GOV / "static"
 CLI = GOV / "wbs_cli.py"
@@ -69,7 +70,25 @@ LOGGER = _build_logger()
 
 def save_definition(defn: dict):
     """Save WBS definition with cross-platform lock + atomic replace."""
-    atomic_write_json(WBS_DEF, defn)
+    atomic_write_json(resolve_runtime_paths()["wbs_def"], defn)
+
+
+def _require_server_mutation_approval(body: dict) -> tuple:
+    """Check WBS mutation approval token from request body or env var.
+
+    Returns (approved: bool, message: str). Mirrors the CLI's
+    require_wbs_mutation_approval() contract so the API and CLI enforce
+    the same constitutional constraint (constitution.md Article IV).
+    """
+    token = str(body.get("wbs_approval", "") or "").strip()
+    if not token:
+        token = str(os.environ.get("WBS_CHANGE_APPROVAL", "")).strip()
+    if token.startswith("WBS-APPROVED:") and len(token) > len("WBS-APPROVED:"):
+        return True, token
+    return False, (
+        "WBS mutation approval required. Include 'wbs_approval': 'WBS-APPROVED:<change-id>' "
+        "in the request body, or set WBS_CHANGE_APPROVAL environment variable."
+    )
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -229,7 +248,7 @@ class Handler(BaseHTTPRequestHandler):
             return {"success": False, "message": "Missing area_id, agent_name, or assessment_path"}
 
         args = [
-            "python3",
+            sys.executable,
             str(CLI),
             "closeout-l2",
             area_id,
@@ -767,7 +786,8 @@ class Handler(BaseHTTPRequestHandler):
 
         repo_root = GOV.parent.resolve()
         file_path = (repo_root / rel_path).resolve()
-        if not str(file_path).startswith(str(repo_root)):
+        # Use parent-chain check to avoid startswith prefix collision bypass
+        if file_path != repo_root and repo_root not in file_path.parents:
             return {"success": False, "message": "Invalid path"}
         if not file_path.is_file():
             return {"success": False, "message": "File not found"}
@@ -791,6 +811,10 @@ class Handler(BaseHTTPRequestHandler):
 
         if not all([area_id, title]):
             return {"success": False, "message": "Missing required fields (area_id, title)"}
+
+        approved, msg = _require_server_mutation_approval(body)
+        if not approved:
+            return {"success": False, "message": msg}
 
         defn = load_definition()
 
@@ -822,7 +846,6 @@ class Handler(BaseHTTPRequestHandler):
         save_definition(defn)
 
         # Initialize state for new packet
-        from wbs_common import WBS_STATE
         state = load_state()
         if pid not in state["packets"]:
             state["packets"][pid] = {
@@ -832,7 +855,7 @@ class Handler(BaseHTTPRequestHandler):
                 "completed_at": None,
                 "notes": None
             }
-            atomic_write_json(WBS_STATE, state)
+            atomic_write_json(resolve_runtime_paths()["wbs_state"], state)
 
         return {"success": True, "message": f"Packet {pid} added"}
 
@@ -843,6 +866,10 @@ class Handler(BaseHTTPRequestHandler):
 
         if not all([aid, title]):
             return {"success": False, "message": "ID and title required"}
+
+        approved, msg = _require_server_mutation_approval(body)
+        if not approved:
+            return {"success": False, "message": msg}
 
         defn = load_definition()
 
@@ -875,6 +902,10 @@ class Handler(BaseHTTPRequestHandler):
 
         if not all([packet, depends_on]):
             return {"success": False, "message": "packet and depends_on required"}
+
+        approved, msg = _require_server_mutation_approval(body)
+        if not approved:
+            return {"success": False, "message": msg}
 
         if packet == depends_on:
             return {"success": False, "message": "Packet cannot depend on itself"}
@@ -912,6 +943,10 @@ class Handler(BaseHTTPRequestHandler):
         if not all([packet, depends_on]):
             return {"success": False, "message": "packet and depends_on required"}
 
+        approved, msg = _require_server_mutation_approval(body)
+        if not approved:
+            return {"success": False, "message": msg}
+
         defn = load_definition()
         deps = defn.get("dependencies", {})
 
@@ -932,6 +967,10 @@ class Handler(BaseHTTPRequestHandler):
 
         if not pid:
             return {"success": False, "message": "Packet ID required"}
+
+        approved, msg = _require_server_mutation_approval(body)
+        if not approved:
+            return {"success": False, "message": msg}
 
         defn = load_definition()
         packet = next((p for p in defn.get("packets", []) if p["id"] == pid), None)
@@ -954,6 +993,10 @@ class Handler(BaseHTTPRequestHandler):
         if not aid:
             return {"success": False, "message": "Area ID required"}
 
+        approved, msg = _require_server_mutation_approval(body)
+        if not approved:
+            return {"success": False, "message": msg}
+
         defn = load_definition()
         area = next((a for a in defn.get("work_areas", []) if a["id"] == aid), None)
 
@@ -971,6 +1014,10 @@ class Handler(BaseHTTPRequestHandler):
         pid = body.get("id", "").strip()
         if not pid:
             return {"success": False, "message": "Packet ID required"}
+
+        approved, msg = _require_server_mutation_approval(body)
+        if not approved:
+            return {"success": False, "message": msg}
 
         defn = load_definition()
         state = load_state()
@@ -1004,8 +1051,7 @@ class Handler(BaseHTTPRequestHandler):
         # Remove from state
         if pid in state["packets"]:
             del state["packets"][pid]
-            from wbs_common import WBS_STATE
-            atomic_write_json(WBS_STATE, state)
+            atomic_write_json(resolve_runtime_paths()["wbs_state"], state)
 
         return {"success": True, "message": f"Packet {pid} deleted"}
 
@@ -1014,11 +1060,14 @@ class Handler(BaseHTTPRequestHandler):
         if not body.get("work_areas") and not body.get("packets"):
             return {"success": False, "message": "No work areas or packets provided"}
 
+        approved, msg = _require_server_mutation_approval(body)
+        if not approved:
+            return {"success": False, "message": msg}
+
         # Save definition
         save_definition(body)
 
         # Initialize/update state for all packets
-        from wbs_common import WBS_STATE
         state = load_state()
 
         # Add new packets to state, preserve existing status
@@ -1043,7 +1092,7 @@ class Handler(BaseHTTPRequestHandler):
                 del state["packets"][pid]
 
         # Save state
-        atomic_write_json(WBS_STATE, state)
+        atomic_write_json(resolve_runtime_paths()["wbs_state"], state)
 
         return {"success": True, "message": f"Saved {len(body.get('work_areas', []))} areas, {len(body.get('packets', []))} packets"}
 

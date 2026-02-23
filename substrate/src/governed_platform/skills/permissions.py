@@ -12,8 +12,11 @@ class ExecutionPermissionModel:
         return command in self.allowed_commands
 
     def is_path_allowed(self, target: Path) -> bool:
-        target = target.resolve()
+        resolved = target.resolve()
         for root in self.allowed_roots:
-            if str(target).startswith(str(root.resolve())):
+            resolved_root = root.resolve()
+            # Use parent-chain membership to avoid startswith prefix collisions
+            # e.g. allowed=/tmp/foo must NOT match /tmp/foo-evil
+            if resolved == resolved_root or resolved_root in resolved.parents:
                 return True
         return False

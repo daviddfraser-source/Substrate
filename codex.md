@@ -13,47 +13,37 @@ Related agent-specific guides:
 ## Your Role as Codex
 
 You are an execution agent operating inside governed lifecycle controls. You:
-- claim packets via CLI before execution
+- claim packets before execution
 - execute only packet-scoped `required_actions`
 - complete with concrete evidence and validation
 - fail explicitly when blocked
 
-## Quick Start
+## Native Integration (MCP) (Recommended Fast-Path)
 
-0. If this is a fresh clone, initialize scaffold:
-```bash
-substrate/scripts/init-scaffold.sh substrate/templates/wbs-codex-minimal.json
-```
+This project provides an MCP (Model Context Protocol) server at `substrate/.governance/mcp_server.py`. 
+If your environment supports MCP, use this as the primary integration path.
 
-1. Bootstrap session context:
-```bash
-python3 substrate/.governance/wbs_cli.py briefing --format json
-```
+**You do NOT need to run bash scripts manually to understand your state.**
+1. Your tools (`get_ready_packets`, `claim_packet`, `mark_packet_done` etc.) are natively available.
+2. When you claim a packet, its context (`required_actions` and validation requirements) is **automatically injected** into your ambient context window via `.codex/system_prompt_addition.md`.
 
-2. Check ready work:
-```bash
-python3 substrate/.governance/wbs_cli.py ready
-```
+### Quick Start 
 
-3. Claim one packet:
-```bash
-python3 substrate/.governance/wbs_cli.py claim <PACKET_ID> codex
-```
+1. Check for ready packets using your MCP tool.
+2. Claim one using `claim_packet(packet_id, "codex")`.
+3. Read your ambient context (`.codex/system_prompt_addition.md` applies automatically) to see what to do.
+4. Execute the work and run required validations.
+5. Provide evidence and mark complete using `mark_packet_done`.
 
-4. Load packet context:
-```bash
-python3 substrate/.governance/wbs_cli.py context <PACKET_ID> --format json --max-events 40 --max-notes-bytes 4000
-```
+## Fallback: Terminal CLI
 
-5. Check runtime state:
-```bash
-python3 substrate/.governance/wbs_cli.py status
-```
-
-6. Complete with evidence:
-```bash
-python3 substrate/.governance/wbs_cli.py done <PACKET_ID> codex "Changed X in Y, validated with Z" --risk none
-```
+If your environment does not support MCP Native bindings, use the standard governance CLI:
+- Bootstrap: `python3 substrate/.governance/wbs_cli.py briefing --format json`
+- Ready: `python3 substrate/.governance/wbs_cli.py ready`
+- Claim: `python3 substrate/.governance/wbs_cli.py claim <PACKET_ID> codex`
+- Context: `python3 substrate/.governance/wbs_cli.py context <PACKET_ID> --format json`
+- Status: `python3 substrate/.governance/wbs_cli.py status`
+- Done: `python3 substrate/.governance/wbs_cli.py done <PACKET_ID> codex "Changed X in Y, validated with Z" --risk none`
 
 ## Packet Execution Rules
 
@@ -73,12 +63,11 @@ Prefer deterministic, tool-driven execution:
 - apply minimal diffs and keep unrelated files untouched
 
 Recommended execution sequence:
-1. `briefing` -> `ready` -> `claim`
-2. inspect scope (`context`, relevant files)
+1. `wbs_ready` -> `claim_packet`
+2. inspect scope (automatically loaded in context)
 3. implement scoped changes
 4. validate locally
-5. `done` with explicit evidence
-6. `note` for supplementary evidence if needed
+5. `mark_packet_done` with explicit evidence
 
 ## Codex Tools and Practices
 
@@ -95,7 +84,7 @@ If tool wrappers are available (for example terminal exec, patch application, pa
 Default behavior for all Codex models:
 - keep prompts and notes explicit, short, and evidence-linked
 - avoid hidden assumptions about scope or dependencies
-- treat `wbs_cli.py` as the source of truth for packet state
+- treat `wbs_cli.py` (or MCP) as the source of truth for packet state
 
 Variant handling:
 - higher-capacity models may produce larger plans; keep execution atomic and packet-bound
@@ -140,7 +129,7 @@ See `substrate/docs/PLAYBOOK.md` and `substrate/docs/governance-workflow-codex.m
 
 ## Completion and Closeout
 
-Per packet:
+Per packet (if not using MCP):
 ```bash
 python3 substrate/.governance/wbs_cli.py done <PACKET_ID> codex "Evidence: ..." --risk none
 python3 substrate/.governance/wbs_cli.py note <PACKET_ID> codex "Evidence paths: ..."

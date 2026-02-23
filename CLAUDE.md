@@ -6,47 +6,38 @@ Constitutional baseline: `constitution.md`.
 ## Your Role as Claude
 
 You are an execution agent working within a governed workflow. You:
-- claim packets via CLI before starting work
+- claim packets before starting work
 - execute within packet scope only
 - mark packets done with evidence
 - cannot skip validation or dependency rules
 
-## Quick Start
+## Native Integration (MCP) (Recommended Fast-Path)
 
-0. If this is a fresh project clone, initialize scaffold:
-```bash
-substrate/scripts/init-scaffold.sh substrate/templates/wbs-codex-minimal.json
-```
+This project provides an MCP (Model Context Protocol) server at `substrate/.governance/mcp_server.py`. 
+For agents like Claude Code or Cursor that support MCP:
 
-1. Bootstrap session context:
-```bash
-python3 substrate/.governance/wbs_cli.py briefing --format json
-```
+**You do NOT need to run bash scripts manually to understand your state.**
+1. Your tools (`wbs_ready`, `wbs_claim`, `wbs_done`, etc.) are natively available.
+2. When you claim a packet, its context (`required_actions` and validation requirements) is **automatically injected** into your ambient context window via `.claude/system_prompt_addition.md`.
 
-2. See available work:
-```bash
-python3 substrate/.governance/wbs_cli.py ready
-```
+### Quick Start 
 
-3. Claim a packet:
-```bash
-python3 substrate/.governance/wbs_cli.py claim <PACKET_ID> claude
-```
+1. Check for ready packets using your MCP tool (`wbs_ready`).
+2. Claim one using `wbs_claim(packet_id, "claude")`.
+3. Read your ambient context (`.claude/system_prompt_addition.md` applies automatically) to see what to do.
+4. Execute the work and run required validations.
+5. Provide evidence and mark complete using `wbs_done`.
 
-4. Inspect packet context bundle:
-```bash
-python3 substrate/.governance/wbs_cli.py context <PACKET_ID> --format json --max-events 40 --max-notes-bytes 4000
-```
+*Note: To enable MCP for Claude Code locally, add `substrate/.governance/mcp_server.py` to your MCP configuration.*
 
-5. Check current status:
-```bash
-python3 substrate/.governance/wbs_cli.py status
-```
+## Fallback: Terminal CLI
 
-6. Mark complete with evidence:
-```bash
-python3 substrate/.governance/wbs_cli.py done <PACKET_ID> claude "Created X, validated Y, evidence in Z" --risk none
-```
+If you are not using MCP, use the standard governance wrappers:
+- Bootstrap: `substrate/scripts/cc-briefing` (or `python3 substrate/.governance/wbs_cli.py briefing --format json`)
+- Ready: `substrate/scripts/cc-ready` (or `python3 substrate/.governance/wbs_cli.py ready`)
+- Claim: `substrate/scripts/cc-claim <PACKET_ID>` (or `python3 substrate/.governance/wbs_cli.py claim <PACKET_ID> claude`)
+- Context: `python3 substrate/.governance/wbs_cli.py context <PACKET_ID>`
+- Done: `substrate/scripts/cc-done <PACKET_ID> "evidence"` (or `python3 substrate/.governance/wbs_cli.py done <PACKET_ID> claude "evidence" --risk none`)
 
 ## Packet Execution Rules
 
@@ -60,10 +51,13 @@ Read `AGENTS.md` for the full operating contract. Key rules:
 ## Skills Available
 
 Custom Claude skills are in `.claude/skills/`:
-- `claim-packet`
-- `complete-packet`
-- `wbs-status`
-- `wbs-log`
+- `claim-packet` — claim a governance packet
+- `complete-packet` — mark a packet done with evidence
+- `wbs-status` — view project status summary
+- `wbs-log` — view recent activity log
+- `wbs-report` — generate a full WBS progress report
+- `review-code` — lightweight code quality review
+- `red-team-review` — **adversarial mode**: probe governance for bypass paths, weak evidence, and security gaps
 
 These are wrappers around the governance CLI.
 
@@ -81,16 +75,6 @@ These are wrappers around the governance CLI.
 - do not edit packet lifecycle state outside CLI commands
 - do not claim multiple packets without user approval
 - do not mark packets done without concrete evidence
-
-## Typical Workflow
-
-1. `ready`
-2. user confirms packet
-3. `claim <id> claude`
-4. execute packet scope
-5. run validation checks
-6. `done <id> claude "evidence" --risk none`
-7. report result
 
 ## Error Handling
 
@@ -112,32 +96,15 @@ This project uses Claude Code hooks (`.claude/hooks.json`) to enforce constituti
 
 These hooks implement constitution.md Article IV (Protected Resources).
 
-## MCP Server Integration
-
-An MCP server (`.governance/mcp_server.py`) exposes governance operations as native tools:
-
-| MCP Tool | Description |
-|----------|-------------|
-| `wbs_ready` | List claimable packets |
-| `wbs_status` | Current state by status |
-| `wbs_claim` | Claim a packet |
-| `wbs_done` | Complete with evidence |
-| `wbs_fail` | Mark failed with reason |
-| `wbs_scope` | View packet requirements |
-| `wbs_log` | Activity log |
-| `wbs_progress` | Completion metrics |
-
-To enable, add to your MCP configuration or use CLI commands directly.
-
 ## Plan Mode for Complex Packets
 
 For packets requiring architectural decisions, use Claude Code's plan mode:
 
-1. Review packet scope: `python3 substrate/.governance/wbs_cli.py scope <ID>`
+1. Review packet scope via ambient context or `wbs_scope` MCP tool
 2. Enter plan mode: "Let's plan the approach for packet X"
 3. Explore codebase and draft implementation approach
 4. Get human approval on plan
-5. Claim packet and execute approved plan
+5. Execute approved plan
 6. Complete with evidence
 
 See `substrate/docs/plan-mode-guide.md` for detailed workflow.
@@ -150,56 +117,7 @@ This project supports Claude Code Agent Teams for parallel packet execution. Age
 
 As team lead, you:
 - Coordinate packet assignment across teammates
-- Monitor progress: `python3 substrate/.governance/wbs_cli.py status`
+- Monitor progress via MCP `wbs_status` or CLI
 - Validate evidence quality before accepting completion
 - Synthesize results across parallel work streams
 - Use **delegate mode** (Shift+Tab) to focus on coordination
-
-### Teammate Role
-
-As a teammate, you:
-- Claim your assigned packet: `python3 substrate/.governance/wbs_cli.py claim <ID> <your-name>`
-- Execute within packet scope only
-- Complete with evidence: `python3 substrate/.governance/wbs_cli.py done <ID> <your-name> "evidence" --risk none`
-- Message lead when blocked or finished
-
-### When to Use Agent Teams
-
-| Use Teams | Use Single Agent |
-|-----------|------------------|
-| 2+ packets ready with no dependencies | Sequential packet dependencies |
-| Different domains (frontend/backend/tests) | Same files need editing |
-| Research/review parallelization | Simple, focused tasks |
-| Cross-cutting concerns | Tight coordination required |
-
-### Spinning Up a Team
-
-```
-Create an agent team for parallel packet execution:
-- Teammate "docs": Claim UPG-001, execute docs work
-- Teammate "code": Claim UPG-002, execute implementation
-- Teammate "tests": Claim UPG-003, execute test coverage
-
-Each teammate must claim their packet before work.
-Require plan approval for complex packets.
-```
-
-See `.claude/skills/agent-teams/SKILL.md` for full documentation.
-
-## Opus 4.6 Features
-
-This project is configured for Claude Opus 4.6 with:
-
-- **Adaptive thinking**: Claude decides when and how much to reason
-- **Effort level**: Set to `high` by default (options: low, medium, high, max)
-- **128K output tokens**: Longer responses for comprehensive evidence
-- **Agent team hooks**: `TeammateIdle` and `TaskCompleted` enforce governance
-
-### Thinking Effort by Packet Type
-
-| Packet Type | Recommended Effort |
-|-------------|-------------------|
-| Simple docs/config | `low` |
-| Standard implementation | `high` (default) |
-| Complex architecture | `max` |
-| Research/exploration | `high` with plan mode |

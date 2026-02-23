@@ -1,49 +1,41 @@
 # Start Here (Bootstrap)
 
-Use this file to start a new Codex chat quickly under this governance model.
+Use this file to start a new Agentic IDE chat (e.g. VS Code + Antigravity, Cursor, Cline) quickly under this governance model.
 
-## 1) Paste This Bootstrap Prompt
+## The Fast-Path (MCP Native)
+
+If your agent supports MCP (Model Context Protocol), you do **not** need to manually run CLI commands to load context. The environment handles state injection natively. 
+
+**Paste this prompt to begin a session:**
 
 ```text
-You are operating in this repository.
-
-Follow governance strictly:
-1) Read constitution.md and AGENTS.md first.
-2) Treat constitution.md as invariant authority; AGENTS.md as operational contract.
-3) Use CLI-governed lifecycle only via python3 substrate/.governance/wbs_cli.py.
-4) Run:
-   - python3 substrate/.governance/wbs_cli.py briefing --format json
-   - python3 substrate/.governance/wbs_cli.py ready
-5) Claim only one packet unless I explicitly approve parallel work.
-6) After claiming, load context:
-   - python3 substrate/.governance/wbs_cli.py context <PACKET_ID> --format json --max-events 40 --max-notes-bytes 4000
-7) Before done/fail, report planned validation commands.
-8) Completion must include: what changed, file paths, validation evidence, and risk ack.
-9) Never edit runtime governance state directly; no direct edits to substrate/.governance/wbs-state.json.
+Read AGENTS.md. We are using the Substrate MCP server. You already have ambient state for any active packets injected into your context. Use your `get_ready_packets` MCP tool to find work, `claim_packet` to claim it, and the `auto-done` skill to finalize it.
 ```
 
-## 2) Run This Command Sequence
+## The Fallback Path (CLI Only)
 
-```bash
-./bootstrap.sh
-python3 start.py --status
-python3 substrate/.governance/wbs_cli.py briefing --format json
-python3 substrate/.governance/wbs_cli.py ready
-python3 substrate/.governance/wbs_cli.py claim <PACKET_ID> codex
-python3 substrate/.governance/wbs_cli.py context <PACKET_ID> --format json --max-events 40 --max-notes-bytes 4000
-```
+If you are using a legacy agent or terminal-only workflow without MCP support, follow this governed CLI bootstrap sequence:
 
-Task shortcut alternative:
+1. **Bootstrap Context:**
+   ```bash
+   python3 substrate/.governance/wbs_cli.py briefing --format json
+   ```
+2. **Find Work:**
+   ```bash
+   python3 substrate/.governance/wbs_cli.py ready
+   ```
+3. **Claim & Contextualize:**
+   ```bash
+   python3 substrate/.governance/wbs_cli.py claim <PACKET_ID> <agent>
+   python3 substrate/.governance/wbs_cli.py context <PACKET_ID> --format json --max-events 40 --max-notes-bytes 4000
+   ```
 
-```bash
-make bootstrap
-```
+## Fresh Clone Initialization
 
-## 3) Fresh Clone Initialization
+If this is a brand new repository clone, initialize the scaffold before starting work:
 
 ```bash
 substrate/scripts/init-scaffold.sh substrate/templates/wbs-codex-minimal.json
-python3 substrate/.governance/wbs_cli.py ready
 ```
 
 Optional post-clone cleanup profile:
@@ -52,29 +44,14 @@ Optional post-clone cleanup profile:
 substrate/scripts/post-clone-cleanup.sh --profile codex-only --yes
 ```
 
-## Optional: Codex Convenience Wrappers
+## Break-Fix Quick Flow
 
-```bash
-.codex/scripts/codex-ready
-.codex/scripts/codex-status
-.codex/scripts/codex-claim <PACKET_ID>
-.codex/scripts/codex-done <PACKET_ID> "Evidence: ..."
-```
-
-## Optional: Break-Fix Quick Flow
+When an unexpected break occurs (e.g. broken tests during execution) that requires governed scope:
 
 ```bash
 python3 substrate/.governance/wbs_cli.py break-fix-open codex "Fix flaky suite" "Intermittent timeout" --severity high --packet <PACKET_ID>
 python3 substrate/.governance/wbs_cli.py break-fix-start <BFIX_ID> codex
 python3 substrate/.governance/wbs_cli.py break-fix-resolve <BFIX_ID> codex "Applied timeout + retry fix" --evidence substrate/tests/test_server_api.py
-python3 substrate/.governance/wbs_cli.py break-fix-list --status open
 ```
 
 Operator guide: `substrate/docs/break-fix-workflow.md`
-
-## Optional: PRD Ideation Quick Flow
-
-```bash
-python3 substrate/.governance/wbs_cli.py prd --output substrate/docs/prd/my-feature-prd.md
-python3 substrate/.governance/wbs_cli.py prd --from-json substrate/docs/prd/spec.json --output substrate/docs/prd/my-feature-prd.md --to-wbs substrate/.governance/wbs-prd-draft.json
-```

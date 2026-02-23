@@ -6,47 +6,35 @@ Constitutional baseline: `constitution.md`.
 ## Your Role as Gemini
 
 You are an execution agent working within a governed workflow. You:
-- claim packets via CLI before starting work
+- claim packets before starting work
 - execute within packet scope only
 - mark packets done with evidence
 - cannot skip validation or dependency rules
 
-## Quick Start
+## Native Integration (MCP)
 
-0. If this is a fresh project clone, initialize scaffold:
-```bash
-substrate/scripts/init-scaffold.sh substrate/templates/wbs-codex-minimal.json
-```
+This project provides an MCP (Model Context Protocol) server at `substrate/.governance/mcp_server.py`. 
 
-1. Bootstrap session context:
-```bash
-python3 substrate/.governance/wbs_cli.py briefing --format json
-```
+**You do NOT need to run bash scripts manually to understand your state.**
+1. Your tools (`get_ready_packets`, `claim_packet`, `mark_packet_done`) are natively available.
+2. When you claim a packet, its context (`required_actions` and validation requirements) is **automatically injected** into your ambient context window via `.gemini/system_prompt_addition.md`.
 
-2. See available work:
-```bash
-python3 substrate/.governance/wbs_cli.py ready
-```
+### Quick Start (The Fast Path)
 
-3. Claim a packet:
-```bash
-python3 substrate/.governance/wbs_cli.py claim <PACKET_ID> gemini
-```
+1. Check for ready packets using your `get_ready_packets` MCP tool.
+2. Claim one using `claim_packet(packet_id, "gemini")`.
+3. Read your ambient context (`.gemini/system_prompt_addition.md` applies automatically) to see what to do.
+4. Execute the work and run required validations.
+5. Provide evidence and mark complete using the `auto-done` skill.
 
-4. Inspect packet context bundle:
-```bash
-python3 substrate/.governance/wbs_cli.py context <PACKET_ID> --format json --max-events 40 --max-notes-bytes 4000
-```
+## Fallback: Terminal CLI
 
-5. Check current status:
-```bash
-python3 substrate/.governance/wbs_cli.py status
-```
-
-6. Mark complete with evidence:
-```bash
-python3 substrate/.governance/wbs_cli.py done <PACKET_ID> gemini "Created X, validated Y, evidence in Z" --risk none
-```
+If your MCP server is offline, use the standard governance CLI:
+- Bootstrap: `python3 substrate/.governance/wbs_cli.py briefing --format json`
+- Ready: `python3 substrate/.governance/wbs_cli.py ready`
+- Claim: `python3 substrate/.governance/wbs_cli.py claim <PACKET_ID> gemini`
+- Context: `python3 substrate/.governance/wbs_cli.py context <PACKET_ID>`
+- Done: `python3 substrate/.governance/wbs_cli.py done <PACKET_ID> gemini "evidence" --risk none`
 
 ## Packet Execution Rules
 
@@ -54,55 +42,26 @@ Read `AGENTS.md` for the full operating contract. Key rules:
 - scope adherence: execute packet-defined required actions only
 - evidence requirement: every `done` includes artifact paths + validation summary
 - no silent scope expansion
-- validation expected before completion
-- if blocked or invalid, use `fail` with explicit reason
 
 ## Skills Available
 
-Custom Gemini skills are in `substrate/scripts/`:
-- `gc-ready`: Check for available packets
-- `gc-claim`: Claim a packet
-- `gc-done`: Mark a packet as done with evidence
-- `gc-status`: Check project status
-
-These are wrappers around the governance CLI.
-
-### Advanced Skills (Agent-Only)
-- `wbs-report`: Generate a comprehensive markdown status report.
-- `deep-code-review`: Perform a deep, context-aware code review of recent changes.
+Custom Gemini skills are located in `.gemini/skills/`:
+- `claim-with-task`: Syncs a claimed packet's scope into your native conversational `task.md` checklist.
+- `auto-done`: Formulates strong evidence blocks by analyzing your local `git diff` and tool execution history before marking a packet done.
 - `architecture-check`: Verify code changes align with documented architecture and WBS.
+- `deep-code-review`: Perform a deep, context-aware code review of recent changes.
+- `wbs-report`: Generate a comprehensive markdown status report.
 
+## The Ralph Wiggum Pattern
 
-## File Locations
-
-- governance CLI: `.governance/wbs_cli.py`
-- packet definitions: `substrate/.governance/wbs.json`
-- runtime state: `substrate/.governance/wbs-state.json` (do not edit directly)
-- packet schema: `.governance/packet-schema.json`
-- agent profiles: `.governance/agents.json`
-
-## What Not To Do
-
-- do not modify `substrate/.governance/wbs-state.json` directly
-- do not edit packet lifecycle state outside CLI commands
-- do not claim multiple packets without user approval
-- do not mark packets done without concrete evidence
-
-## Typical Workflow
-
-1. `ready`
-2. user confirms packet
-3. `claim <id> gemini`
-4. execute packet scope
-5. run validation checks
-6. `done <id> gemini "evidence" --risk none`
-7. report result
+Governance state mutation (`claim` and `done`) requires clarity.
+- **Manual Pattern:** Explicitly state what you assume before claiming, and what evidence you have before marking done. See `AGENTS.md`.
+- **Automated Pattern:** For Gemini, using the `auto-done` programmatic skill fulfills the pre-done check algorithmically. Do not manually narrate your actions if you are cleanly executing the `auto-done` verification chain unless you encounter ambiguity.
 
 ## Error Handling
 
-- if claim fails due dependencies: run `status` or `ready`
-- if completion fails: fix validation gaps and retry
-- if blocked: mark packet `failed` with reason
-- if session must transfer mid-packet: use `handover` then next session uses `resume`
+- if claim fails due dependencies: check `status` or `ready`.
+- if completion fails: fix validation gaps and retry.
+- if blocked: mark packet `failed` with reason.
 
 See `substrate/docs/PLAYBOOK.md` and `substrate/docs/governance-workflow-codex.md` for recovery patterns.

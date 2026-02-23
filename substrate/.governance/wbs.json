@@ -55,6 +55,16 @@
       "id": "14.0",
       "title": "Review Remediation - WBS 13.0 Findings",
       "description": "Resolve issues identified in post-delivery review of Area 13.0 (Project-Scoped WBS Protection): stray artifacts, enforcement gaps, schema normalization, and path resolution fragility."
+    },
+    {
+      "id": "15.0",
+      "title": "Ralph Wiggum Pre-Action Self-Check",
+      "description": "Embed the Ralph Wiggum pre-action self-check pattern into all agent integration surfaces: GEMINI.md, CLAUDE.md, AGENTS.md, codex.md, and a new Gemini skill."
+    },
+    {
+      "id": "16.0",
+      "title": "VS Code & Antigravity Native Integration",
+      "description": "Bridge the CLI governance state machine directly into the IDE and agentic context windows via MCP, ambient state injection, and UI synchronization."
     }
   ],
   "wbs_level_3": [
@@ -1890,6 +1900,62 @@
       "authority": "Repository packet governance",
       "type": "WBS_PACKET",
       "references": []
+    },
+    {
+      "id": "RW-15-1",
+      "wbs_ref": "11.1",
+      "area_id": "15.0",
+      "title": "Update GEMINI.md with Ralph Wiggum self-check",
+      "scope": "Add a 'Ralph Wiggum Self-Check' section to GEMINI.md defining the two-moment pre-action checklist: (1) pre-claim: state what you don't know about the packet scope and what you are assuming; (2) pre-done: confirm the evidence string would tell a reader what changed, where it lives, and how it was validated. Include non-goal: this is not general running commentary, only at governance state mutation boundaries (claim, done)."
+    },
+    {
+      "id": "RW-15-2",
+      "wbs_ref": "11.2",
+      "area_id": "15.0",
+      "title": "Update CLAUDE.md with Ralph Wiggum self-check",
+      "scope": "Mirror the Ralph Wiggum self-check section into CLAUDE.md, noting that it is the lightweight equivalent of plan-mode for straightforward packets that don't warrant a full plan document. Text must be consistent with GEMINI.md. Note that Claude hooks and post-completion validation partially automate the pre-done check; the section should document what the agent must still do explicitly."
+    },
+    {
+      "id": "RW-15-3",
+      "wbs_ref": "11.3",
+      "area_id": "15.0",
+      "title": "Create ralph-wiggum Gemini skill",
+      "scope": "Create .gemini/skills/ralph-wiggum/SKILL.md \u2014 a callable skill that presents the pre-claim and pre-done checklists as structured prompts. SKILL.md must include valid YAML frontmatter (name, description) and clear numbered checklists for both moments. Pre-claim checklist: (1) What packet am I claiming? (2) What does 'required_actions' say I must do? (3) What am I assuming that isn't written there? (4) Is there any ambiguity I should resolve with the user before proceeding? Pre-done checklist: (1) What file(s) did I change or create? (2) What validation did I run and what was the result? (3) Does my evidence string capture all of the above?"
+    },
+    {
+      "id": "RW-15-4",
+      "wbs_ref": "11.4",
+      "area_id": "15.0",
+      "title": "Update AGENTS.md and codex.md with Ralph Wiggum cross-reference",
+      "scope": "Add a 'Ralph Wiggum Self-Check' cross-reference section to AGENTS.md (agent-agnostic operating contract) and a matching brief section to codex.md. AGENTS.md carries the normative description; per-agent docs carry implementation detail. All text must be consistent with GEMINI.md and CLAUDE.md."
+    },
+    {
+      "id": "VSX-16-1",
+      "wbs_ref": "12.1",
+      "area_id": "16.0",
+      "title": "Implement Core MCP Server wrapper",
+      "scope": "Create an MCP (Model Context Protocol) compatible Python server in substrate/.governance/mcp_server.py. Wrap existing wbs_cli.py logic to expose structured tools (get_ready_packets, claim_packet, mark_packet_done, get_status) that the VS Code agent can call natively without relying on bash scripts or stdout parsing. Includes basic tests."
+    },
+    {
+      "id": "VSX-16-2",
+      "wbs_ref": "12.2",
+      "area_id": "16.0",
+      "title": "Ephemeral Context & Ambient State Injection",
+      "scope": "Develop a mechanism (e.g., a .gemini/system_prompt_addition.md scraper or workspace setting) that automatically injects the current active packet's scope (required_actions and exit_criteria) into the agent's context window. Implement a background watcher that updates this context whenever wbs-state.json changes."
+    },
+    {
+      "id": "VSX-16-3",
+      "wbs_ref": "12.3",
+      "area_id": "16.0",
+      "title": "Sync Packet Scope to Task UI",
+      "scope": "Create a workflow script or Gemini skill that triggers upon claiming a packet. This script will automatically translate the packet's JSON required_actions and validation_checks into the agent's native task.md checklist format, ensuring the agent's UI progress perfectly mirrors the governance milestone data."
+    },
+    {
+      "id": "VSX-16-4",
+      "wbs_ref": "12.4",
+      "area_id": "16.0",
+      "title": "Automated Evidence Generation & Pre-Flight Checks",
+      "scope": "Upgrade the Ralph Wiggum pattern from manual narration to programmatic execution. Implement a script that the agent runs before invoking the done MCP tool. The script will analyze git diffs, file modifications, and test command outputs in the current session to automatically construct an exhaustive, cryptographically sound evidence string for the governance audit log."
     }
   ],
   "dependencies": {
@@ -1995,6 +2061,26 @@
     ],
     "REM-14-5": [
       "REM-14-4"
+    ],
+    "RW-15-2": [
+      "RW-15-1"
+    ],
+    "RW-15-3": [
+      "RW-15-1"
+    ],
+    "RW-15-4": [
+      "RW-15-2",
+      "RW-15-3"
+    ],
+    "VSX-16-2": [
+      "VSX-16-1"
+    ],
+    "VSX-16-3": [
+      "VSX-16-1"
+    ],
+    "VSX-16-4": [
+      "VSX-16-2",
+      "VSX-16-3"
     ]
   }
 }

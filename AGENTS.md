@@ -31,7 +31,7 @@ Use this file as executable governance, not background documentation.
   - record Level-2 drift assessment via `closeout-l2` when applicable
 
 ## WBS Execution Rules
-- Use `substrate/.governance/wbs_cli.py` as the source of truth for packet lifecycle updates.
+- Use `substrate/.governance/wbs_cli.py` (or the equivalent MCP server tools) as the source of truth for packet lifecycle updates.
 - Do not create or modify packets unless explicitly requested by the user.
 - Prefer explicit commands over assistant-specific slash commands.
 - Use `substrate/.governance/packet-schema.json` as the canonical packet content schema.
@@ -148,3 +148,29 @@ Use this file as executable governance, not background documentation.
 - Cross-agent references:
   - `CLAUDE.md`
   - `GEMINI.md`
+
+## Ralph Wiggum Self-Check
+
+The Ralph Wiggum method is a lightweight pre-action self-check run at governance state
+mutation boundaries (`claim` and `done`). It is the behavioural implementation of
+`constitution.md` Article I §3 — scope clarification — applied consistently rather than
+only when things are obviously ambiguous.
+
+The goal is to say what you actually know and don't know, plainly, before acting.
+*Note: Depending on the agent's integration (e.g., Gemini via MCP), this check may be automated programmatically via skills (like `auto-done`) rather than narrated.*
+
+### Pre-Claim Check (Mental or Narrated)
+Before running `claim`, answer:
+1. **What does `required_actions` say I must do?** 
+2. **What am I assuming that isn't written there?**
+3. **Is there any ambiguity?** If yes — ask the user before claiming.
+4. **Which files will I touch?** 
+
+### Pre-Done Check (Mental or Narrated)
+Before running `done`, confirm:
+1. **What file(s) did I change or create?** 
+2. **What validation did I run?** 
+3. **Does my evidence string capture all of the above?** If not, rewrite it first.
+
+For agent-specific implementations or tools regarding this check, see the individual
+integration guides (`CLAUDE.md`, `GEMINI.md`).

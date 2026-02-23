@@ -1,0 +1,8 @@
+{
+  "name": "codex-only",
+  "description": "Codex-first profile. Removes Claude and Gemini directories.",
+  "remove": [
+    ".claude",
+    ".gemini"
+  ]
+}

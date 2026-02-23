@@ -2,8 +2,11 @@
 * @daviddfraser-source
 
 # Governance-critical paths
-/.governance/ @daviddfraser-source
+/substrate/.governance/ @daviddfraser-source
 /constitution.md @daviddfraser-source
 /AGENTS.md @daviddfraser-source
 /CLAUDE.md @daviddfraser-source
-/docs/governance-index.md @daviddfraser-source
+/GEMINI.md @daviddfraser-source
+/codex.md @daviddfraser-source
+/START.md @daviddfraser-source
+/substrate/docs/governance-index.md @daviddfraser-source

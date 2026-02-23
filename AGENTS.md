@@ -10,12 +10,17 @@ Use this file as executable governance, not background documentation.
 - It should be referenced at session start, before major execution, and at closeout.
 - If instructions conflict, user instruction wins, then this file, then defaults.
 - For governance-rule interpretation conflicts across repo docs, `constitution.md` takes precedence.
+- For fast new-chat bootstrap, use `START.md`.
 
 ## How To Use This File
+- New project initialization (day-0):
+  - run `substrate/scripts/init-scaffold.sh substrate/templates/wbs-codex-minimal.json`
+  - verify `python3 substrate/.governance/wbs_cli.py ready` returns the expected first packet
+  - begin lifecycle with `claim` -> `done --risk none` -> `note`
 - At session start:
-  - run `python3 .governance/wbs_cli.py briefing --format json` and review summary before claiming
+  - run `python3 substrate/.governance/wbs_cli.py briefing --format json` and review summary before claiming
   - confirm active WBS scope and ready packet(s)
-  - after claim, load packet context with `python3 .governance/wbs_cli.py context <packet_id> --format json`
+  - after claim, load packet context with `python3 substrate/.governance/wbs_cli.py context <packet_id> --format json`
   - confirm owner and expected output artifact
 - During execution:
   - follow packet lifecycle (`claim` -> execute -> `done`/`fail` -> `note`)
@@ -26,11 +31,11 @@ Use this file as executable governance, not background documentation.
   - record Level-2 drift assessment via `closeout-l2` when applicable
 
 ## WBS Execution Rules
-- Use `.governance/wbs_cli.py` as the source of truth for packet lifecycle updates.
+- Use `substrate/.governance/wbs_cli.py` as the source of truth for packet lifecycle updates.
 - Do not create or modify packets unless explicitly requested by the user.
 - Prefer explicit commands over assistant-specific slash commands.
-- Use `.governance/packet-schema.json` as the canonical packet content schema.
-- Use `.governance/agents.json` for declared agent capability profiles and enforcement mode.
+- Use `substrate/.governance/packet-schema.json` as the canonical packet content schema.
+- Use `substrate/.governance/agents.json` for declared agent capability profiles and enforcement mode.
 - Ensure packet definitions include required governance fields (not only title/scope).
 - Packet viewer behavior should present the full packet object plus runtime state.
 
@@ -68,7 +73,7 @@ Use this file as executable governance, not background documentation.
   - Scope covered (for example: `WBS 1.0`, `1.1-1.5`)
   - Completion summary (`done/in_progress/pending/failed/blocked`)
   - Per-packet status lines including packet ID, title, owner, start/completion timestamps, and completion notes
-  - Evidence source references (`.governance/wbs-state.json` and recent log entries)
+  - Evidence source references (`substrate/.governance/wbs-state.json` and recent log entries)
   - Risks/gaps and immediate next actions
 - Do not return only a single aggregate count when a full report is requested.
 
@@ -76,11 +81,11 @@ Use this file as executable governance, not background documentation.
 - After execution steps, report exactly what changed and what remains.
 - If an action was requested but not executed, state that clearly.
 - Level-2 WBS closeout (for example `1.0`, `2.0`) requires a drift assessment recorded via:
-  - `python3 .governance/wbs_cli.py closeout-l2 <area_id|n> <agent> <drift_assessment.md> [notes]`
+  - `python3 substrate/.governance/wbs_cli.py closeout-l2 <area_id|n> <agent> <drift_assessment.md> [notes]`
 - `closeout-l2` is valid only when all packets in that Level-2 area are `done`.
-- Use `docs/drift-assessment-template.md` as the default template for closeout docs.
+- Use `substrate/docs/drift-assessment-template.md` as the default template for closeout docs.
 - Drift assessment file naming convention:
-  - `docs/codex-migration/drift-wbs<N>.md` (for area `<N>.0`)
+  - `substrate/docs/codex-migration/drift-wbs<N>.md` (for area `<N>.0`)
 - Drift assessment documents must include:
   - `## Scope Reviewed`
   - `## Expected vs Delivered`
@@ -104,29 +109,42 @@ Use this file as executable governance, not background documentation.
 - Keep commands and examples copy-pasteable.
 - Keep governance docs aligned with actual CLI/API behavior.
 - Use stable file paths for evidence to keep packet viewer useful.
-- Keep `docs/governance-workflow-codex.md` aligned with current CLI behavior.
+- Keep `substrate/docs/governance-workflow-codex.md` aligned with current CLI behavior.
 
 ## Packet Standard
-- Canonical schema: `.governance/packet-schema.json`
-- Human-readable standard and examples: `docs/codex-migration/packet-standard.md`
+- Canonical schema: `substrate/.governance/packet-schema.json`
+- Human-readable standard and examples: `substrate/docs/codex-migration/packet-standard.md`
 
 ## Claude Code Agents
 - Claude Code sessions must follow the same CLI-governed lifecycle as any other agent.
 - Preferred execution identity: `claude` (or explicit variants like `claude-1` for multi-agent scenarios).
-- Claude should not modify `.governance/wbs-state.json` directly; all lifecycle changes go through `.governance/wbs_cli.py`.
+- Claude should not modify `substrate/.governance/wbs-state.json` directly; all lifecycle changes go through `substrate/.governance/wbs_cli.py`.
 - Claude should not claim multiple packets without explicit user approval.
 - Claude should collect file-level evidence and validation results before `done`.
 - Claude-specific usage guidance lives in:
   - `CLAUDE.md`
   - `.claude/skills/*`
-  - `docs/claude-code-guide.md`
+  - `substrate/docs/claude-code-guide.md`
 
 ## Gemini Agents
 - Gemini sessions must follow the same CLI-governed lifecycle as any other agent.
 - Preferred execution identity: `gemini`.
-- Gemini should not modify `.governance/wbs-state.json` directly; all lifecycle changes go through `.governance/wbs_cli.py`.
+- Gemini should not modify `substrate/.governance/wbs-state.json` directly; all lifecycle changes go through `substrate/.governance/wbs_cli.py`.
 - Gemini should not claim multiple packets without explicit user approval.
 - Gemini should collect file-level evidence and validation results before `done`.
 - Gemini-specific usage guidance lives in:
   - `GEMINI.md`
-  - `scripts/gc-*`
+  - `substrate/scripts/gc-*`
+
+## Codex Agents
+- Codex sessions must follow the same CLI-governed lifecycle as any other agent.
+- Preferred execution identity: `codex` (or explicit variants like `codex-1` for multi-agent scenarios).
+- Codex should not modify `substrate/.governance/wbs-state.json` directly; all lifecycle changes go through `substrate/.governance/wbs_cli.py`.
+- Codex should not claim multiple packets without explicit user approval.
+- Codex should collect file-level evidence and validation results before `done`.
+- Codex-specific usage guidance lives in:
+  - `codex.md`
+  - `substrate/docs/governance-workflow-codex.md`
+- Cross-agent references:
+  - `CLAUDE.md`
+  - `GEMINI.md`

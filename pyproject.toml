@@ -25,7 +25,7 @@ ignore = []
 quote-style = "preserve"
 
 [tool.coverage.run]
-source = [".governance", "src"]
+source = ["substrate/.governance", "substrate/src"]
 branch = true
 
 [tool.coverage.report]

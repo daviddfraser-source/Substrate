@@ -1,0 +1,10 @@
+{
+  "name": "minimal",
+  "description": "Minimal product profile. Removes optional agent and local devcontainer directories.",
+  "remove": [
+    ".claude",
+    ".gemini",
+    ".devcontainer",
+    ".codex"
+  ]
+}

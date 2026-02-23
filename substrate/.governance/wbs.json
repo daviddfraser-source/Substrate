@@ -1,0 +1,1233 @@
+{
+  "metadata": {
+    "project_name": "Substrate Minimal",
+    "approved_by": "substrate-lead",
+    "approved_at": "2026-02-13",
+    "version": "1.0"
+  },
+  "work_areas": [
+    {
+      "id": "1.0",
+      "title": "Scaffold Init",
+      "description": "Initialize scaffold and baseline governance."
+    },
+    {
+      "id": "2.0",
+      "title": "Core Workflow",
+      "description": "Establish packet lifecycle and reporting."
+    },
+    {
+      "id": "3.0",
+      "title": "Quality Baseline",
+      "description": "Add minimal tests and checks."
+    },
+    {
+      "id": "4.0",
+      "title": "Closeout",
+      "description": "Deliver report and drift closeout."
+    },
+    {
+      "id": "5.0",
+      "title": "Residual Risk Governance",
+      "description": "Integrate execution-time residual risk capture, tracking, and reporting into packet lifecycle governance."
+    },
+    {
+      "id": "6.0",
+      "title": "E2E Visibility in WBS Viewer",
+      "description": "Capture E2E runs, expose results via API, and render run findings in dashboard."
+    },
+    {
+      "id": "7.0",
+      "title": "Break-Fix Mode with Audit History",
+      "description": "Implement a minor-fix lifecycle with strict evidence tracking and full change history across CLI/API/viewer/reporting."
+    },
+    {
+      "id": "12.0",
+      "title": "Optional Productive Workflow Enhancements",
+      "description": "Optional governance/productivity features kept lean and non-blocking."
+    }
+  ],
+  "wbs_level_3": [
+    {
+      "wbs_ref": "1.1",
+      "area_id": "1.0",
+      "title": "Initialize governance files"
+    },
+    {
+      "wbs_ref": "2.1",
+      "area_id": "2.0",
+      "title": "Execute first packet lifecycle"
+    },
+    {
+      "wbs_ref": "3.1",
+      "area_id": "3.0",
+      "title": "Run baseline validation"
+    },
+    {
+      "wbs_ref": "4.1",
+      "area_id": "4.0",
+      "title": "Closeout with drift assessment"
+    }
+  ],
+  "packets": [
+    {
+      "id": "MIN-1-1",
+      "wbs_ref": "1.1",
+      "wbs_l3_ref": "1.1",
+      "area_id": "1.0",
+      "title": "Initialize governance files",
+      "scope": "Implement WBS item 1.1: Initialize governance files.",
+      "packet_id": "MIN-1-1",
+      "wbs_refs": [
+        "1.1"
+      ],
+      "purpose": "Deliver Initialize governance files.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "MEDIUM",
+      "preconditions": [],
+      "required_inputs": [],
+      "required_actions": [
+        "Implement WBS item 1.1: Initialize governance files."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Evidence path included in packet notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with evidence references"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Evidence missing for completion claim"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "MIN-2-1",
+      "wbs_ref": "2.1",
+      "wbs_l3_ref": "2.1",
+      "area_id": "2.0",
+      "title": "Execute first packet lifecycle",
+      "scope": "Implement WBS item 2.1: Execute first packet lifecycle.",
+      "packet_id": "MIN-2-1",
+      "wbs_refs": [
+        "2.1"
+      ],
+      "purpose": "Deliver Execute first packet lifecycle.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "MEDIUM",
+      "preconditions": [],
+      "required_inputs": [],
+      "required_actions": [
+        "Implement WBS item 2.1: Execute first packet lifecycle."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Evidence path included in packet notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with evidence references"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Evidence missing for completion claim"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "MIN-3-1",
+      "wbs_ref": "3.1",
+      "wbs_l3_ref": "3.1",
+      "area_id": "3.0",
+      "title": "Run baseline validation",
+      "scope": "Implement WBS item 3.1: Run baseline validation.",
+      "packet_id": "MIN-3-1",
+      "wbs_refs": [
+        "3.1"
+      ],
+      "purpose": "Deliver Run baseline validation.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "MEDIUM",
+      "preconditions": [],
+      "required_inputs": [],
+      "required_actions": [
+        "Implement WBS item 3.1: Run baseline validation."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Evidence path included in packet notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with evidence references"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Evidence missing for completion claim"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "MIN-4-1",
+      "wbs_ref": "4.1",
+      "wbs_l3_ref": "4.1",
+      "area_id": "4.0",
+      "title": "Closeout with drift assessment",
+      "scope": "Implement WBS item 4.1: Closeout with drift assessment.",
+      "packet_id": "MIN-4-1",
+      "wbs_refs": [
+        "4.1"
+      ],
+      "purpose": "Deliver Closeout with drift assessment.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "MEDIUM",
+      "preconditions": [],
+      "required_inputs": [],
+      "required_actions": [
+        "Implement WBS item 4.1: Closeout with drift assessment."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Evidence path included in packet notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with evidence references"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Evidence missing for completion claim"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "RSK-5-1",
+      "wbs_ref": "5.1",
+      "area_id": "5.0",
+      "title": "Define residual risk register schema and runtime storage",
+      "scope": "Create .governance/residual-risk-register.json contract and supporting validation/storage rules. Define normalized enums for likelihood/impact/confidence/status and ensure runtime-artifact handling aligns with template hygiene controls.",
+      "wbs_l3_ref": "5.1",
+      "packet_id": "RSK-5-1",
+      "wbs_refs": [
+        "5.1"
+      ],
+      "purpose": "Deliver Define residual risk register schema and runtime storage.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "HIGH",
+      "preconditions": [],
+      "required_inputs": [],
+      "required_actions": [
+        "Create .governance/residual-risk-register.json contract and supporting validation/storage rules. Define normalized enums for likelihood/impact/confidence/status and ensure runtime-artifact handling aligns with template hygiene controls."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Evidence path included in packet notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with evidence references"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Evidence missing for completion claim"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "RSK-5-2",
+      "wbs_ref": "5.2",
+      "area_id": "5.0",
+      "title": "Require risk acknowledgement at packet closure",
+      "scope": "Integrate residual risk acknowledgement into done workflow with non-interactive flags (for example --risk none or --risk-file path). Enforce explicit acknowledgement without forcing interactive prompts, and persist audit-ready event metadata.",
+      "wbs_l3_ref": "5.2",
+      "packet_id": "RSK-5-2",
+      "wbs_refs": [
+        "5.2"
+      ],
+      "purpose": "Deliver Require risk acknowledgement at packet closure.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "HIGH",
+      "preconditions": [],
+      "required_inputs": [],
+      "required_actions": [
+        "Integrate residual risk acknowledgement into done workflow with non-interactive flags (for example --risk none or --risk-file path). Enforce explicit acknowledgement without forcing interactive prompts, and persist audit-ready event metadata."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Evidence path included in packet notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with evidence references"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Evidence missing for completion claim"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "RSK-5-3",
+      "wbs_ref": "5.3",
+      "area_id": "5.0",
+      "title": "Implement residual risk CLI lifecycle commands",
+      "scope": "Add CLI commands to create, list, inspect, and transition residual risks (open, mitigated, accepted, transferred) including packet-linked filtering and actor/timestamp capture.",
+      "wbs_l3_ref": "5.3",
+      "packet_id": "RSK-5-3",
+      "wbs_refs": [
+        "5.3"
+      ],
+      "purpose": "Deliver Implement residual risk CLI lifecycle commands.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "HIGH",
+      "preconditions": [],
+      "required_inputs": [],
+      "required_actions": [
+        "Add CLI commands to create, list, inspect, and transition residual risks (open, mitigated, accepted, transferred) including packet-linked filtering and actor/timestamp capture."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Evidence path included in packet notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with evidence references"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Evidence missing for completion claim"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "RSK-5-4",
+      "wbs_ref": "5.4",
+      "area_id": "5.0",
+      "title": "Add residual risk reporting and governance documentation",
+      "scope": "Add risk summary/report outputs and document operational policy: ownership, evidence expectations, deduplication approach, and relationship to closeout-l2 drift assessments.",
+      "wbs_l3_ref": "5.4",
+      "packet_id": "RSK-5-4",
+      "wbs_refs": [
+        "5.4"
+      ],
+      "purpose": "Deliver Add residual risk reporting and governance documentation.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "HIGH",
+      "preconditions": [],
+      "required_inputs": [],
+      "required_actions": [
+        "Add risk summary/report outputs and document operational policy: ownership, evidence expectations, deduplication approach, and relationship to closeout-l2 drift assessments."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Evidence path included in packet notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with evidence references"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Evidence missing for completion claim"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "RSK-5-5",
+      "wbs_ref": "5.5",
+      "area_id": "5.0",
+      "title": "Validate rollout and optional git-governance linkage",
+      "scope": "Deliver tests and end-to-end validation for residual risk flows, plus optional git-native audit linkage for risk declarations. Publish a rollout/readiness note with residual implementation risks and next steps.",
+      "wbs_l3_ref": "5.5",
+      "packet_id": "RSK-5-5",
+      "wbs_refs": [
+        "5.5"
+      ],
+      "purpose": "Deliver Validate rollout and optional git-governance linkage.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "HIGH",
+      "preconditions": [],
+      "required_inputs": [],
+      "required_actions": [
+        "Deliver tests and end-to-end validation for residual risk flows, plus optional git-native audit linkage for risk declarations. Publish a rollout/readiness note with residual implementation risks and next steps."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Evidence path included in packet notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with evidence references"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Evidence missing for completion claim"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "E2E-6-1",
+      "wbs_ref": "6.1",
+      "area_id": "6.0",
+      "title": "Define E2E run contract + writer",
+      "scope": "Define substrate/.governance/e2e-runs.json schema and implement runner/writer script that records run metadata, status, summary, failures, and artifact paths.",
+      "wbs_l3_ref": "6.1",
+      "packet_id": "E2E-6-1",
+      "wbs_refs": [
+        "6.1"
+      ],
+      "purpose": "Deliver Define E2E run contract + writer.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "HIGH",
+      "preconditions": [],
+      "required_inputs": [
+        "Existing WBS dashboard and governance CLI/server codebase",
+        "Current e2e and quality gate scripts under substrate/scripts/"
+      ],
+      "required_actions": [
+        "Define substrate/.governance/e2e-runs.json schema and implement runner/writer script that records run metadata, status, summary, failures, and artifact paths."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Tests or smoke checks executed for impacted behavior",
+        "Evidence paths included in completion notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with concrete evidence and validation results"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Contract-breaking change detected without remediation plan"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "E2E-6-2",
+      "wbs_ref": "6.2",
+      "area_id": "6.0",
+      "title": "Add E2E API endpoints",
+      "scope": "Implement read-only API routes in substrate/.governance/wbs_server.py for listing runs and retrieving run details/findings from e2e-runs store.",
+      "wbs_l3_ref": "6.2",
+      "packet_id": "E2E-6-2",
+      "wbs_refs": [
+        "6.2"
+      ],
+      "purpose": "Deliver Add E2E API endpoints.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "HIGH",
+      "preconditions": [],
+      "required_inputs": [
+        "Existing WBS dashboard and governance CLI/server codebase",
+        "Current e2e and quality gate scripts under substrate/scripts/"
+      ],
+      "required_actions": [
+        "Implement read-only API routes in substrate/.governance/wbs_server.py for listing runs and retrieving run details/findings from e2e-runs store."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Tests or smoke checks executed for impacted behavior",
+        "Evidence paths included in completion notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with concrete evidence and validation results"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Contract-breaking change detected without remediation plan"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "E2E-6-3",
+      "wbs_ref": "6.3",
+      "area_id": "6.0",
+      "title": "Render E2E runs in viewer",
+      "scope": "Add dashboard UI section/tab showing E2E run history, status counts, failure findings, and artifact/log references.",
+      "wbs_l3_ref": "6.3",
+      "packet_id": "E2E-6-3",
+      "wbs_refs": [
+        "6.3"
+      ],
+      "purpose": "Deliver Render E2E runs in viewer.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "HIGH",
+      "preconditions": [],
+      "required_inputs": [
+        "Existing WBS dashboard and governance CLI/server codebase",
+        "Current e2e and quality gate scripts under substrate/scripts/"
+      ],
+      "required_actions": [
+        "Add dashboard UI section/tab showing E2E run history, status counts, failure findings, and artifact/log references."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Tests or smoke checks executed for impacted behavior",
+        "Evidence paths included in completion notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with concrete evidence and validation results"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Contract-breaking change detected without remediation plan"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "E2E-6-4",
+      "wbs_ref": "6.4",
+      "area_id": "6.0",
+      "title": "Integrate E2E runner with CI/local workflows",
+      "scope": "Wire e2e runner script into CI/local execution path and ensure normalized outputs are persisted for viewer consumption.",
+      "wbs_l3_ref": "6.4",
+      "packet_id": "E2E-6-4",
+      "wbs_refs": [
+        "6.4"
+      ],
+      "purpose": "Deliver Integrate E2E runner with CI/local workflows.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "HIGH",
+      "preconditions": [],
+      "required_inputs": [
+        "Existing WBS dashboard and governance CLI/server codebase",
+        "Current e2e and quality gate scripts under substrate/scripts/"
+      ],
+      "required_actions": [
+        "Wire e2e runner script into CI/local execution path and ensure normalized outputs are persisted for viewer consumption."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Tests or smoke checks executed for impacted behavior",
+        "Evidence paths included in completion notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with concrete evidence and validation results"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Contract-breaking change detected without remediation plan"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "E2E-6-5",
+      "wbs_ref": "6.5",
+      "area_id": "6.0",
+      "title": "Validate and document E2E viewer capability",
+      "scope": "Add tests and operator docs covering data contract, API routes, UI behavior, and end-to-end evidence flow in WBS governance workflows.",
+      "wbs_l3_ref": "6.5",
+      "packet_id": "E2E-6-5",
+      "wbs_refs": [
+        "6.5"
+      ],
+      "purpose": "Deliver Validate and document E2E viewer capability.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "HIGH",
+      "preconditions": [],
+      "required_inputs": [
+        "Existing WBS dashboard and governance CLI/server codebase",
+        "Current e2e and quality gate scripts under substrate/scripts/"
+      ],
+      "required_actions": [
+        "Add tests and operator docs covering data contract, API routes, UI behavior, and end-to-end evidence flow in WBS governance workflows."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Tests or smoke checks executed for impacted behavior",
+        "Evidence paths included in completion notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with concrete evidence and validation results"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Contract-breaking change detected without remediation plan"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "BF-7-1",
+      "wbs_ref": "7.1",
+      "area_id": "7.0",
+      "title": "Define break-fix schema + runtime store",
+      "scope": "Define substrate/.governance/break-fix-log.json schema and runtime store contract including lifecycle states, severity, ownership, timestamps, evidence, and packet linkage fields.",
+      "wbs_l3_ref": "7.1",
+      "packet_id": "BF-7-1",
+      "wbs_refs": [
+        "7.1"
+      ],
+      "purpose": "Deliver Define break-fix schema + runtime store.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "HIGH",
+      "preconditions": [],
+      "required_inputs": [
+        "Current governance CLI/server/dashboard implementation",
+        "Existing WBS packet lifecycle and reporting model"
+      ],
+      "required_actions": [
+        "Define substrate/.governance/break-fix-log.json schema and runtime store contract including lifecycle states, severity, ownership, timestamps, evidence, and packet linkage fields."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Tests or smoke checks executed for impacted behavior",
+        "Evidence paths included in completion notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with concrete evidence and validation results"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Contract-breaking change detected without remediation plan"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "BF-7-2",
+      "wbs_ref": "7.2",
+      "area_id": "7.0",
+      "title": "Implement break-fix CLI lifecycle",
+      "scope": "Add CLI commands for break-fix open/start/resolve/reject/note/list/show with transition rules and required evidence validation on resolve.",
+      "wbs_l3_ref": "7.2",
+      "packet_id": "BF-7-2",
+      "wbs_refs": [
+        "7.2"
+      ],
+      "purpose": "Deliver Implement break-fix CLI lifecycle.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "HIGH",
+      "preconditions": [],
+      "required_inputs": [
+        "Current governance CLI/server/dashboard implementation",
+        "Existing WBS packet lifecycle and reporting model"
+      ],
+      "required_actions": [
+        "Add CLI commands for break-fix open/start/resolve/reject/note/list/show with transition rules and required evidence validation on resolve."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Tests or smoke checks executed for impacted behavior",
+        "Evidence paths included in completion notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with concrete evidence and validation results"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Contract-breaking change detected without remediation plan"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "BF-7-3",
+      "wbs_ref": "7.3",
+      "area_id": "7.0",
+      "title": "Expose break-fix API endpoints",
+      "scope": "Add read/write API routes for break-fix records and transitions in substrate/.governance/wbs_server.py with validation and consistent error semantics.",
+      "wbs_l3_ref": "7.3",
+      "packet_id": "BF-7-3",
+      "wbs_refs": [
+        "7.3"
+      ],
+      "purpose": "Deliver Expose break-fix API endpoints.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "HIGH",
+      "preconditions": [],
+      "required_inputs": [
+        "Current governance CLI/server/dashboard implementation",
+        "Existing WBS packet lifecycle and reporting model"
+      ],
+      "required_actions": [
+        "Add read/write API routes for break-fix records and transitions in substrate/.governance/wbs_server.py with validation and consistent error semantics."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Tests or smoke checks executed for impacted behavior",
+        "Evidence paths included in completion notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with concrete evidence and validation results"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Contract-breaking change detected without remediation plan"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "BF-7-4",
+      "wbs_ref": "7.4",
+      "area_id": "7.0",
+      "title": "Add viewer break-fix panel",
+      "scope": "Add dashboard UI panel/modal for break-fix queue, filters, lifecycle actions, linked packet visibility, and evidence/finding details.",
+      "wbs_l3_ref": "7.4",
+      "packet_id": "BF-7-4",
+      "wbs_refs": [
+        "7.4"
+      ],
+      "purpose": "Deliver Add viewer break-fix panel.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "HIGH",
+      "preconditions": [],
+      "required_inputs": [
+        "Current governance CLI/server/dashboard implementation",
+        "Existing WBS packet lifecycle and reporting model"
+      ],
+      "required_actions": [
+        "Add dashboard UI panel/modal for break-fix queue, filters, lifecycle actions, linked packet visibility, and evidence/finding details."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Tests or smoke checks executed for impacted behavior",
+        "Evidence paths included in completion notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with concrete evidence and validation results"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Contract-breaking change detected without remediation plan"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "BF-7-5",
+      "wbs_ref": "7.5",
+      "area_id": "7.0",
+      "title": "Integrate break-fix into completion/reporting",
+      "scope": "Integrate break-fix status into governance reporting/export and packet completion visibility so unresolved items are surfaced clearly in delivery workflows.",
+      "wbs_l3_ref": "7.5",
+      "packet_id": "BF-7-5",
+      "wbs_refs": [
+        "7.5"
+      ],
+      "purpose": "Deliver Integrate break-fix into completion/reporting.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "HIGH",
+      "preconditions": [],
+      "required_inputs": [
+        "Current governance CLI/server/dashboard implementation",
+        "Existing WBS packet lifecycle and reporting model"
+      ],
+      "required_actions": [
+        "Integrate break-fix status into governance reporting/export and packet completion visibility so unresolved items are surfaced clearly in delivery workflows."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Tests or smoke checks executed for impacted behavior",
+        "Evidence paths included in completion notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with concrete evidence and validation results"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Contract-breaking change detected without remediation plan"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "BF-7-6",
+      "wbs_ref": "7.6",
+      "area_id": "7.0",
+      "title": "Validate and document break-fix mode",
+      "scope": "Add tests and operator docs for break-fix schema, transitions, API/UI behavior, reporting integration, and evidence chain expectations.",
+      "wbs_l3_ref": "7.6",
+      "packet_id": "BF-7-6",
+      "wbs_refs": [
+        "7.6"
+      ],
+      "purpose": "Deliver Validate and document break-fix mode.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "HIGH",
+      "preconditions": [],
+      "required_inputs": [
+        "Current governance CLI/server/dashboard implementation",
+        "Existing WBS packet lifecycle and reporting model"
+      ],
+      "required_actions": [
+        "Add tests and operator docs for break-fix schema, transitions, API/UI behavior, reporting integration, and evidence chain expectations."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Tests or smoke checks executed for impacted behavior",
+        "Evidence paths included in completion notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with concrete evidence and validation results"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Contract-breaking change detected without remediation plan"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "OPT-12-1",
+      "wbs_ref": "8.1",
+      "area_id": "12.0",
+      "title": "Add checklist gate for done",
+      "scope": "Add optional done checklist validation via --checklist flag without changing default done behavior.",
+      "wbs_l3_ref": "8.1",
+      "packet_id": "OPT-12-1",
+      "wbs_refs": [
+        "8.1"
+      ],
+      "purpose": "Deliver Add checklist gate for done.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "MEDIUM",
+      "preconditions": [],
+      "required_inputs": [
+        "Current governance CLI/state workflow",
+        "Existing packet lifecycle and reporting behaviors"
+      ],
+      "required_actions": [
+        "Add optional done checklist validation via --checklist flag without changing default done behavior."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Tests or smoke checks executed for impacted behavior",
+        "Evidence paths included in completion notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with concrete evidence and validation results"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Contract-breaking change detected without remediation plan"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "OPT-12-2",
+      "wbs_ref": "8.2",
+      "area_id": "12.0",
+      "title": "Add delivery-report command",
+      "scope": "Add delivery-report command to emit full delivery report format for scope/area/packet.",
+      "wbs_l3_ref": "8.2",
+      "packet_id": "OPT-12-2",
+      "wbs_refs": [
+        "8.2"
+      ],
+      "purpose": "Deliver Add delivery-report command.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "MEDIUM",
+      "preconditions": [],
+      "required_inputs": [
+        "Current governance CLI/state workflow",
+        "Existing packet lifecycle and reporting behaviors"
+      ],
+      "required_actions": [
+        "Add delivery-report command to emit full delivery report format for scope/area/packet."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Tests or smoke checks executed for impacted behavior",
+        "Evidence paths included in completion notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with concrete evidence and validation results"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Contract-breaking change detected without remediation plan"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "OPT-12-3",
+      "wbs_ref": "8.3",
+      "area_id": "12.0",
+      "title": "Enhance stale watchdog",
+      "scope": "Add stale severity bands and recommended next actions.",
+      "wbs_l3_ref": "8.3",
+      "packet_id": "OPT-12-3",
+      "wbs_refs": [
+        "8.3"
+      ],
+      "purpose": "Deliver Enhance stale watchdog.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "MEDIUM",
+      "preconditions": [],
+      "required_inputs": [
+        "Current governance CLI/state workflow",
+        "Existing packet lifecycle and reporting behaviors"
+      ],
+      "required_actions": [
+        "Add stale severity bands and recommended next actions."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Tests or smoke checks executed for impacted behavior",
+        "Evidence paths included in completion notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with concrete evidence and validation results"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Contract-breaking change detected without remediation plan"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "OPT-12-4",
+      "wbs_ref": "8.4",
+      "area_id": "12.0",
+      "title": "Add packet presets",
+      "scope": "Add optional packet preset templates for add-packet flow.",
+      "wbs_l3_ref": "8.4",
+      "packet_id": "OPT-12-4",
+      "wbs_refs": [
+        "8.4"
+      ],
+      "purpose": "Deliver Add packet presets.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "MEDIUM",
+      "preconditions": [],
+      "required_inputs": [
+        "Current governance CLI/state workflow",
+        "Existing packet lifecycle and reporting behaviors"
+      ],
+      "required_actions": [
+        "Add optional packet preset templates for add-packet flow."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Tests or smoke checks executed for impacted behavior",
+        "Evidence paths included in completion notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with concrete evidence and validation results"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Contract-breaking change detected without remediation plan"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "OPT-12-5",
+      "wbs_ref": "8.5",
+      "area_id": "12.0",
+      "title": "Add evidence verifier",
+      "scope": "Add optional evidence path verification for done command.",
+      "wbs_l3_ref": "8.5",
+      "packet_id": "OPT-12-5",
+      "wbs_refs": [
+        "8.5"
+      ],
+      "purpose": "Deliver Add evidence verifier.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "MEDIUM",
+      "preconditions": [],
+      "required_inputs": [
+        "Current governance CLI/state workflow",
+        "Existing packet lifecycle and reporting behaviors"
+      ],
+      "required_actions": [
+        "Add optional evidence path verification for done command."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Tests or smoke checks executed for impacted behavior",
+        "Evidence paths included in completion notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with concrete evidence and validation results"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Contract-breaking change detected without remediation plan"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "OPT-12-6",
+      "wbs_ref": "8.6",
+      "area_id": "12.0",
+      "title": "Add WBS diff explainer",
+      "scope": "Add command to summarize structural differences between two WBS files.",
+      "wbs_l3_ref": "8.6",
+      "packet_id": "OPT-12-6",
+      "wbs_refs": [
+        "8.6"
+      ],
+      "purpose": "Deliver Add WBS diff explainer.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "MEDIUM",
+      "preconditions": [],
+      "required_inputs": [
+        "Current governance CLI/state workflow",
+        "Existing packet lifecycle and reporting behaviors"
+      ],
+      "required_actions": [
+        "Add command to summarize structural differences between two WBS files."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Tests or smoke checks executed for impacted behavior",
+        "Evidence paths included in completion notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with concrete evidence and validation results"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Contract-breaking change detected without remediation plan"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "OPT-12-7",
+      "wbs_ref": "8.7",
+      "area_id": "12.0",
+      "title": "Add mode profiles",
+      "scope": "Add optional speed/balanced/strict profile toggles to configure defaults.",
+      "wbs_l3_ref": "8.7",
+      "packet_id": "OPT-12-7",
+      "wbs_refs": [
+        "8.7"
+      ],
+      "purpose": "Deliver Add mode profiles.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "MEDIUM",
+      "preconditions": [],
+      "required_inputs": [
+        "Current governance CLI/state workflow",
+        "Existing packet lifecycle and reporting behaviors"
+      ],
+      "required_actions": [
+        "Add optional speed/balanced/strict profile toggles to configure defaults."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Tests or smoke checks executed for impacted behavior",
+        "Evidence paths included in completion notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with concrete evidence and validation results"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Contract-breaking change detected without remediation plan"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "OPT-12-8",
+      "wbs_ref": "8.8",
+      "area_id": "12.0",
+      "title": "Add closeout readiness score",
+      "scope": "Add closeout-readiness command to score area readiness and identify blockers.",
+      "wbs_l3_ref": "8.8",
+      "packet_id": "OPT-12-8",
+      "wbs_refs": [
+        "8.8"
+      ],
+      "purpose": "Deliver Add closeout readiness score.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "MEDIUM",
+      "preconditions": [],
+      "required_inputs": [
+        "Current governance CLI/state workflow",
+        "Existing packet lifecycle and reporting behaviors"
+      ],
+      "required_actions": [
+        "Add closeout-readiness command to score area readiness and identify blockers."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Tests or smoke checks executed for impacted behavior",
+        "Evidence paths included in completion notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with concrete evidence and validation results"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Contract-breaking change detected without remediation plan"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    }
+  ],
+  "dependencies": {
+    "MIN-2-1": [
+      "MIN-1-1"
+    ],
+    "MIN-3-1": [
+      "MIN-2-1"
+    ],
+    "MIN-4-1": [
+      "MIN-3-1"
+    ],
+    "RSK-5-2": [
+      "RSK-5-1"
+    ],
+    "RSK-5-3": [
+      "RSK-5-2"
+    ],
+    "RSK-5-4": [
+      "RSK-5-3"
+    ],
+    "RSK-5-5": [
+      "RSK-5-4"
+    ],
+    "E2E-6-2": [
+      "E2E-6-1"
+    ],
+    "E2E-6-3": [
+      "E2E-6-2"
+    ],
+    "E2E-6-4": [
+      "E2E-6-1"
+    ],
+    "E2E-6-5": [
+      "E2E-6-3",
+      "E2E-6-4"
+    ],
+    "BF-7-2": [
+      "BF-7-1"
+    ],
+    "BF-7-3": [
+      "BF-7-2"
+    ],
+    "BF-7-4": [
+      "BF-7-3"
+    ],
+    "BF-7-5": [
+      "BF-7-2",
+      "BF-7-3"
+    ],
+    "BF-7-6": [
+      "BF-7-4",
+      "BF-7-5"
+    ],
+    "OPT-12-2": [
+      "OPT-12-1"
+    ],
+    "OPT-12-3": [
+      "OPT-12-2"
+    ],
+    "OPT-12-4": [
+      "OPT-12-2"
+    ],
+    "OPT-12-5": [
+      "OPT-12-1"
+    ],
+    "OPT-12-6": [
+      "OPT-12-2"
+    ],
+    "OPT-12-7": [
+      "OPT-12-5"
+    ],
+    "OPT-12-8": [
+      "OPT-12-6",
+      "OPT-12-7"
+    ]
+  }
+}

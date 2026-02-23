@@ -20,22 +20,36 @@ jobs:
 
       - name: Governance runtime state guard
         run: |
-          chmod +x scripts/governance-state-guard.sh
-          ./scripts/governance-state-guard.sh --ci
+          chmod +x substrate/scripts/governance-state-guard.sh
+          ./substrate/scripts/governance-state-guard.sh --ci
+
+      - name: Root hygiene
+        run: |
+          chmod +x substrate/scripts/check-root-hygiene.sh
+          ./substrate/scripts/check-root-hygiene.sh
 
       - name: Git-native governance protocol checks
         run: |
-          python3 .governance/wbs_cli.py git-protocol --json >/tmp/git-protocol.json
-          python3 .governance/wbs_cli.py --json git-verify-ledger --strict >/tmp/git-ledger-verify.json
+          python3 substrate/.governance/wbs_cli.py git-protocol --json >/tmp/git-protocol.json
+          python3 substrate/.governance/wbs_cli.py --json git-verify-ledger --strict >/tmp/git-ledger-verify.json
 
       - name: Run quality gates
         run: |
-          chmod +x scripts/quality-gates.sh
-          ./scripts/quality-gates.sh
+          chmod +x substrate/scripts/quality-gates.sh
+          ./substrate/scripts/quality-gates.sh
+
+      - name: Upload E2E run artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-runs
+          path: |
+            substrate/.governance/e2e-runs.json
+            substrate/reports/e2e/*.log
+          if-no-files-found: warn
 
       - name: Verify templates
         run: |
-          for template in templates/*.json; do
+          for template in substrate/templates/*.json substrate/templates/clone-profiles/*.json; do
             echo "Validating $template..."
             python3 -c "import json; json.load(open('$template'))"
           done
@@ -58,11 +72,11 @@ jobs:
 
       - name: Syntax check
         run: |
-          python3 -m py_compile .governance/wbs_cli.py .governance/wbs_server.py start.py
+          python3 -m py_compile substrate/.governance/wbs_cli.py substrate/.governance/wbs_server.py start.py
 
       - name: Unit and API tests
         run: |
-          python3 -m unittest discover -s tests -v
+          python3 -m unittest discover -s substrate/tests -v
 
   skills-agent-eval-smoke:
     runs-on: ubuntu-latest
@@ -80,8 +94,8 @@ jobs:
 
       - name: Run agent-eval smoke
         run: |
-          chmod +x skills/agent-eval/scripts/*.sh
-          ./skills/agent-eval/scripts/smoke.sh
+          chmod +x substrate/skills/agent-eval/scripts/*.sh
+          ./substrate/skills/agent-eval/scripts/smoke.sh
 
   skills-security-gates-ci:
     runs-on: ubuntu-latest
@@ -91,9 +105,9 @@ jobs:
 
       - name: Script sanity
         run: |
-          chmod +x skills/security-gates/scripts/*.sh
-          bash -n skills/security-gates/scripts/smoke.sh
-          bash -n skills/security-gates/scripts/run.sh
+          chmod +x substrate/skills/security-gates/scripts/*.sh
+          bash -n substrate/skills/security-gates/scripts/smoke.sh
+          bash -n substrate/skills/security-gates/scripts/run.sh
 
       - name: Semgrep scan
         uses: returntocorp/semgrep-action@v1
@@ -124,9 +138,9 @@ jobs:
 
       - name: Run pr-review-automation smoke
         run: |
-          chmod +x skills/pr-review-automation/scripts/*.sh
-          ./skills/pr-review-automation/scripts/smoke.sh
-          ./skills/pr-review-automation/scripts/run.sh
+          chmod +x substrate/skills/pr-review-automation/scripts/*.sh
+          ./substrate/skills/pr-review-automation/scripts/smoke.sh
+          ./substrate/skills/pr-review-automation/scripts/run.sh
 
   skills-precommit-governance:
     runs-on: ubuntu-latest
@@ -144,10 +158,10 @@ jobs:
 
       - name: Run precommit-governance
         run: |
-          chmod +x skills/precommit-governance/scripts/*.sh
-          ./skills/precommit-governance/scripts/smoke.sh
-          ./skills/precommit-governance/scripts/install.sh
-          ./skills/precommit-governance/scripts/run.sh
+          chmod +x substrate/skills/precommit-governance/scripts/*.sh
+          ./substrate/skills/precommit-governance/scripts/smoke.sh
+          ./substrate/skills/precommit-governance/scripts/install.sh
+          ./substrate/skills/precommit-governance/scripts/run.sh
 
   skills-ui-regression:
     runs-on: ubuntu-latest
@@ -172,12 +186,12 @@ jobs:
 
       - name: Start dashboard server
         run: |
-          python3 .governance/wbs_server.py 8090 >/tmp/wbs-server.log 2>&1 &
+          python3 substrate/.governance/wbs_server.py 8090 >/tmp/wbs-server.log 2>&1 &
           sleep 2
           curl -fsS http://127.0.0.1:8090/api/status >/dev/null
 
       - name: Run ui-regression skill
         run: |
-          chmod +x skills/ui-regression/scripts/*.sh
-          UI_BASE_URL=http://127.0.0.1:8090 ./skills/ui-regression/scripts/smoke.sh
-          UI_BASE_URL=http://127.0.0.1:8090 ./skills/ui-regression/scripts/run.sh
+          chmod +x substrate/skills/ui-regression/scripts/*.sh
+          UI_BASE_URL=http://127.0.0.1:8090 ./substrate/skills/ui-regression/scripts/smoke.sh
+          UI_BASE_URL=http://127.0.0.1:8090 ./substrate/skills/ui-regression/scripts/run.sh

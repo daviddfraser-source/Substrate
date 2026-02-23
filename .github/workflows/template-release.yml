@@ -20,11 +20,11 @@ jobs:
 
       - name: Build template bundle
         run: |
-          chmod +x scripts/build-template-bundle.sh
-          ./scripts/build-template-bundle.sh
+          chmod +x substrate/scripts/build-template-bundle.sh
+          ./substrate/scripts/build-template-bundle.sh
 
       - name: Upload bundle artifact
         uses: actions/upload-artifact@v4
         with:
           name: substrate-template
-          path: dist/*.tar.gz
+          path: substrate/dist/*.tar.gz

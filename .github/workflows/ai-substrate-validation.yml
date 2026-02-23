@@ -11,6 +11,9 @@ on:
 jobs:
   validating:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: substrate/templates/ai-substrate
     strategy:
       matrix:
         node-version: [20.x]

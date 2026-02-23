@@ -13,34 +13,39 @@ You are an execution agent working within a governed workflow. You:
 
 ## Quick Start
 
+0. If this is a fresh project clone, initialize scaffold:
+```bash
+substrate/scripts/init-scaffold.sh substrate/templates/wbs-codex-minimal.json
+```
+
 1. Bootstrap session context:
 ```bash
-python3 .governance/wbs_cli.py briefing --format json
+python3 substrate/.governance/wbs_cli.py briefing --format json
 ```
 
 2. See available work:
 ```bash
-python3 .governance/wbs_cli.py ready
+python3 substrate/.governance/wbs_cli.py ready
 ```
 
 3. Claim a packet:
 ```bash
-python3 .governance/wbs_cli.py claim <PACKET_ID> claude
+python3 substrate/.governance/wbs_cli.py claim <PACKET_ID> claude
 ```
 
 4. Inspect packet context bundle:
 ```bash
-python3 .governance/wbs_cli.py context <PACKET_ID> --format json --max-events 40 --max-notes-bytes 4000
+python3 substrate/.governance/wbs_cli.py context <PACKET_ID> --format json --max-events 40 --max-notes-bytes 4000
 ```
 
 5. Check current status:
 ```bash
-python3 .governance/wbs_cli.py status
+python3 substrate/.governance/wbs_cli.py status
 ```
 
 6. Mark complete with evidence:
 ```bash
-python3 .governance/wbs_cli.py done <PACKET_ID> claude "Created X, validated Y, evidence in Z"
+python3 substrate/.governance/wbs_cli.py done <PACKET_ID> claude "Created X, validated Y, evidence in Z" --risk none
 ```
 
 ## Packet Execution Rules
@@ -65,14 +70,14 @@ These are wrappers around the governance CLI.
 ## File Locations
 
 - governance CLI: `.governance/wbs_cli.py`
-- packet definitions: `.governance/wbs.json`
-- runtime state: `.governance/wbs-state.json` (do not edit directly)
+- packet definitions: `substrate/.governance/wbs.json`
+- runtime state: `substrate/.governance/wbs-state.json` (do not edit directly)
 - packet schema: `.governance/packet-schema.json`
 - agent profiles: `.governance/agents.json`
 
 ## What Not To Do
 
-- do not modify `.governance/wbs-state.json` directly
+- do not modify `substrate/.governance/wbs-state.json` directly
 - do not edit packet lifecycle state outside CLI commands
 - do not claim multiple packets without user approval
 - do not mark packets done without concrete evidence
@@ -84,7 +89,7 @@ These are wrappers around the governance CLI.
 3. `claim <id> claude`
 4. execute packet scope
 5. run validation checks
-6. `done <id> claude "evidence"`
+6. `done <id> claude "evidence" --risk none`
 7. report result
 
 ## Error Handling
@@ -94,7 +99,7 @@ These are wrappers around the governance CLI.
 - if blocked: mark packet `failed` with reason
 - if session must transfer mid-packet: use `handover` then next session uses `resume`
 
-See `docs/PLAYBOOK.md` and `docs/governance-workflow-codex.md` for recovery patterns.
+See `substrate/docs/PLAYBOOK.md` and `substrate/docs/governance-workflow-codex.md` for recovery patterns.
 
 ## Governance Enforcement
 
@@ -128,14 +133,14 @@ To enable, add to your MCP configuration or use CLI commands directly.
 
 For packets requiring architectural decisions, use Claude Code's plan mode:
 
-1. Review packet scope: `python3 .governance/wbs_cli.py scope <ID>`
+1. Review packet scope: `python3 substrate/.governance/wbs_cli.py scope <ID>`
 2. Enter plan mode: "Let's plan the approach for packet X"
 3. Explore codebase and draft implementation approach
 4. Get human approval on plan
 5. Claim packet and execute approved plan
 6. Complete with evidence
 
-See `docs/plan-mode-guide.md` for detailed workflow.
+See `substrate/docs/plan-mode-guide.md` for detailed workflow.
 
 ## Agent Teams (Opus 4.6)
 
@@ -145,7 +150,7 @@ This project supports Claude Code Agent Teams for parallel packet execution. Age
 
 As team lead, you:
 - Coordinate packet assignment across teammates
-- Monitor progress: `python3 .governance/wbs_cli.py status`
+- Monitor progress: `python3 substrate/.governance/wbs_cli.py status`
 - Validate evidence quality before accepting completion
 - Synthesize results across parallel work streams
 - Use **delegate mode** (Shift+Tab) to focus on coordination
@@ -153,9 +158,9 @@ As team lead, you:
 ### Teammate Role
 
 As a teammate, you:
-- Claim your assigned packet: `python3 .governance/wbs_cli.py claim <ID> <your-name>`
+- Claim your assigned packet: `python3 substrate/.governance/wbs_cli.py claim <ID> <your-name>`
 - Execute within packet scope only
-- Complete with evidence: `python3 .governance/wbs_cli.py done <ID> <your-name> "evidence"`
+- Complete with evidence: `python3 substrate/.governance/wbs_cli.py done <ID> <your-name> "evidence" --risk none`
 - Message lead when blocked or finished
 
 ### When to Use Agent Teams

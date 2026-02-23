@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ $# -lt 1 ]; then
+  echo "Usage: .codex/scripts/codex-claim <packet_id> [agent]" >&2
+  exit 2
+fi
+
+packet_id="$1"
+agent="${2:-codex}"
+python3 substrate/.governance/wbs_cli.py claim "$packet_id" "$agent"

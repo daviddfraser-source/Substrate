@@ -1,0 +1,110 @@
+{
+  "break_fix": [
+    {
+      "fix_id": "BFIX-0001",
+      "title": "CLI smoke",
+      "description": "verify lifecycle",
+      "severity": "low",
+      "status": "resolved",
+      "created_at": "2026-02-23T08:16:05.639724",
+      "created_by": "codex",
+      "owner": "codex",
+      "packet_id": "BF-7-2",
+      "linked_packets": [],
+      "findings": [
+        "minor parser edge"
+      ],
+      "evidence": [
+        "substrate/.governance/wbs_cli.py",
+        "substrate/.governance/break-fix-log.json"
+      ],
+      "notes": [
+        {
+          "timestamp": "2026-02-23T08:16:06.125202",
+          "actor": "codex",
+          "note": "start smoke"
+        },
+        {
+          "timestamp": "2026-02-23T08:16:06.647322",
+          "actor": "codex",
+          "note": "collected finding"
+        }
+      ],
+      "history": [
+        {
+          "timestamp": "2026-02-23T08:16:05.639737",
+          "actor": "codex",
+          "action": "open",
+          "from_status": null,
+          "to_status": "open",
+          "note": null,
+          "evidence": [],
+          "findings": []
+        },
+        {
+          "timestamp": "2026-02-23T08:16:06.125205",
+          "actor": "codex",
+          "action": "start",
+          "from_status": "open",
+          "to_status": "in_progress",
+          "note": "start smoke",
+          "evidence": [],
+          "findings": []
+        },
+        {
+          "timestamp": "2026-02-23T08:16:06.647326",
+          "actor": "codex",
+          "action": "note",
+          "from_status": "in_progress",
+          "to_status": "in_progress",
+          "note": "collected finding",
+          "evidence": [],
+          "findings": [
+            "minor parser edge"
+          ]
+        },
+        {
+          "timestamp": "2026-02-23T08:16:07.124520",
+          "actor": "codex",
+          "action": "resolve",
+          "from_status": "in_progress",
+          "to_status": "resolved",
+          "note": "smoke done",
+          "evidence": [
+            "substrate/.governance/break-fix-log.json"
+          ],
+          "findings": []
+        }
+      ],
+      "started_at": "2026-02-23T08:16:06.125199",
+      "resolved_at": "2026-02-23T08:16:07.124516",
+      "resolved_by": "codex",
+      "resolution_summary": "smoke done",
+      "rejected_at": null,
+      "rejected_by": null,
+      "rejection_reason": null,
+      "updated_at": "2026-02-23T08:16:07.124518"
+    }
+  ],
+  "summary": {
+    "schema_version": "1.0",
+    "updated_at": "2026-02-23T08:16:07.124525",
+    "total": 1,
+    "active": 0,
+    "counts": {
+      "in_progress": 0,
+      "open": 0,
+      "rejected": 0,
+      "resolved": 1
+    },
+    "by_severity": {
+      "critical": 0,
+      "high": 0,
+      "low": 1,
+      "medium": 0
+    },
+    "by_packet": {
+      "BF-7-2": 1
+    }
+  }
+}

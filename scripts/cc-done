@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-set -euo pipefail
-if [[ $# -lt 2 ]]; then
-  echo "Usage: scripts/cc-done PACKET-ID 'evidence string'"
-  exit 1
-fi
-python3 .governance/wbs_cli.py done "$1" claude "$2"

@@ -13,7 +13,7 @@ Brief description of changes.
 - Change 2
 
 ## Testing
-- [ ] `./test.sh` passes
+- [ ] `./substrate/scripts/test.sh` passes
 - [ ] Tested manually on: [OS]
 
 ## Checklist

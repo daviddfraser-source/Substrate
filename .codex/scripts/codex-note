@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ $# -lt 2 ]; then
+  echo "Usage: .codex/scripts/codex-note <packet_id> <note> [agent]" >&2
+  exit 2
+fi
+
+packet_id="$1"
+note="$2"
+agent="${3:-codex}"
+python3 substrate/.governance/wbs_cli.py note "$packet_id" "$agent" "$note"

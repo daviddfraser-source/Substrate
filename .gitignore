@@ -20,6 +20,14 @@ venv/
 env/
 node_modules/
 **/node_modules/
+substrate/templates/ai-substrate/node_modules/
+substrate/templates/ai-substrate/dist/
+substrate/templates/ai-substrate/.next/
+substrate/templates/ai-substrate/coverage/
+substrate/dist/git-ready/**/substrate/templates/ai-substrate/node_modules/
+substrate/dist/git-ready/**/substrate/templates/ai-substrate/dist/
+substrate/dist/git-ready/**/substrate/templates/ai-substrate/.next/
+substrate/dist/git-ready/**/substrate/templates/ai-substrate/coverage/
 
 # Temporary files
 *.tmp
@@ -28,7 +36,10 @@ node_modules/
 
 # WBS state file - generated at runtime, not committed
 # The definition (wbs.json) IS committed
-.governance/wbs-state.json
+substrate/.governance/wbs-state.json
+substrate/.governance/activity-log.jsonl
+substrate/.governance/residual-risk-register.json
+substrate/.governance/e2e-runs.json
 
 # Meta/planning directory (not part of template)
 .meta/

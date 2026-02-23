@@ -1,0 +1,2107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WBS Manager</title>
+    <script src="https://unpkg.com/ag-grid-enterprise@31.0.0/dist/ag-grid-enterprise.min.js"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --success: #059669;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--gray-100); color: var(--gray-900); }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--gray-900) 0%, var(--gray-800) 100%);
+            color: white;
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        .logo { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+        .logo span { color: var(--primary); }
+        .header-divider { width: 1px; height: 32px; background: var(--gray-700); }
+        .project-info { flex: 1; }
+        .project-name { font-size: 16px; font-weight: 600; }
+        .project-meta { font-size: 12px; color: var(--gray-400); }
+
+        .header-stats { display: flex; gap: 32px; }
+        .stat { text-align: center; }
+        .stat-value { font-size: 24px; font-weight: 700; }
+        .stat-value.pending { color: var(--warning); }
+        .stat-value.progress { color: var(--primary); }
+        .stat-value.done { color: var(--success); }
+        .stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gray-400); }
+
+        .header-actions { display: flex; gap: 12px; }
+        .refresh-indicator {
+            align-self: center;
+            color: var(--gray-400);
+            font-size: 12px;
+            min-width: 130px;
+            text-align: right;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.15s;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+        .btn-secondary { background: var(--gray-700); color: white; }
+        .btn-secondary:hover { background: var(--gray-600); }
+        .btn-success { background: var(--success); color: white; }
+        .btn-ghost { background: transparent; color: var(--gray-400); }
+        .btn-ghost:hover { color: white; background: var(--gray-700); }
+        .btn-sm { padding: 6px 12px; font-size: 13px; }
+        .btn-icon { width: 36px; height: 36px; padding: 0; justify-content: center; border-radius: 8px; }
+
+        /* Main Layout */
+        .main { display: flex; height: calc(100vh - 64px); }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: white;
+            border-right: 1px solid var(--gray-200);
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .sidebar-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gray-500); }
+        .sidebar-list { flex: 1; overflow-y: auto; padding: 12px; }
+        .sidebar-item {
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 4px;
+            transition: all 0.15s;
+        }
+        .sidebar-item:hover { background: var(--gray-50); }
+        .sidebar-item.active { background: var(--primary); color: white; }
+        .sidebar-item-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--gray-100); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; }
+        .sidebar-item.active .sidebar-item-icon { background: rgba(255,255,255,0.2); }
+        .sidebar-item-content { flex: 1; min-width: 0; }
+        .sidebar-item-title { font-weight: 500; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .sidebar-item-meta { font-size: 12px; color: var(--gray-400); }
+        .sidebar-item.active .sidebar-item-meta { color: rgba(255,255,255,0.7); }
+        .sidebar-item-count { background: var(--gray-200); padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: 500; }
+        .sidebar-item.active .sidebar-item-count { background: rgba(255,255,255,0.2); }
+        .sidebar-footer { padding: 16px; border-top: 1px solid var(--gray-200); }
+
+        /* Content */
+        .content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .content-header {
+            padding: 20px 24px;
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .content-title { font-size: 20px; font-weight: 600; flex: 1; }
+        .content-body { flex: 1; padding: 24px; overflow: hidden; }
+
+        /* Grid Container */
+        .grid-wrapper {
+            height: 100%;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        /* AG Grid Customization */
+        .ag-theme-alpine {
+            --ag-header-background-color: var(--gray-50);
+            --ag-header-foreground-color: var(--gray-600);
+            --ag-row-hover-color: var(--gray-50);
+            --ag-selected-row-background-color: #eff6ff;
+            --ag-font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --ag-font-size: 14px;
+            --ag-row-height: 52px;
+            --ag-header-height: 48px;
+        }
+        .ag-theme-alpine .ag-header-cell-label { font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .ag-theme-alpine .ag-row { border-bottom: 1px solid var(--gray-100); }
+        .ag-theme-alpine .ag-cell { display: flex; align-items: center; }
+
+        /* WBS Number Cell */
+        .wbs-number { font-family: 'SF Mono', Monaco, monospace; font-size: 13px; color: var(--primary); font-weight: 600; }
+
+        /* Status Badge */
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-in_progress { background: #dbeafe; color: #1e40af; }
+        .status-done { background: #d1fae5; color: #065f46; }
+        .status-blocked { background: var(--gray-100); color: var(--gray-500); }
+
+        /* Row Type Styling */
+        .row-category { background: var(--gray-50) !important; font-weight: 600; }
+        .row-category .ag-cell { font-weight: 600; }
+
+        /* Action Buttons in Grid */
+        .grid-actions { display: flex; gap: 8px; }
+        .grid-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .grid-btn-claim { background: var(--primary); color: white; }
+        .grid-btn-claim:hover { background: var(--primary-dark); }
+        .grid-btn-done { background: var(--success); color: white; }
+        .grid-btn-edit { background: var(--gray-100); color: var(--gray-600); }
+        .grid-btn-edit:hover { background: var(--gray-200); }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.show { display: flex; }
+        .modal {
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 560px;
+            max-height: 90vh;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+        }
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .modal-title { font-size: 18px; font-weight: 600; }
+        .modal-close { background: none; border: none; font-size: 24px; color: var(--gray-400); cursor: pointer; }
+        .modal-close:hover { color: var(--gray-600); }
+        .modal-body { padding: 24px; overflow-y: auto; }
+        .modal-footer { padding: 20px 24px; border-top: 1px solid var(--gray-200); display: flex; justify-content: flex-end; gap: 12px; }
+
+        /* Form */
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; font-size: 14px; font-weight: 500; color: var(--gray-700); margin-bottom: 8px; }
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.15s;
+        }
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+        }
+        .form-textarea { min-height: 100px; resize: vertical; }
+        .form-hint { font-size: 12px; color: var(--gray-500); margin-top: 6px; }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 16px 24px;
+            background: var(--gray-900);
+            color: white;
+            border-radius: 12px;
+            font-weight: 500;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s;
+            z-index: 2000;
+        }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast.error { background: var(--danger); }
+        .toast.success { background: var(--success); }
+        .packet-viewer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .viewer-card { border: 1px solid var(--gray-200); border-radius: 8px; padding: 10px; background: var(--gray-50); }
+        .viewer-label { font-size: 12px; color: var(--gray-500); margin-bottom: 4px; }
+        .viewer-value { font-size: 13px; color: var(--gray-800); word-break: break-word; }
+        .viewer-doc { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--gray-200); }
+        .viewer-doc:last-child { border-bottom: none; }
+        .viewer-events { max-height: 220px; overflow: auto; border: 1px solid var(--gray-200); border-radius: 8px; }
+        .viewer-event { padding: 8px 10px; border-bottom: 1px solid var(--gray-200); font-size: 12px; }
+        .viewer-event:last-child { border-bottom: none; }
+        .viewer-file { width: 100%; min-height: 180px; border: 1px solid var(--gray-200); border-radius: 8px; padding: 10px; background: #0b1020; color: #d6def8; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; white-space: pre-wrap; overflow: auto; }
+        .docs-explorer-layout { display: grid; grid-template-columns: 340px 1fr; gap: 12px; min-height: 540px; }
+        .docs-sidebar { border: 1px solid var(--gray-200); border-radius: 10px; padding: 12px; background: var(--gray-50); display: flex; flex-direction: column; gap: 10px; min-height: 0; }
+        .docs-filters { display: grid; gap: 8px; }
+        .docs-list { border: 1px solid var(--gray-200); border-radius: 8px; background: white; overflow: auto; min-height: 0; flex: 1; }
+        .docs-item { padding: 10px 12px; border-bottom: 1px solid var(--gray-100); cursor: pointer; }
+        .docs-item:last-child { border-bottom: none; }
+        .docs-item:hover { background: var(--gray-50); }
+        .docs-item.active { background: #e0e7ff; border-left: 3px solid var(--primary); padding-left: 9px; }
+        .docs-item-title { font-size: 13px; font-weight: 600; color: var(--gray-800); margin-bottom: 2px; }
+        .docs-item-meta { font-size: 11px; color: var(--gray-500); }
+        .docs-item-summary { font-size: 12px; color: var(--gray-600); margin-top: 4px; }
+        .docs-main { border: 1px solid var(--gray-200); border-radius: 10px; background: var(--gray-50); padding: 12px; display: flex; flex-direction: column; gap: 10px; min-height: 0; }
+        .docs-main-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+        .docs-main-title { font-size: 14px; font-weight: 600; color: var(--gray-800); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .docs-main-meta { font-size: 12px; color: var(--gray-500); }
+        .docs-empty { padding: 20px 12px; color: var(--gray-500); font-size: 13px; text-align: center; }
+        .docs-stats { font-size: 12px; color: var(--gray-500); }
+        .e2e-layout { display: grid; grid-template-columns: 360px 1fr; gap: 12px; min-height: 560px; }
+        .e2e-sidebar { border: 1px solid var(--gray-200); border-radius: 10px; padding: 12px; background: var(--gray-50); display: flex; flex-direction: column; gap: 10px; min-height: 0; }
+        .e2e-filters { display: grid; gap: 8px; }
+        .e2e-list { border: 1px solid var(--gray-200); border-radius: 8px; background: white; overflow: auto; min-height: 0; flex: 1; }
+        .e2e-item { padding: 10px 12px; border-bottom: 1px solid var(--gray-100); cursor: pointer; }
+        .e2e-item:last-child { border-bottom: none; }
+        .e2e-item:hover { background: var(--gray-50); }
+        .e2e-item.active { background: #e0e7ff; border-left: 3px solid var(--primary); padding-left: 9px; }
+        .e2e-item-title { font-size: 13px; font-weight: 600; color: var(--gray-800); margin-bottom: 2px; }
+        .e2e-item-meta { font-size: 11px; color: var(--gray-500); }
+        .e2e-main { border: 1px solid var(--gray-200); border-radius: 10px; background: var(--gray-50); padding: 12px; display: flex; flex-direction: column; gap: 10px; min-height: 0; }
+        .e2e-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+        .e2e-title { font-size: 14px; font-weight: 600; color: var(--gray-800); }
+        .e2e-meta { font-size: 12px; color: var(--gray-500); }
+        .e2e-stats { font-size: 12px; color: var(--gray-500); }
+        .e2e-findings { border: 1px solid var(--gray-200); border-radius: 8px; background: white; padding: 10px; max-height: 260px; overflow: auto; }
+        .e2e-finding { font-size: 12px; padding: 6px 0; border-bottom: 1px solid var(--gray-100); }
+        .e2e-finding:last-child { border-bottom: none; }
+        .bf-layout { display: grid; grid-template-columns: 390px 1fr; gap: 12px; min-height: 620px; }
+        .bf-sidebar { border: 1px solid var(--gray-200); border-radius: 10px; padding: 12px; background: var(--gray-50); display: flex; flex-direction: column; gap: 10px; min-height: 0; }
+        .bf-filters { display: grid; gap: 8px; }
+        .bf-list { border: 1px solid var(--gray-200); border-radius: 8px; background: white; overflow: auto; min-height: 0; flex: 1; }
+        .bf-item { padding: 10px 12px; border-bottom: 1px solid var(--gray-100); cursor: pointer; }
+        .bf-item:last-child { border-bottom: none; }
+        .bf-item:hover { background: var(--gray-50); }
+        .bf-item.active { background: #e0e7ff; border-left: 3px solid var(--primary); padding-left: 9px; }
+        .bf-item-title { font-size: 13px; font-weight: 600; color: var(--gray-800); margin-bottom: 2px; }
+        .bf-item-meta { font-size: 11px; color: var(--gray-500); }
+        .bf-main { border: 1px solid var(--gray-200); border-radius: 10px; background: var(--gray-50); padding: 12px; display: flex; flex-direction: column; gap: 10px; min-height: 0; }
+        .bf-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+        .bf-title { font-size: 14px; font-weight: 600; color: var(--gray-800); }
+        .bf-meta { font-size: 12px; color: var(--gray-500); }
+        .bf-form { display: grid; gap: 8px; border: 1px solid var(--gray-200); border-radius: 8px; background: white; padding: 10px; }
+        .bf-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+        .bf-linked { border: 1px solid var(--gray-200); border-radius: 8px; background: white; padding: 10px; font-size: 12px; color: var(--gray-700); }
+        .bf-stats { font-size: 12px; color: var(--gray-500); }
+        .bf-pill { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+        .bf-severity-low { background: #dbeafe; color: #1e40af; }
+        .bf-severity-medium { background: #fef3c7; color: #92400e; }
+        .bf-severity-high { background: #fed7aa; color: #9a3412; }
+        .bf-severity-critical { background: #fee2e2; color: #991b1b; }
+        .bf-status-open { background: #fef3c7; color: #92400e; }
+        .bf-status-in_progress { background: #dbeafe; color: #1e40af; }
+        .bf-status-resolved { background: #d1fae5; color: #065f46; }
+        .bf-status-rejected { background: #e5e7eb; color: #374151; }
+
+        /* Progress Ring */
+        .progress-ring { position: relative; width: 80px; height: 80px; }
+        .progress-ring svg { transform: rotate(-90deg); }
+        .progress-ring-bg { fill: none; stroke: var(--gray-200); stroke-width: 8; }
+        .progress-ring-fill { fill: none; stroke: var(--success); stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 0.5s; }
+        .progress-ring-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 18px; font-weight: 700; }
+
+        /* Empty State */
+        .empty-state { text-align: center; padding: 80px 40px; }
+        .empty-state-icon { font-size: 64px; margin-bottom: 24px; }
+        .empty-state-title { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
+        .empty-state-desc { color: var(--gray-500); margin-bottom: 24px; }
+        @media (max-width: 1024px) {
+            .packet-viewer-grid { grid-template-columns: 1fr; }
+            .docs-explorer-layout { grid-template-columns: 1fr; }
+            .docs-sidebar { max-height: 320px; }
+            .e2e-layout { grid-template-columns: 1fr; }
+            .e2e-sidebar { max-height: 320px; }
+            .bf-layout { grid-template-columns: 1fr; }
+            .bf-sidebar { max-height: 380px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">WBS<span>Manager</span></div>
+        <div class="header-divider"></div>
+        <div class="project-info">
+            <div class="project-name" id="project-name">Loading...</div>
+            <div class="project-meta" id="project-meta"></div>
+        </div>
+        <div class="header-stats">
+            <div class="stat">
+                <div class="stat-value pending" id="stat-pending">0</div>
+                <div class="stat-label">Pending</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value progress" id="stat-progress">0</div>
+                <div class="stat-label">In Progress</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value done" id="stat-done">0</div>
+                <div class="stat-label">Complete</div>
+            </div>
+        </div>
+        <div class="header-actions">
+            <span class="refresh-indicator" id="last-refresh">Last refresh: --</span>
+            <button class="btn btn-ghost btn-icon" onclick="refreshData()" title="Refresh">↻</button>
+            <button class="btn btn-success" onclick="showCloseoutL2()">L2 Closeout</button>
+            <button class="btn btn-secondary" onclick="showAddCategory()">+ Category</button>
+            <button class="btn btn-primary" onclick="showAddPacket()">+ Work Item</button>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <span class="sidebar-title">Work Areas</span>
+            </div>
+            <div class="sidebar-list" id="sidebar-list"></div>
+            <div class="sidebar-footer">
+                <button class="btn btn-secondary" style="width:100%" onclick="showAddCategory()">+ Add Work Area</button>
+            </div>
+        </div>
+        <div class="content">
+            <div class="content-header">
+                <div class="content-title" id="content-title">All Work Items</div>
+                <div style="display:flex;gap:8px">
+                    <button class="btn btn-sm btn-ghost" onclick="showDocsExplorer()">Docs Explorer</button>
+                    <button class="btn btn-sm btn-ghost" onclick="showE2ERuns()">E2E Runs</button>
+                    <button class="btn btn-sm btn-ghost" onclick="showBreakFixPanel()">Break-Fix</button>
+                    <button class="btn btn-sm btn-ghost" onclick="showDepsGraph()">Deps Graph</button>
+                    <button class="btn btn-sm btn-ghost" onclick="expandAll()">Expand All</button>
+                    <button class="btn btn-sm btn-ghost" onclick="collapseAll()">Collapse All</button>
+                </div>
+            </div>
+            <div class="content-body">
+                <div class="grid-wrapper">
+                    <div id="wbs-grid" class="ag-theme-alpine" style="height:100%;width:100%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Category Modal -->
+    <div class="modal-overlay" id="modal-category">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title">Add Work Area</span>
+                <button class="modal-close" onclick="closeModal('modal-category')">&times;</button>
+            </div>
+            <form onsubmit="saveCategory(event)">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Area ID</label>
+                        <input type="text" class="form-input" id="cat-id" required placeholder="e.g., BACKEND, UI, TESTING">
+                        <div class="form-hint">Short identifier (auto-uppercased)</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Title</label>
+                        <input type="text" class="form-input" id="cat-title" required placeholder="e.g., Backend Development">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-textarea" id="cat-desc" placeholder="What work belongs in this area?"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-category')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Work Area</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Packet Modal -->
+    <div class="modal-overlay" id="modal-packet">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title" id="packet-modal-title">Add Work Item</span>
+                <button class="modal-close" onclick="closeModal('modal-packet')">&times;</button>
+            </div>
+            <form onsubmit="savePacket(event)">
+                <input type="hidden" id="pkt-edit-mode">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Work Area</label>
+                        <select class="form-select" id="pkt-area" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Title</label>
+                        <input type="text" class="form-input" id="pkt-title" required placeholder="What needs to be delivered?">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Scope / Description</label>
+                        <textarea class="form-textarea" id="pkt-scope" placeholder="Describe the deliverable, acceptance criteria, and expected output..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Dependencies (optional)</label>
+                        <select class="form-select" id="pkt-deps" multiple style="height:100px"></select>
+                        <div class="form-hint">Hold Ctrl/Cmd to select multiple items this depends on</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-packet')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Action Modal -->
+    <div class="modal-overlay" id="modal-action">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title" id="action-title">Claim Work Item</span>
+                <button class="modal-close" onclick="closeModal('modal-action')">&times;</button>
+            </div>
+            <form onsubmit="submitAction(event)">
+                <input type="hidden" id="action-id">
+                <input type="hidden" id="action-type">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Operator Name</label>
+                        <input type="text" class="form-input" id="action-agent" required placeholder="Enter operator name">
+                    </div>
+                    <div class="form-group" id="action-notes-group">
+                        <label class="form-label">Completion Notes</label>
+                        <textarea class="form-textarea" id="action-notes" placeholder="What was completed? Include evidence file paths."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-action')">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="action-submit">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Packet Viewer Modal -->
+    <div class="modal-overlay" id="modal-packet-viewer">
+        <div class="modal" style="max-width: 960px;">
+            <div class="modal-header">
+                <span class="modal-title" id="viewer-title">Packet Viewer</span>
+                <button class="modal-close" onclick="closeModal('modal-packet-viewer')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="packet-viewer-grid">
+                    <div class="viewer-card">
+                        <div class="viewer-label">Summary</div>
+                        <div class="viewer-value" id="viewer-summary">-</div>
+                    </div>
+                    <div class="viewer-card">
+                        <div class="viewer-label">Status</div>
+                        <div class="viewer-value" id="viewer-status">-</div>
+                    </div>
+                    <div class="viewer-card">
+                        <div class="viewer-label">Notes</div>
+                        <div class="viewer-value" id="viewer-notes">-</div>
+                    </div>
+                    <div class="viewer-card">
+                        <div class="viewer-label">Dependencies / Dependents</div>
+                        <div class="viewer-value" id="viewer-deps">-</div>
+                    </div>
+                </div>
+                <div class="viewer-card" style="margin-top: 12px;">
+                    <div class="viewer-label">Scope</div>
+                    <div class="viewer-value" id="viewer-scope">-</div>
+                </div>
+                <div class="viewer-card" style="margin-top: 12px;">
+                    <div class="viewer-label">Canonical Packet JSON</div>
+                    <pre class="viewer-file" id="viewer-packet-json">-</pre>
+                </div>
+                <div class="viewer-card" style="margin-top: 12px;">
+                    <div class="viewer-label">Structured Fields</div>
+                    <pre class="viewer-file" id="viewer-structured">-</pre>
+                </div>
+                <div class="viewer-card" style="margin-top: 12px;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+                        <div class="viewer-label" style="margin-bottom:0">Linked Documents</div>
+                        <button class="btn btn-sm btn-ghost" type="button" onclick="showDocsExplorer()">Open Full Explorer</button>
+                    </div>
+                    <div id="viewer-docs">No documents detected.</div>
+                </div>
+                <div class="viewer-card" style="margin-top: 12px;">
+                    <div class="viewer-label">Packet Events</div>
+                    <div class="viewer-events" id="viewer-events"></div>
+                </div>
+                <div class="viewer-card" style="margin-top: 12px;">
+                    <div class="viewer-label">Document Preview</div>
+                    <pre class="viewer-file" id="viewer-file">Select a linked document to preview.</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Documentation Explorer Modal -->
+    <div class="modal-overlay" id="modal-docs-explorer">
+        <div class="modal" style="max-width: 1200px;">
+            <div class="modal-header">
+                <span class="modal-title">Project Documentation Explorer</span>
+                <button class="modal-close" onclick="closeModal('modal-docs-explorer')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="docs-explorer-layout">
+                    <div class="docs-sidebar">
+                        <div class="docs-filters">
+                            <input type="text" class="form-input" id="docs-search" placeholder="Search path, title, summary...">
+                            <select class="form-select" id="docs-category"></select>
+                            <select class="form-select" id="docs-kind"></select>
+                            <div style="display:flex;gap:8px">
+                                <button class="btn btn-sm btn-primary" type="button" onclick="reloadDocsIndex()">Search</button>
+                                <button class="btn btn-sm btn-ghost" type="button" onclick="resetDocsFilters()">Reset</button>
+                            </div>
+                        </div>
+                        <div class="docs-stats" id="docs-stats">Loading...</div>
+                        <div class="docs-list" id="docs-list"></div>
+                    </div>
+                    <div class="docs-main">
+                        <div class="docs-main-head">
+                            <div>
+                                <div class="docs-main-title" id="docs-selected-title">Select a document</div>
+                                <div class="docs-main-meta" id="docs-selected-meta">-</div>
+                            </div>
+                            <button class="btn btn-sm btn-ghost" type="button" id="docs-reload-selected" onclick="reloadSelectedDoc()" disabled>Reload</button>
+                        </div>
+                        <pre class="viewer-file" id="docs-preview">Select a document from the list to preview.</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- E2E Runs Modal -->
+    <div class="modal-overlay" id="modal-e2e-runs">
+        <div class="modal" style="max-width: 1200px;">
+            <div class="modal-header">
+                <span class="modal-title">E2E Test Runs</span>
+                <button class="modal-close" onclick="closeModal('modal-e2e-runs')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="e2e-layout">
+                    <div class="e2e-sidebar">
+                        <div class="e2e-filters">
+                            <input type="text" class="form-input" id="e2e-suite" placeholder="Filter by suite...">
+                            <select class="form-select" id="e2e-status">
+                                <option value="all">All statuses</option>
+                                <option value="pass">pass</option>
+                                <option value="fail">fail</option>
+                                <option value="error">error</option>
+                            </select>
+                            <div style="display:flex;gap:8px">
+                                <button class="btn btn-sm btn-primary" type="button" onclick="reloadE2ERuns()">Search</button>
+                                <button class="btn btn-sm btn-ghost" type="button" onclick="resetE2EFilters()">Reset</button>
+                            </div>
+                        </div>
+                        <div class="e2e-stats" id="e2e-stats">Loading...</div>
+                        <div class="e2e-list" id="e2e-list"></div>
+                    </div>
+                    <div class="e2e-main">
+                        <div class="e2e-head">
+                            <div>
+                                <div class="e2e-title" id="e2e-selected-title">Select a run</div>
+                                <div class="e2e-meta" id="e2e-selected-meta">-</div>
+                            </div>
+                            <button class="btn btn-sm btn-ghost" type="button" id="e2e-reload-selected" onclick="reloadSelectedE2ERun()" disabled>Reload</button>
+                        </div>
+                        <pre class="viewer-file" id="e2e-run-json">Select an E2E run to inspect details.</pre>
+                        <div class="viewer-card">
+                            <div class="viewer-label">Findings</div>
+                            <div class="e2e-findings" id="e2e-findings">No run selected.</div>
+                        </div>
+                        <div class="viewer-card">
+                            <div class="viewer-label">Artifacts</div>
+                            <div class="viewer-value" id="e2e-artifacts">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Break-Fix Modal -->
+    <div class="modal-overlay" id="modal-break-fix">
+        <div class="modal" style="max-width: 1300px;">
+            <div class="modal-header">
+                <span class="modal-title">Break-Fix Queue</span>
+                <button class="modal-close" onclick="closeModal('modal-break-fix')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="bf-layout">
+                    <div class="bf-sidebar">
+                        <div class="bf-filters">
+                            <select class="form-select" id="bf-filter-status">
+                                <option value="all">All statuses</option>
+                                <option value="open">open</option>
+                                <option value="in_progress">in_progress</option>
+                                <option value="resolved">resolved</option>
+                                <option value="rejected">rejected</option>
+                            </select>
+                            <select class="form-select" id="bf-filter-severity">
+                                <option value="all">All severities</option>
+                                <option value="low">low</option>
+                                <option value="medium">medium</option>
+                                <option value="high">high</option>
+                                <option value="critical">critical</option>
+                            </select>
+                            <input type="text" class="form-input" id="bf-filter-packet" placeholder="Filter by packet id...">
+                            <div style="display:flex;gap:8px">
+                                <button class="btn btn-sm btn-primary" type="button" onclick="reloadBreakFixItems()">Search</button>
+                                <button class="btn btn-sm btn-ghost" type="button" onclick="resetBreakFixFilters()">Reset</button>
+                            </div>
+                        </div>
+                        <div class="bf-stats" id="bf-stats">Loading...</div>
+                        <div class="bf-list" id="bf-list"></div>
+                        <div class="bf-form">
+                            <div class="viewer-label">Create Break-Fix Item</div>
+                            <input type="text" class="form-input" id="bf-open-actor" placeholder="Actor">
+                            <input type="text" class="form-input" id="bf-open-title" placeholder="Title">
+                            <textarea class="form-textarea" id="bf-open-description" placeholder="Description"></textarea>
+                            <select class="form-select" id="bf-open-severity">
+                                <option value="medium">medium</option>
+                                <option value="low">low</option>
+                                <option value="high">high</option>
+                                <option value="critical">critical</option>
+                            </select>
+                            <input type="text" class="form-input" id="bf-open-packet" placeholder="Primary packet id (optional)">
+                            <input type="text" class="form-input" id="bf-open-linked" placeholder="Linked packets CSV (optional)">
+                            <input type="text" class="form-input" id="bf-open-evidence" placeholder="Evidence CSV (optional)">
+                            <textarea class="form-textarea" id="bf-open-findings" placeholder="Findings (one per line)"></textarea>
+                            <button class="btn btn-sm btn-success" type="button" onclick="submitBreakFixOpen()">Create Item</button>
+                        </div>
+                    </div>
+                    <div class="bf-main">
+                        <div class="bf-head">
+                            <div>
+                                <div class="bf-title" id="bf-selected-title">Select a break-fix item</div>
+                                <div class="bf-meta" id="bf-selected-meta">-</div>
+                            </div>
+                            <button class="btn btn-sm btn-ghost" type="button" id="bf-reload-selected" onclick="reloadSelectedBreakFix()" disabled>Reload</button>
+                        </div>
+                        <div class="bf-linked" id="bf-linked-packets">No item selected.</div>
+                        <pre class="viewer-file" id="bf-item-json">Select an item to inspect full details.</pre>
+                        <div class="viewer-card">
+                            <div class="viewer-label">Evidence</div>
+                            <div class="viewer-value" id="bf-evidence">-</div>
+                        </div>
+                        <div class="viewer-card">
+                            <div class="viewer-label">Findings</div>
+                            <div class="e2e-findings" id="bf-findings">No item selected.</div>
+                        </div>
+                        <div class="bf-form">
+                            <div class="viewer-label">Lifecycle Actions</div>
+                            <input type="text" class="form-input" id="bf-action-actor" placeholder="Actor">
+                            <textarea class="form-textarea" id="bf-action-note" placeholder="Action note (for note/start/reject/resolve append)"></textarea>
+                            <input type="text" class="form-input" id="bf-action-summary" placeholder="Resolve summary">
+                            <input type="text" class="form-input" id="bf-action-reason" placeholder="Reject reason">
+                            <input type="text" class="form-input" id="bf-action-owner" placeholder="Owner override for start (optional)">
+                            <input type="text" class="form-input" id="bf-action-evidence" placeholder="Evidence CSV">
+                            <textarea class="form-textarea" id="bf-action-findings" placeholder="Findings (one per line)"></textarea>
+                            <div class="bf-actions">
+                                <button class="btn btn-sm btn-primary" type="button" onclick="submitBreakFixAction('start')">Start</button>
+                                <button class="btn btn-sm btn-success" type="button" onclick="submitBreakFixAction('resolve')">Resolve</button>
+                                <button class="btn btn-sm btn-secondary" type="button" onclick="submitBreakFixAction('note')">Add Note</button>
+                                <button class="btn btn-sm" style="background: var(--danger); color: white;" type="button" onclick="submitBreakFixAction('reject')">Reject</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dependency Graph Modal -->
+    <div class="modal-overlay" id="modal-deps-graph">
+        <div class="modal" style="max-width: 960px;">
+            <div class="modal-header">
+                <span class="modal-title">Dependency Graph</span>
+                <button class="modal-close" onclick="closeModal('modal-deps-graph')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <pre class="viewer-file" id="deps-graph-content">Loading...</pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- Level-2 Closeout Modal -->
+    <div class="modal-overlay" id="modal-closeout-l2">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title">Level-2 Drift Closeout</span>
+                <button class="modal-close" onclick="closeModal('modal-closeout-l2')">&times;</button>
+            </div>
+            <form onsubmit="submitCloseoutL2(event)">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Level-2 Area</label>
+                        <select class="form-select" id="l2-area" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Operator Name</label>
+                        <input type="text" class="form-input" id="l2-agent" required placeholder="Enter operator name">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Drift Assessment Path</label>
+                        <input type="text" class="form-input" id="l2-assessment-path" required placeholder="docs/codex-migration/drift-wbs2.md">
+                        <div class="form-hint">Must include all required sections (Scope Reviewed, Expected vs Delivered, Drift Assessment, Evidence Reviewed, Residual Risks, Immediate Next Actions).</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Closeout Notes (optional)</label>
+                        <textarea class="form-textarea" id="l2-notes" placeholder="Summary of closeout decision and any follow-up context."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-closeout-l2')">Cancel</button>
+                    <button type="submit" class="btn btn-success">Record Closeout</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Suppress license warning for demo
+        agGrid.LicenseManager?.setLicenseKey?.('');
+
+        let gridApi = null;
+        let wbsData = { areas: [], packets: [], deps: {}, counts: {} };
+        let selectedArea = null;
+        let docsIndex = { documents: [], categories: [], kinds: [], total: 0 };
+        let docsSelectedPath = '';
+        let e2eRunsIndex = { runs: [], total: 0, updated_at: null };
+        let e2eSelectedRunId = '';
+        let breakFixIndex = { items: [], summary: {} };
+        let breakFixSelectedId = '';
+
+        // Toast
+        function toast(msg, type = '') {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = 'toast show ' + type;
+            setTimeout(() => t.className = 'toast', 3000);
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function formatBytes(bytes) {
+            const n = Number(bytes || 0);
+            if (n < 1024) return `${n} B`;
+            if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
+            return `${(n / (1024 * 1024)).toFixed(1)} MB`;
+        }
+
+        function formatTs(value) {
+            if (!value) return '-';
+            const d = new Date(value);
+            if (Number.isNaN(d.getTime())) return value;
+            return d.toLocaleString();
+        }
+
+        function formatDuration(sec) {
+            const n = Number(sec || 0);
+            if (!Number.isFinite(n)) return '-';
+            return `${n.toFixed(2)}s`;
+        }
+
+        function csvItems(raw) {
+            return String(raw || '')
+                .split(',')
+                .map(v => v.trim())
+                .filter(Boolean);
+        }
+
+        function lineItems(raw) {
+            return String(raw || '')
+                .split('\n')
+                .map(v => v.trim())
+                .filter(Boolean);
+        }
+
+        // Modal
+        function showModal(id) { document.getElementById(id).classList.add('show'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+        // Initialize Grid
+        function initGrid() {
+            const columnDefs = [
+                {
+                    field: 'wbs_ref',
+                    headerName: 'WBS #',
+                    width: 120,
+                    cellRenderer: 'agGroupCellRenderer',
+                    cellRendererParams: { suppressCount: true },
+                    cellClass: 'wbs-number'
+                },
+                { field: 'title', headerName: 'Title', flex: 2, editable: true },
+                { field: 'scope', headerName: 'Scope', flex: 3, editable: true, cellEditor: 'agLargeTextCellEditor' },
+                {
+                    field: 'status',
+                    headerName: 'Status',
+                    width: 140,
+                    cellRenderer: params => {
+                        if (!params.value || params.data.type === 'area') return '';
+                        return `<span class="status-badge status-${params.value}">${params.value.replace('_', ' ')}</span>`;
+                    }
+                },
+                { field: 'assigned_to', headerName: 'Assigned', width: 120 },
+                {
+                    headerName: 'Actions',
+                    width: 360,
+                    cellRenderer: params => {
+                        if (params.data.type === 'area') {
+                            const areaData = wbsData.areas.find(a => a.id === params.data.id) || {};
+                            const closeoutLabel = areaData.closeout ? 'Re-close L2' : 'Closeout L2';
+                            return `<button class="grid-btn grid-btn-edit" onclick="showAddPacketToArea('${params.data.id}')">+ Add Item</button> <button class="grid-btn grid-btn-done" onclick="showCloseoutL2('${params.data.id}')">${closeoutLabel}</button>`;
+                        }
+                        const status = params.data.status;
+                        if (status === 'pending') {
+                            const blocked = isBlocked(params.data.id);
+                            if (blocked) {
+                                return `<span style="color:var(--gray-400);margin-right:8px;">Blocked</span><button class="grid-btn grid-btn-edit" onclick="showPacketViewer('${params.data.id}')">View</button>`;
+                            }
+                            return `<button class="grid-btn grid-btn-claim" onclick="showAction('${params.data.id}', 'claim')">Claim</button> <button class="grid-btn grid-btn-edit" onclick="showPacketViewer('${params.data.id}')">View</button>`;
+                        }
+                        if (status === 'in_progress') {
+                            return `<button class="grid-btn grid-btn-done" onclick="showAction('${params.data.id}', 'done')">Complete</button> <button class="grid-btn grid-btn-edit" onclick="showPacketViewer('${params.data.id}')">View</button>`;
+                        }
+                        return `<button class="grid-btn grid-btn-edit" onclick="showPacketViewer('${params.data.id}')">View</button>`;
+                    }
+                }
+            ];
+
+            const gridOptions = {
+                columnDefs,
+                defaultColDef: {
+                    resizable: true,
+                    sortable: true
+                },
+                treeData: true,
+                getDataPath: data => data.path,
+                groupDefaultExpanded: 1,
+                animateRows: true,
+                rowSelection: 'multiple',
+                getRowId: params => params.data.id,
+                getRowClass: params => params.data.type === 'area' ? 'row-category' : '',
+                onCellValueChanged: onCellEdit
+            };
+
+            gridApi = agGrid.createGrid(document.getElementById('wbs-grid'), gridOptions);
+        }
+
+        // Check if packet is blocked
+        function isBlocked(packetId) {
+            const deps = wbsData.deps[packetId] || [];
+            return deps.some(depId => {
+                const pkt = wbsData.packets.find(p => p.id === depId);
+                return pkt && pkt.status !== 'done';
+            });
+        }
+
+        // Cell edit handler
+        async function onCellEdit(event) {
+            const { data, colDef, newValue } = event;
+            if (data.type === 'area') {
+                await fetch('/api/edit-area', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: data.id, field: colDef.field, value: newValue })
+                });
+            } else {
+                await fetch('/api/edit-packet', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: data.id, field: colDef.field, value: newValue })
+                });
+            }
+            toast('Saved');
+        }
+
+        // Load data
+        async function refreshData() {
+            try {
+                const res = await fetch('/api/status');
+                const data = await res.json();
+                const refreshedAt = new Date();
+
+                document.getElementById('project-name').textContent = data.metadata?.project_name || 'Untitled Project';
+                const bfSummary = data.break_fix_summary || {};
+                document.getElementById('project-meta').textContent =
+                    `Last updated: ${refreshedAt.toLocaleString()} | break-fix active: ${bfSummary.active || 0}`;
+                document.getElementById('last-refresh').textContent = `Last refresh: ${refreshedAt.toLocaleTimeString()}`;
+
+                wbsData.areas = data.areas || [];
+                wbsData.deps = data.dependencies || {};
+                wbsData.packets = [];
+                wbsData.counts = data.counts || {};
+
+                // Build flat list with paths for tree
+                const rowData = [];
+                let areaNum = 0;
+
+                wbsData.areas.forEach(area => {
+                    areaNum++;
+                    const areaWbs = `${areaNum}.0`;
+
+                    rowData.push({
+                        id: area.id,
+                        type: 'area',
+                        wbs_ref: areaWbs,
+                        title: area.title,
+                        scope: area.description || '',
+                        status: '',
+                        assigned_to: '',
+                        path: [area.id],
+                        packet_count: (area.packets || []).length
+                    });
+
+                    (area.packets || []).forEach((pkt, i) => {
+                        const pktWbs = `${areaNum}.${i + 1}`;
+                        const activeBreakFix = Number(pkt.break_fix_active || 0);
+                        const titleWithFlag = activeBreakFix > 0 ? `${pkt.title} [BF:${activeBreakFix}]` : pkt.title;
+                        wbsData.packets.push({ ...pkt, area_id: area.id, wbs_ref: pktWbs, title: titleWithFlag });
+
+                        rowData.push({
+                            id: pkt.id,
+                            type: 'packet',
+                            wbs_ref: pktWbs,
+                            title: titleWithFlag,
+                            scope: pkt.scope || '',
+                            status: pkt.status || 'pending',
+                            assigned_to: pkt.assigned_to || '',
+                            path: [area.id, pkt.id]
+                        });
+                    });
+                });
+
+                gridApi.setGridOption('rowData', rowData);
+
+                // Update stats
+                const counts = data.counts || {};
+                document.getElementById('stat-pending').textContent = counts.pending || 0;
+                document.getElementById('stat-progress').textContent = counts.in_progress || 0;
+                document.getElementById('stat-done').textContent = counts.done || 0;
+
+                // Update sidebar
+                renderSidebar();
+
+                // Update dropdowns
+                updateDropdowns();
+
+            } catch (e) {
+                console.error(e);
+                toast('Failed to load data', 'error');
+            }
+        }
+
+        // Render sidebar
+        function renderSidebar() {
+            const list = document.getElementById('sidebar-list');
+
+            // All items option
+            let html = `
+                <div class="sidebar-item ${selectedArea === null ? 'active' : ''}" onclick="filterByArea(null)">
+                    <div class="sidebar-item-icon">All</div>
+                    <div class="sidebar-item-content">
+                        <div class="sidebar-item-title">All Work Items</div>
+                        <div class="sidebar-item-meta">${wbsData.packets.length} items</div>
+                    </div>
+                </div>`;
+
+            wbsData.areas.forEach((area, i) => {
+                const count = (area.packets || []).length;
+                const done = (area.packets || []).filter(p => p.status === 'done').length;
+                const activeBreakFix = (area.packets || []).reduce((acc, p) => acc + Number(p.break_fix_active || 0), 0);
+                const closeoutStatus = area.closeout ? ' | L2 closed' : '';
+                html += `
+                    <div class="sidebar-item ${selectedArea === area.id ? 'active' : ''}" onclick="filterByArea('${area.id}')">
+                        <div class="sidebar-item-icon">${i + 1}</div>
+                        <div class="sidebar-item-content">
+                            <div class="sidebar-item-title">${area.title}</div>
+                            <div class="sidebar-item-meta">${done}/${count} complete | BF active ${activeBreakFix}${closeoutStatus}</div>
+                        </div>
+                        <span class="sidebar-item-count">${count}</span>
+                    </div>`;
+            });
+
+            list.innerHTML = html;
+        }
+
+        // Filter by area
+        function filterByArea(areaId) {
+            selectedArea = areaId;
+            renderSidebar();
+
+            if (areaId === null) {
+                document.getElementById('content-title').textContent = 'All Work Items';
+                gridApi.setGridOption('isExternalFilterPresent', () => false);
+            } else {
+                const area = wbsData.areas.find(a => a.id === areaId);
+                document.getElementById('content-title').textContent = area ? area.title : areaId;
+                gridApi.setGridOption('isExternalFilterPresent', () => true);
+                gridApi.setGridOption('doesExternalFilterPass', node => {
+                    return node.data.path[0] === areaId;
+                });
+            }
+            gridApi.onFilterChanged();
+        }
+
+        // Update dropdowns
+        function updateDropdowns() {
+            // Area dropdown
+            const areaSelect = document.getElementById('pkt-area');
+            areaSelect.innerHTML = wbsData.areas.map(a =>
+                `<option value="${a.id}">${a.title}</option>`
+            ).join('');
+
+            // Dependencies dropdown
+            const depsSelect = document.getElementById('pkt-deps');
+            depsSelect.innerHTML = wbsData.packets.map(p =>
+                `<option value="${p.id}">${p.wbs_ref} - ${p.title}</option>`
+            ).join('');
+
+            const l2AreaSelect = document.getElementById('l2-area');
+            if (l2AreaSelect) {
+                l2AreaSelect.innerHTML = wbsData.areas.map(a => {
+                    const status = a.closeout ? ' (closed)' : '';
+                    return `<option value="${a.id}">${a.id} - ${a.title}${status}</option>`;
+                }).join('');
+            }
+        }
+
+        // Expand/Collapse
+        function expandAll() { gridApi.expandAll(); }
+        function collapseAll() { gridApi.collapseAll(); }
+
+        // Add Category
+        function showAddCategory() {
+            document.getElementById('cat-id').value = '';
+            document.getElementById('cat-title').value = '';
+            document.getElementById('cat-desc').value = '';
+            showModal('modal-category');
+            document.getElementById('cat-id').focus();
+        }
+
+        async function saveCategory(e) {
+            e.preventDefault();
+            const data = {
+                id: document.getElementById('cat-id').value.toUpperCase().replace(/[^A-Z0-9]/g, ''),
+                title: document.getElementById('cat-title').value,
+                description: document.getElementById('cat-desc').value
+            };
+
+            try {
+                const res = await fetch('/api/add-area', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (!res.ok) {
+                    toast(`Server error: ${res.status}`, 'error');
+                    return;
+                }
+
+                const text = await res.text();
+                if (!text) {
+                    toast('Empty response from server', 'error');
+                    return;
+                }
+
+                const result = JSON.parse(text);
+                if (result.success) {
+                    toast('Work area added', 'success');
+                    closeModal('modal-category');
+                    refreshData();
+                } else {
+                    toast(result.message || 'Failed', 'error');
+                }
+            } catch (err) {
+                console.error('Save error:', err);
+                toast('Error: ' + err.message, 'error');
+            }
+        }
+
+        // Add Packet
+        function showAddPacket() {
+            document.getElementById('packet-modal-title').textContent = 'Add Work Item';
+            document.getElementById('pkt-edit-mode').value = '';
+            document.getElementById('pkt-title').value = '';
+            document.getElementById('pkt-scope').value = '';
+            document.getElementById('pkt-deps').selectedIndex = -1;
+            if (selectedArea) {
+                document.getElementById('pkt-area').value = selectedArea;
+            }
+            showModal('modal-packet');
+            document.getElementById('pkt-title').focus();
+        }
+
+        function showAddPacketToArea(areaId) {
+            document.getElementById('pkt-area').value = areaId;
+            showAddPacket();
+        }
+
+        async function savePacket(e) {
+            e.preventDefault();
+            const areaId = document.getElementById('pkt-area').value;
+            const title = document.getElementById('pkt-title').value;
+            const scope = document.getElementById('pkt-scope').value;
+
+            if (!areaId) {
+                toast('Please select a work area first', 'error');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/add-packet', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ area_id: areaId, title, scope })
+                });
+
+                if (!res.ok) {
+                    toast(`Server error: ${res.status}`, 'error');
+                    return;
+                }
+
+                const text = await res.text();
+                const result = text ? JSON.parse(text) : { success: false, message: 'Empty response' };
+
+                if (!result.success) {
+                    toast(result.message || 'Failed', 'error');
+                    return;
+                }
+
+                // Add dependencies
+                const deps = Array.from(document.getElementById('pkt-deps').selectedOptions).map(o => o.value);
+                const packetId = result.message.match(/Packet (\S+) added/)?.[1];
+                for (const dep of deps) {
+                    await fetch('/api/add-dep', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ packet: packetId, depends_on: dep })
+                    });
+                }
+
+                toast('Work item added', 'success');
+                closeModal('modal-packet');
+                refreshData();
+            } catch (err) {
+                console.error('Save error:', err);
+                toast('Error: ' + err.message, 'error');
+            }
+        }
+
+        // Actions (Claim/Done)
+        function showAction(packetId, type) {
+            document.getElementById('action-id').value = packetId;
+            document.getElementById('action-type').value = type;
+            document.getElementById('action-agent').value =
+                localStorage.getItem('wbs-operator') || localStorage.getItem('wbs-agent') || '';
+            document.getElementById('action-notes').value = '';
+
+            if (type === 'claim') {
+                document.getElementById('action-title').textContent = 'Claim Work Item';
+                document.getElementById('action-notes-group').style.display = 'none';
+                document.getElementById('action-submit').textContent = 'Claim';
+            } else {
+                document.getElementById('action-title').textContent = 'Complete Work Item';
+                document.getElementById('action-notes-group').style.display = 'block';
+                document.getElementById('action-submit').textContent = 'Mark Complete';
+            }
+
+            showModal('modal-action');
+        }
+
+        async function submitAction(e) {
+            e.preventDefault();
+            const packetId = document.getElementById('action-id').value;
+            const type = document.getElementById('action-type').value;
+            const agent = document.getElementById('action-agent').value;
+            const notes = document.getElementById('action-notes').value;
+
+            localStorage.setItem('wbs-operator', agent);
+            localStorage.setItem('wbs-agent', agent); // Backward compatible key
+
+            const data = { packet_id: packetId, agent_name: agent };
+            if (type === 'done') data.notes = notes;
+
+            const res = await fetch(`/api/${type}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await res.json();
+
+            if (result.success) {
+                toast(type === 'claim' ? 'Work item claimed by operator' : 'Work item completed', 'success');
+                closeModal('modal-action');
+                refreshData();
+            } else {
+                toast(result.message || 'Failed', 'error');
+            }
+        }
+
+        function defaultDriftPathForArea(areaId) {
+            if (!areaId) return 'docs/codex-migration/drift-wbs?.md';
+            const match = String(areaId).match(/^(\d+)/);
+            const n = match ? match[1] : areaId;
+            return `docs/codex-migration/drift-wbs${n}.md`;
+        }
+
+        function showCloseoutL2(areaId = null) {
+            const select = document.getElementById('l2-area');
+            if (!wbsData.areas.length) {
+                toast('No Level-2 areas available', 'error');
+                return;
+            }
+            const targetArea = areaId || selectedArea || (wbsData.areas[0] && wbsData.areas[0].id);
+            if (select) {
+                select.value = targetArea;
+            }
+
+            const agent = localStorage.getItem('wbs-operator') || localStorage.getItem('wbs-agent') || '';
+            document.getElementById('l2-agent').value = agent;
+            document.getElementById('l2-assessment-path').value = defaultDriftPathForArea(targetArea);
+            document.getElementById('l2-notes').value = '';
+
+            showModal('modal-closeout-l2');
+            document.getElementById('l2-agent').focus();
+        }
+
+        async function submitCloseoutL2(e) {
+            e.preventDefault();
+            const areaId = document.getElementById('l2-area').value;
+            const agent = document.getElementById('l2-agent').value.trim();
+            const assessmentPath = document.getElementById('l2-assessment-path').value.trim();
+            const notes = document.getElementById('l2-notes').value.trim();
+
+            if (!areaId || !agent || !assessmentPath) {
+                toast('Area, operator, and assessment path are required', 'error');
+                return;
+            }
+
+            localStorage.setItem('wbs-operator', agent);
+            localStorage.setItem('wbs-agent', agent);
+
+            const res = await fetch('/api/closeout-l2', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    area_id: areaId,
+                    agent_name: agent,
+                    assessment_path: assessmentPath,
+                    notes
+                })
+            });
+            const raw = await res.text();
+            let result = null;
+            try {
+                result = raw ? JSON.parse(raw) : null;
+            } catch (_) {
+                result = null;
+            }
+
+            if (!res.ok || !result) {
+                toast(`Closeout API error (HTTP ${res.status})`, 'error');
+                return;
+            }
+            if (!result.success) {
+                toast(result.message || 'Closeout failed', 'error');
+                return;
+            }
+
+            toast('Level-2 closeout recorded', 'success');
+            closeModal('modal-closeout-l2');
+            refreshData();
+        }
+
+        async function loadFileContent(path, targetElementId) {
+            const filePanel = document.getElementById(targetElementId);
+            filePanel.textContent = `Loading ${path}...`;
+
+            const res = await fetch(`/api/file?path=${encodeURIComponent(path)}`);
+            const raw = await res.text();
+            let data = null;
+            try {
+                data = raw ? JSON.parse(raw) : null;
+            } catch (_) {
+                data = null;
+            }
+            if (!res.ok || !data) {
+                filePanel.textContent = `Failed to load file: HTTP ${res.status}.`;
+                return null;
+            }
+            if (!data.success) {
+                filePanel.textContent = `Failed to load file: ${data.message || 'unknown error'}`;
+                return data;
+            }
+            filePanel.textContent = data.content + (data.truncated ? '\n\n[truncated]' : '');
+            return data;
+        }
+
+        async function previewFile(path) {
+            await loadFileContent(path, 'viewer-file');
+        }
+
+        function previewFileFromButton(button) {
+            const encodedPath = button?.dataset?.path || '';
+            if (!encodedPath) return;
+            previewFile(decodeURIComponent(encodedPath));
+        }
+
+        async function openInDocsExplorerFromButton(button) {
+            const encodedPath = button?.dataset?.path || '';
+            if (!encodedPath) return;
+            await showDocsExplorer(decodeURIComponent(encodedPath));
+        }
+
+        function selectDocFromList(el) {
+            const encodedPath = el?.dataset?.path || '';
+            if (!encodedPath) return;
+            selectDocForPreview(decodeURIComponent(encodedPath));
+        }
+
+        async function selectDocForPreview(path) {
+            if (!path) return;
+            docsSelectedPath = path;
+
+            document.querySelectorAll('#docs-list .docs-item').forEach(node => {
+                const encoded = node?.dataset?.path || '';
+                const itemPath = encoded ? decodeURIComponent(encoded) : '';
+                node.classList.toggle('active', itemPath === path);
+            });
+
+            const doc = docsIndex.documents.find(d => d.path === path);
+            if (doc) {
+                document.getElementById('docs-selected-title').textContent = doc.title || doc.path;
+                document.getElementById('docs-selected-meta').textContent =
+                    `${doc.path} | ${doc.kind} | ${formatBytes(doc.size)} | ${doc.updated_at || '-'}`;
+            } else {
+                document.getElementById('docs-selected-title').textContent = path;
+                document.getElementById('docs-selected-meta').textContent = '-';
+            }
+            document.getElementById('docs-reload-selected').disabled = false;
+            await loadFileContent(path, 'docs-preview');
+        }
+
+        function renderDocsList(preferredPath = '') {
+            const listEl = document.getElementById('docs-list');
+            const statsEl = document.getElementById('docs-stats');
+            const docs = docsIndex.documents || [];
+            if (statsEl) {
+                statsEl.textContent = `Showing ${docs.length} of ${docsIndex.total || 0} documents`;
+            }
+
+            if (!docs.length) {
+                listEl.innerHTML = '<div class="docs-empty">No documents match the current filters.</div>';
+                document.getElementById('docs-selected-title').textContent = 'No document selected';
+                document.getElementById('docs-selected-meta').textContent = '-';
+                document.getElementById('docs-preview').textContent = 'No matching documents found.';
+                document.getElementById('docs-reload-selected').disabled = true;
+                docsSelectedPath = '';
+                return;
+            }
+
+            listEl.innerHTML = docs.map(d => {
+                const active = (preferredPath || docsSelectedPath) === d.path ? 'active' : '';
+                const encodedPath = encodeURIComponent(d.path);
+                const summary = d.summary ? `<div class="docs-item-summary">${escapeHtml(d.summary)}</div>` : '';
+                return `
+                    <div class="docs-item ${active}" data-path="${encodedPath}" onclick="selectDocFromList(this)">
+                        <div class="docs-item-title">${escapeHtml(d.title || d.path)}</div>
+                        <div class="docs-item-meta">${escapeHtml(d.path)} | ${escapeHtml(d.kind)} | ${formatBytes(d.size)}</div>
+                        ${summary}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function resetDocsFilters() {
+            document.getElementById('docs-search').value = '';
+            document.getElementById('docs-category').value = 'all';
+            document.getElementById('docs-kind').value = 'all';
+            reloadDocsIndex();
+        }
+
+        async function reloadSelectedDoc() {
+            if (!docsSelectedPath) return;
+            await selectDocForPreview(docsSelectedPath);
+        }
+
+        async function reloadDocsIndex(preferredPath = '') {
+            const searchInput = document.getElementById('docs-search');
+            const categorySelect = document.getElementById('docs-category');
+            const kindSelect = document.getElementById('docs-kind');
+
+            const q = (searchInput?.value || '').trim();
+            const category = (categorySelect?.value || 'all').trim();
+            const kind = (kindSelect?.value || 'all').trim();
+
+            const params = new URLSearchParams();
+            params.set('limit', '5000');
+            if (q) params.set('q', q);
+            if (category && category !== 'all') params.set('category', category);
+            if (kind && kind !== 'all') params.set('kind', kind);
+
+            const listEl = document.getElementById('docs-list');
+            if (listEl) {
+                listEl.innerHTML = '<div class="docs-empty">Loading documentation index...</div>';
+            }
+
+            const res = await fetch(`/api/docs-index?${params.toString()}`);
+            const raw = await res.text();
+            let data = null;
+            try {
+                data = raw ? JSON.parse(raw) : null;
+            } catch (_) {
+                data = null;
+            }
+            if (!res.ok || !data || !data.success) {
+                const msg = data?.message || `Failed to load docs index (HTTP ${res.status})`;
+                if (listEl) {
+                    listEl.innerHTML = `<div class="docs-empty">${escapeHtml(msg)}</div>`;
+                }
+                toast(msg, 'error');
+                return;
+            }
+
+            docsIndex = {
+                documents: data.documents || [],
+                categories: data.categories || [],
+                kinds: data.kinds || [],
+                total: Number(data.total || 0)
+            };
+
+            const priorCategory = categorySelect?.value || 'all';
+            const priorKind = kindSelect?.value || 'all';
+            if (categorySelect) {
+                const options = ['all', ...docsIndex.categories];
+                categorySelect.innerHTML = options.map(opt => (
+                    `<option value="${escapeHtml(opt)}">${opt === 'all' ? 'All categories' : escapeHtml(opt)}</option>`
+                )).join('');
+                categorySelect.value = options.includes(priorCategory) ? priorCategory : 'all';
+            }
+            if (kindSelect) {
+                const options = ['all', ...docsIndex.kinds];
+                kindSelect.innerHTML = options.map(opt => (
+                    `<option value="${escapeHtml(opt)}">${opt === 'all' ? 'All kinds' : escapeHtml(opt)}</option>`
+                )).join('');
+                kindSelect.value = options.includes(priorKind) ? priorKind : 'all';
+            }
+
+            renderDocsList(preferredPath);
+
+            const selectedPath = preferredPath || docsSelectedPath;
+            const existing = docsIndex.documents.find(d => d.path === selectedPath);
+            if (existing) {
+                await selectDocForPreview(existing.path);
+                return;
+            }
+            if (docsIndex.documents.length > 0) {
+                await selectDocForPreview(docsIndex.documents[0].path);
+            }
+        }
+
+        async function showDocsExplorer(initialPath = '') {
+            const searchInput = document.getElementById('docs-search');
+            const categorySelect = document.getElementById('docs-category');
+            const kindSelect = document.getElementById('docs-kind');
+            if (searchInput && !searchInput.dataset.bound) {
+                searchInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        reloadDocsIndex();
+                    }
+                });
+                searchInput.dataset.bound = '1';
+            }
+            if (categorySelect && !categorySelect.dataset.bound) {
+                categorySelect.addEventListener('change', () => reloadDocsIndex());
+                categorySelect.dataset.bound = '1';
+            }
+            if (kindSelect && !kindSelect.dataset.bound) {
+                kindSelect.addEventListener('change', () => reloadDocsIndex());
+                kindSelect.dataset.bound = '1';
+            }
+
+            if (initialPath) {
+                if (searchInput) searchInput.value = '';
+                if (categorySelect) categorySelect.value = 'all';
+                if (kindSelect) kindSelect.value = 'all';
+            }
+
+            showModal('modal-docs-explorer');
+            await reloadDocsIndex(initialPath);
+        }
+
+        async function selectE2ERun(runId) {
+            if (!runId) return;
+            e2eSelectedRunId = runId;
+            document.querySelectorAll('#e2e-list .e2e-item').forEach(node => {
+                node.classList.toggle('active', decodeURIComponent(node.dataset.runId || '') === runId);
+            });
+            const res = await fetch(`/api/e2e/run?id=${encodeURIComponent(runId)}`);
+            const data = await res.json();
+            if (!res.ok || !data || !data.success) {
+                toast(data?.message || `Failed to load E2E run (${res.status})`, 'error');
+                return;
+            }
+            const run = data.run || {};
+            document.getElementById('e2e-selected-title').textContent = `${run.run_id || '-'} | ${run.suite || '-'}`;
+            document.getElementById('e2e-selected-meta').textContent =
+                `${run.status || '-'} | ${formatTs(run.timestamp)} | duration=${formatDuration(run.duration_sec)} | packet=${run.packet_id || '-'}`;
+            document.getElementById('e2e-run-json').textContent = JSON.stringify(run, null, 2);
+            document.getElementById('e2e-reload-selected').disabled = false;
+
+            const findings = run.failures || [];
+            const findingsEl = document.getElementById('e2e-findings');
+            if (!findings.length) {
+                findingsEl.textContent = 'No findings recorded.';
+            } else {
+                findingsEl.innerHTML = findings.map(f => `
+                    <div class="e2e-finding">
+                        <strong>${escapeHtml(f.test_id || 'finding')}</strong><br>
+                        ${escapeHtml(f.message || '-')}<br>
+                        <span style="color:var(--gray-500)">file=${escapeHtml(f.file || '-')} snippet=${escapeHtml(f.snippet || '-')}</span>
+                    </div>
+                `).join('');
+            }
+
+            const artifacts = run.artifacts || [];
+            const artifactHtml = artifacts.length
+                ? artifacts.map(path => `<div class="viewer-doc"><div class="viewer-value">${escapeHtml(path)}</div><button class="grid-btn grid-btn-edit" data-path="${encodeURIComponent(path)}" onclick="previewFileFromButton(this)">Preview</button></div>`).join('')
+                : '-';
+            document.getElementById('e2e-artifacts').innerHTML = artifactHtml;
+        }
+
+        function renderE2EList(preferredRunId = '') {
+            const listEl = document.getElementById('e2e-list');
+            const statsEl = document.getElementById('e2e-stats');
+            const runs = e2eRunsIndex.runs || [];
+            const pass = runs.filter(r => r.status === 'pass').length;
+            const fail = runs.filter(r => r.status !== 'pass').length;
+            statsEl.textContent = `Showing ${runs.length} runs | pass=${pass} | fail/error=${fail} | updated=${formatTs(e2eRunsIndex.updated_at)}`;
+
+            if (!runs.length) {
+                listEl.innerHTML = '<div class="docs-empty">No E2E runs found for current filters.</div>';
+                document.getElementById('e2e-selected-title').textContent = 'No run selected';
+                document.getElementById('e2e-selected-meta').textContent = '-';
+                document.getElementById('e2e-run-json').textContent = 'No matching E2E runs found.';
+                document.getElementById('e2e-findings').textContent = 'No run selected.';
+                document.getElementById('e2e-artifacts').textContent = '-';
+                document.getElementById('e2e-reload-selected').disabled = true;
+                e2eSelectedRunId = '';
+                return;
+            }
+
+            listEl.innerHTML = runs.map(run => {
+                const active = (preferredRunId || e2eSelectedRunId) === run.run_id ? 'active' : '';
+                return `
+                    <div class="e2e-item ${active}" data-run-id="${encodeURIComponent(run.run_id || '')}" onclick="selectE2ERun(decodeURIComponent(this.dataset.runId || ''))">
+                        <div class="e2e-item-title">${escapeHtml(run.suite || '-')} | ${escapeHtml(run.status || '-')}</div>
+                        <div class="e2e-item-meta">${escapeHtml(run.run_id || '-')} | ${formatTs(run.timestamp)} | ${formatDuration(run.duration_sec)}</div>
+                        <div class="e2e-item-meta">summary: pass=${run.summary?.passed || 0}, fail=${run.summary?.failed || 0}, skip=${run.summary?.skipped || 0}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function resetE2EFilters() {
+            document.getElementById('e2e-suite').value = '';
+            document.getElementById('e2e-status').value = 'all';
+            reloadE2ERuns();
+        }
+
+        async function reloadSelectedE2ERun() {
+            if (!e2eSelectedRunId) return;
+            await selectE2ERun(e2eSelectedRunId);
+        }
+
+        async function reloadE2ERuns(preferredRunId = '') {
+            const suite = (document.getElementById('e2e-suite')?.value || '').trim();
+            const status = (document.getElementById('e2e-status')?.value || 'all').trim();
+            const params = new URLSearchParams();
+            params.set('limit', '200');
+            if (suite) params.set('suite', suite);
+            if (status && status !== 'all') params.set('status', status);
+
+            const listEl = document.getElementById('e2e-list');
+            if (listEl) {
+                listEl.innerHTML = '<div class="docs-empty">Loading E2E runs...</div>';
+            }
+
+            const res = await fetch(`/api/e2e/runs?${params.toString()}`);
+            const data = await res.json();
+            if (!res.ok || !data || !data.success) {
+                const msg = data?.message || `Failed to load E2E runs (${res.status})`;
+                if (listEl) listEl.innerHTML = `<div class="docs-empty">${escapeHtml(msg)}</div>`;
+                toast(msg, 'error');
+                return;
+            }
+
+            e2eRunsIndex = {
+                runs: data.runs || [],
+                total: Number(data.total || 0),
+                updated_at: data.updated_at || null
+            };
+            renderE2EList(preferredRunId);
+
+            const selected = preferredRunId || e2eSelectedRunId;
+            const existing = e2eRunsIndex.runs.find(r => r.run_id === selected);
+            if (existing) {
+                await selectE2ERun(existing.run_id);
+            } else if (e2eRunsIndex.runs.length > 0) {
+                await selectE2ERun(e2eRunsIndex.runs[0].run_id);
+            }
+        }
+
+        async function showE2ERuns() {
+            const suiteInput = document.getElementById('e2e-suite');
+            const statusSelect = document.getElementById('e2e-status');
+            if (suiteInput && !suiteInput.dataset.bound) {
+                suiteInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        reloadE2ERuns();
+                    }
+                });
+                suiteInput.dataset.bound = '1';
+            }
+            if (statusSelect && !statusSelect.dataset.bound) {
+                statusSelect.addEventListener('change', () => reloadE2ERuns());
+                statusSelect.dataset.bound = '1';
+            }
+            showModal('modal-e2e-runs');
+            await reloadE2ERuns();
+        }
+
+        function renderBreakFixList(preferredFixId = '') {
+            const listEl = document.getElementById('bf-list');
+            const statsEl = document.getElementById('bf-stats');
+            const items = breakFixIndex.items || [];
+            const summary = breakFixIndex.summary || {};
+            const counts = summary.counts || {};
+            if (statsEl) {
+                statsEl.textContent =
+                    `items=${items.length} | active=${summary.active || 0} | open=${counts.open || 0} in_progress=${counts.in_progress || 0} resolved=${counts.resolved || 0} rejected=${counts.rejected || 0}`;
+            }
+
+            if (!items.length) {
+                listEl.innerHTML = '<div class="docs-empty">No break-fix items for current filters.</div>';
+                document.getElementById('bf-selected-title').textContent = 'No item selected';
+                document.getElementById('bf-selected-meta').textContent = '-';
+                document.getElementById('bf-item-json').textContent = 'No matching break-fix items found.';
+                document.getElementById('bf-linked-packets').textContent = 'No item selected.';
+                document.getElementById('bf-evidence').textContent = '-';
+                document.getElementById('bf-findings').textContent = 'No item selected.';
+                document.getElementById('bf-reload-selected').disabled = true;
+                breakFixSelectedId = '';
+                return;
+            }
+
+            listEl.innerHTML = items.map(item => {
+                const active = (preferredFixId || breakFixSelectedId) === item.fix_id ? 'active' : '';
+                const sev = escapeHtml(item.severity || 'medium');
+                const st = escapeHtml(item.status || 'open');
+                return `
+                    <div class="bf-item ${active}" data-fix-id="${encodeURIComponent(item.fix_id || '')}" onclick="selectBreakFix(decodeURIComponent(this.dataset.fixId || ''))">
+                        <div class="bf-item-title">${escapeHtml(item.title || '-')}</div>
+                        <div class="bf-item-meta">${escapeHtml(item.fix_id || '-')} | ${formatTs(item.updated_at)} | owner=${escapeHtml(item.owner || '-')}</div>
+                        <div class="bf-item-meta">
+                            <span class="bf-pill bf-severity-${sev}">${sev}</span>
+                            <span class="bf-pill bf-status-${st}" style="margin-left:6px">${st}</span>
+                            <span style="margin-left:6px">packet=${escapeHtml(item.packet_id || '-')}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function selectBreakFix(fixId) {
+            if (!fixId) return;
+            breakFixSelectedId = fixId;
+            document.querySelectorAll('#bf-list .bf-item').forEach(node => {
+                node.classList.toggle('active', decodeURIComponent(node.dataset.fixId || '') === fixId);
+            });
+            const res = await fetch(`/api/break-fix/item?id=${encodeURIComponent(fixId)}`);
+            const data = await res.json();
+            if (!res.ok || !data || !data.success) {
+                toast(data?.message || `Failed to load break-fix item (${res.status})`, 'error');
+                return;
+            }
+
+            const item = data.item || {};
+            document.getElementById('bf-selected-title').textContent = `${item.fix_id || '-'} | ${item.title || '-'}`;
+            document.getElementById('bf-selected-meta').textContent =
+                `${item.status || '-'} | severity=${item.severity || '-'} | owner=${item.owner || '-'} | updated=${formatTs(item.updated_at)}`;
+            document.getElementById('bf-item-json').textContent = JSON.stringify(item, null, 2);
+            document.getElementById('bf-reload-selected').disabled = false;
+
+            const linked = [item.packet_id, ...(item.linked_packets || [])].filter(Boolean);
+            document.getElementById('bf-linked-packets').textContent =
+                linked.length ? `Linked packets: ${linked.join(', ')}` : 'Linked packets: none';
+
+            const evidence = item.evidence || [];
+            document.getElementById('bf-evidence').innerHTML = evidence.length
+                ? evidence.map(path => `<div class="viewer-doc"><div class="viewer-value">${escapeHtml(path)}</div><button class="grid-btn grid-btn-edit" data-path="${encodeURIComponent(path)}" onclick="previewFileFromButton(this)">Preview</button></div>`).join('')
+                : '-';
+
+            const findings = item.findings || [];
+            document.getElementById('bf-findings').innerHTML = findings.length
+                ? findings.map(line => `<div class="e2e-finding">${escapeHtml(line)}</div>`).join('')
+                : 'No findings recorded.';
+        }
+
+        async function reloadBreakFixItems(preferredFixId = '') {
+            const status = (document.getElementById('bf-filter-status')?.value || 'all').trim();
+            const severity = (document.getElementById('bf-filter-severity')?.value || 'all').trim();
+            const packet = (document.getElementById('bf-filter-packet')?.value || '').trim();
+            const params = new URLSearchParams();
+            params.set('limit', '300');
+            if (status && status !== 'all') params.set('status', status);
+            if (severity && severity !== 'all') params.set('severity', severity);
+            if (packet) params.set('packet_id', packet);
+
+            const listEl = document.getElementById('bf-list');
+            if (listEl) {
+                listEl.innerHTML = '<div class="docs-empty">Loading break-fix items...</div>';
+            }
+
+            const res = await fetch(`/api/break-fix/items?${params.toString()}`);
+            const data = await res.json();
+            if (!res.ok || !data || !data.success) {
+                const msg = data?.message || `Failed to load break-fix items (${res.status})`;
+                if (listEl) listEl.innerHTML = `<div class="docs-empty">${escapeHtml(msg)}</div>`;
+                toast(msg, 'error');
+                return;
+            }
+
+            breakFixIndex = {
+                items: data.items || [],
+                summary: data.summary || {}
+            };
+            renderBreakFixList(preferredFixId);
+
+            const selected = preferredFixId || breakFixSelectedId;
+            const existing = breakFixIndex.items.find(i => i.fix_id === selected);
+            if (existing) {
+                await selectBreakFix(existing.fix_id);
+            } else if (breakFixIndex.items.length > 0) {
+                await selectBreakFix(breakFixIndex.items[0].fix_id);
+            }
+        }
+
+        function resetBreakFixFilters() {
+            document.getElementById('bf-filter-status').value = 'all';
+            document.getElementById('bf-filter-severity').value = 'all';
+            document.getElementById('bf-filter-packet').value = '';
+            reloadBreakFixItems();
+        }
+
+        async function reloadSelectedBreakFix() {
+            if (!breakFixSelectedId) return;
+            await selectBreakFix(breakFixSelectedId);
+        }
+
+        async function submitBreakFixOpen() {
+            const actor = (document.getElementById('bf-open-actor').value || '').trim();
+            const title = (document.getElementById('bf-open-title').value || '').trim();
+            const description = (document.getElementById('bf-open-description').value || '').trim();
+            const severity = (document.getElementById('bf-open-severity').value || 'medium').trim();
+            const packet_id = (document.getElementById('bf-open-packet').value || '').trim();
+            const linked_packets = csvItems(document.getElementById('bf-open-linked').value || '');
+            const evidence = csvItems(document.getElementById('bf-open-evidence').value || '');
+            const findings = lineItems(document.getElementById('bf-open-findings').value || '');
+
+            if (!actor || !title || !description) {
+                toast('Actor, title, and description are required', 'error');
+                return;
+            }
+            localStorage.setItem('wbs-operator', actor);
+            localStorage.setItem('wbs-agent', actor);
+
+            const res = await fetch('/api/break-fix/open', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ actor, title, description, severity, packet_id, linked_packets, evidence, findings })
+            });
+            const result = await res.json();
+            if (!res.ok || !result || !result.success) {
+                toast(result?.message || `Open failed (${res.status})`, 'error');
+                return;
+            }
+
+            document.getElementById('bf-open-title').value = '';
+            document.getElementById('bf-open-description').value = '';
+            document.getElementById('bf-open-packet').value = '';
+            document.getElementById('bf-open-linked').value = '';
+            document.getElementById('bf-open-evidence').value = '';
+            document.getElementById('bf-open-findings').value = '';
+            toast('Break-fix item created', 'success');
+            await reloadBreakFixItems(result.fix_id);
+        }
+
+        async function submitBreakFixAction(action) {
+            if (!breakFixSelectedId) {
+                toast('Select a break-fix item first', 'error');
+                return;
+            }
+            const actor = (document.getElementById('bf-action-actor').value || '').trim();
+            if (!actor) {
+                toast('Actor is required', 'error');
+                return;
+            }
+            localStorage.setItem('wbs-operator', actor);
+            localStorage.setItem('wbs-agent', actor);
+
+            const payload = {
+                fix_id: breakFixSelectedId,
+                actor,
+                note: (document.getElementById('bf-action-note').value || '').trim(),
+                notes: (document.getElementById('bf-action-note').value || '').trim(),
+                evidence: csvItems(document.getElementById('bf-action-evidence').value || ''),
+                findings: lineItems(document.getElementById('bf-action-findings').value || '')
+            };
+
+            let endpoint = '';
+            if (action === 'start') {
+                endpoint = '/api/break-fix/start';
+                payload.owner = (document.getElementById('bf-action-owner').value || '').trim();
+            } else if (action === 'resolve') {
+                endpoint = '/api/break-fix/resolve';
+                payload.resolution_summary = (document.getElementById('bf-action-summary').value || '').trim();
+            } else if (action === 'reject') {
+                endpoint = '/api/break-fix/reject';
+                payload.reason = (document.getElementById('bf-action-reason').value || '').trim();
+            } else if (action === 'note') {
+                endpoint = '/api/break-fix/note';
+            } else {
+                toast(`Unknown action: ${action}`, 'error');
+                return;
+            }
+
+            const res = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const result = await res.json();
+            if (!res.ok || !result || !result.success) {
+                toast(result?.message || `${action} failed (${res.status})`, 'error');
+                return;
+            }
+            toast(`Break-fix ${action} completed`, 'success');
+            await reloadBreakFixItems(breakFixSelectedId);
+        }
+
+        async function showBreakFixPanel() {
+            const cachedActor = localStorage.getItem('wbs-operator') || localStorage.getItem('wbs-agent') || '';
+            document.getElementById('bf-open-actor').value = cachedActor;
+            document.getElementById('bf-action-actor').value = cachedActor;
+
+            const statusSelect = document.getElementById('bf-filter-status');
+            const severitySelect = document.getElementById('bf-filter-severity');
+            const packetInput = document.getElementById('bf-filter-packet');
+            if (statusSelect && !statusSelect.dataset.bound) {
+                statusSelect.addEventListener('change', () => reloadBreakFixItems());
+                statusSelect.dataset.bound = '1';
+            }
+            if (severitySelect && !severitySelect.dataset.bound) {
+                severitySelect.addEventListener('change', () => reloadBreakFixItems());
+                severitySelect.dataset.bound = '1';
+            }
+            if (packetInput && !packetInput.dataset.bound) {
+                packetInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        reloadBreakFixItems();
+                    }
+                });
+                packetInput.dataset.bound = '1';
+            }
+
+            showModal('modal-break-fix');
+            await reloadBreakFixItems();
+        }
+
+        async function showDepsGraph() {
+            const content = document.getElementById('deps-graph-content');
+            content.textContent = 'Loading dependency graph...';
+            showModal('modal-deps-graph');
+            try {
+                const res = await fetch('/api/deps-graph');
+                const raw = await res.text();
+                const data = raw ? JSON.parse(raw) : null;
+                if (!res.ok || !data) {
+                    content.textContent = `Failed to load dependency graph (HTTP ${res.status}).`;
+                    return;
+                }
+                const nodes = data.nodes || [];
+                const edges = data.edges || [];
+                const statusById = Object.fromEntries(nodes.map(n => [n.id, n.status || 'pending']));
+                const lines = [];
+                lines.push(`nodes=${nodes.length}, edges=${edges.length}`);
+                lines.push('');
+                lines.push('Edges:');
+                for (const edge of edges) {
+                    lines.push(`  ${edge.from} (${statusById[edge.from] || '-'}) -> ${edge.to} (${statusById[edge.to] || '-'})`);
+                }
+                if (edges.length === 0) {
+                    lines.push('  (no dependency edges)');
+                }
+                lines.push('');
+                lines.push('Nodes:');
+                for (const node of nodes) {
+                    lines.push(`  ${node.id} [${node.status}] ${node.wbs_ref} ${node.title}`);
+                }
+                content.textContent = lines.join('\n');
+            } catch (e) {
+                content.textContent = `Failed to load dependency graph: ${e.message}`;
+            }
+        }
+
+        async function showPacketViewer(packetId) {
+            const res = await fetch(`/api/packet?id=${encodeURIComponent(packetId)}`);
+            const raw = await res.text();
+            let data = null;
+            try {
+                data = raw ? JSON.parse(raw) : null;
+            } catch (_) {
+                data = null;
+            }
+            if (!res.ok || !data) {
+                toast(`Packet viewer requires /api/packet on ${location.origin} (HTTP ${res.status}). Wrong port or outdated server.`, 'error');
+                return;
+            }
+            if (!data.success) {
+                toast(data.message || 'Failed to load packet details', 'error');
+                return;
+            }
+
+            const p = data.packet || {};
+            document.getElementById('viewer-title').textContent = `Packet Viewer: ${p.id || '-'}`;
+            document.getElementById('viewer-summary').textContent =
+                `${p.wbs_ref || '-'} - ${p.title || '-'} (${p.area_title || p.area_id || '-'})`;
+            document.getElementById('viewer-status').textContent =
+                `status=${p.status || '-'}, owner=${p.assigned_to || '-'}, started=${p.started_at || '-'}, completed=${p.completed_at || '-'}, break-fix-active=${p.break_fix_active || 0}`;
+            document.getElementById('viewer-notes').textContent = p.notes || '-';
+            document.getElementById('viewer-scope').textContent = p.scope || '-';
+            document.getElementById('viewer-deps').textContent =
+                `depends on: ${(p.dependencies || []).join(', ') || '-'} | dependents: ${(p.dependents || []).join(', ') || '-'}`;
+            document.getElementById('viewer-packet-json').textContent =
+                JSON.stringify(data.packet_definition || p, null, 2);
+            const full = data.packet_definition || {};
+            const structured = {
+                packet_id: full.packet_id || p.id,
+                wbs_refs: full.wbs_refs || [],
+                purpose: full.purpose || '',
+                priority: full.priority || '',
+                owner: full.owner || p.assigned_to || '',
+                required_actions: full.required_actions || [],
+                required_outputs: full.required_outputs || [],
+                validation_checks: full.validation_checks || [],
+                exit_criteria: full.exit_criteria || [],
+                halt_conditions: full.halt_conditions || [],
+                break_fix_active: p.break_fix_active || 0,
+                break_fix_ids: (data.break_fix_items || []).map(item => item.fix_id)
+            };
+            document.getElementById('viewer-structured').textContent = JSON.stringify(structured, null, 2);
+
+            const docsEl = document.getElementById('viewer-docs');
+            const docs = data.documents || [];
+            if (docs.length === 0) {
+                docsEl.innerHTML = 'No documents detected.';
+            } else {
+                docsEl.innerHTML = docs.map(d => `
+                    <div class="viewer-doc">
+                        <div class="viewer-value">${escapeHtml(d.path)} ${d.exists ? '' : '(missing)'}</div>
+                        <div style="display:flex;gap:6px">
+                            <button class="grid-btn grid-btn-edit" ${d.exists ? '' : 'disabled'} data-path="${encodeURIComponent(d.path)}" onclick="previewFileFromButton(this)">Preview</button>
+                            <button class="grid-btn grid-btn-claim" ${d.exists ? '' : 'disabled'} data-path="${encodeURIComponent(d.path)}" onclick="openInDocsExplorerFromButton(this)">Open</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            const eventsEl = document.getElementById('viewer-events');
+            const events = data.events || [];
+            if (events.length === 0) {
+                eventsEl.innerHTML = '<div class="viewer-event">No events recorded.</div>';
+            } else {
+                eventsEl.innerHTML = events.map(e => `
+                    <div class="viewer-event">
+                        <strong>${e.event || '-'}</strong> | ${e.timestamp || '-'} | ${e.agent || '-'}<br>
+                        ${e.notes || ''}
+                    </div>
+                `).join('');
+            }
+
+            document.getElementById('viewer-file').textContent = 'Select a linked document to preview.';
+            showModal('modal-packet-viewer');
+        }
+
+        // Init
+        initGrid();
+        refreshData();
+        setInterval(refreshData, 5000);
+    </script>
+</body>
+</html>

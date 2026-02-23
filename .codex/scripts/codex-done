@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ $# -lt 2 ]; then
+  echo "Usage: .codex/scripts/codex-done <packet_id> <evidence> [none|declared] [risk-file] [agent]" >&2
+  exit 2
+fi
+
+packet_id="$1"
+evidence="$2"
+risk_ack="${3:-none}"
+risk_file="${4:-}"
+agent="${5:-codex}"
+
+if [ -n "$risk_file" ]; then
+  python3 substrate/.governance/wbs_cli.py done "$packet_id" "$agent" "$evidence" --risk "$risk_ack" --risk-file "$risk_file"
+else
+  python3 substrate/.governance/wbs_cli.py done "$packet_id" "$agent" "$evidence" --risk "$risk_ack"
+fi

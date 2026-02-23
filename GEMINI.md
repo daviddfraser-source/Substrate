@@ -13,34 +13,39 @@ You are an execution agent working within a governed workflow. You:
 
 ## Quick Start
 
+0. If this is a fresh project clone, initialize scaffold:
+```bash
+substrate/scripts/init-scaffold.sh substrate/templates/wbs-codex-minimal.json
+```
+
 1. Bootstrap session context:
 ```bash
-python3 .governance/wbs_cli.py briefing --format json
+python3 substrate/.governance/wbs_cli.py briefing --format json
 ```
 
 2. See available work:
 ```bash
-python3 .governance/wbs_cli.py ready
+python3 substrate/.governance/wbs_cli.py ready
 ```
 
 3. Claim a packet:
 ```bash
-python3 .governance/wbs_cli.py claim <PACKET_ID> gemini
+python3 substrate/.governance/wbs_cli.py claim <PACKET_ID> gemini
 ```
 
 4. Inspect packet context bundle:
 ```bash
-python3 .governance/wbs_cli.py context <PACKET_ID> --format json --max-events 40 --max-notes-bytes 4000
+python3 substrate/.governance/wbs_cli.py context <PACKET_ID> --format json --max-events 40 --max-notes-bytes 4000
 ```
 
 5. Check current status:
 ```bash
-python3 .governance/wbs_cli.py status
+python3 substrate/.governance/wbs_cli.py status
 ```
 
 6. Mark complete with evidence:
 ```bash
-python3 .governance/wbs_cli.py done <PACKET_ID> gemini "Created X, validated Y, evidence in Z"
+python3 substrate/.governance/wbs_cli.py done <PACKET_ID> gemini "Created X, validated Y, evidence in Z" --risk none
 ```
 
 ## Packet Execution Rules
@@ -54,7 +59,7 @@ Read `AGENTS.md` for the full operating contract. Key rules:
 
 ## Skills Available
 
-Custom Gemini skills are in `scripts/`:
+Custom Gemini skills are in `substrate/scripts/`:
 - `gc-ready`: Check for available packets
 - `gc-claim`: Claim a packet
 - `gc-done`: Mark a packet as done with evidence
@@ -71,14 +76,14 @@ These are wrappers around the governance CLI.
 ## File Locations
 
 - governance CLI: `.governance/wbs_cli.py`
-- packet definitions: `.governance/wbs.json`
-- runtime state: `.governance/wbs-state.json` (do not edit directly)
+- packet definitions: `substrate/.governance/wbs.json`
+- runtime state: `substrate/.governance/wbs-state.json` (do not edit directly)
 - packet schema: `.governance/packet-schema.json`
 - agent profiles: `.governance/agents.json`
 
 ## What Not To Do
 
-- do not modify `.governance/wbs-state.json` directly
+- do not modify `substrate/.governance/wbs-state.json` directly
 - do not edit packet lifecycle state outside CLI commands
 - do not claim multiple packets without user approval
 - do not mark packets done without concrete evidence
@@ -90,7 +95,7 @@ These are wrappers around the governance CLI.
 3. `claim <id> gemini`
 4. execute packet scope
 5. run validation checks
-6. `done <id> gemini "evidence"`
+6. `done <id> gemini "evidence" --risk none`
 7. report result
 
 ## Error Handling
@@ -100,4 +105,4 @@ These are wrappers around the governance CLI.
 - if blocked: mark packet `failed` with reason
 - if session must transfer mid-packet: use `handover` then next session uses `resume`
 
-See `docs/PLAYBOOK.md` and `docs/governance-workflow-codex.md` for recovery patterns.
+See `substrate/docs/PLAYBOOK.md` and `substrate/docs/governance-workflow-codex.md` for recovery patterns.

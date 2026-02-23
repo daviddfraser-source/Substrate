@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://substrate.local/schemas/break-fix-log.schema.json",
+  "title": "Substrate Break-Fix Log",
+  "type": "object",
+  "required": ["schema_version", "created_at", "updated_at", "items"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"type": "string", "const": "1.0"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "updated_at": {"type": "string", "format": "date-time"},
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/break_fix_item"
+      }
+    }
+  },
+  "$defs": {
+    "break_fix_item": {
+      "type": "object",
+      "required": [
+        "fix_id",
+        "title",
+        "description",
+        "severity",
+        "status",
+        "created_at",
+        "created_by",
+        "owner",
+        "packet_id",
+        "linked_packets",
+        "findings",
+        "evidence",
+        "notes",
+        "history"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "fix_id": {"type": "string", "pattern": "^BFIX-[0-9]{4,}$"},
+        "title": {"type": "string", "minLength": 1},
+        "description": {"type": "string", "minLength": 1},
+        "severity": {"type": "string", "enum": ["low", "medium", "high", "critical"]},
+        "status": {"type": "string", "enum": ["open", "in_progress", "resolved", "rejected"]},
+        "created_at": {"type": "string", "format": "date-time"},
+        "created_by": {"type": "string", "minLength": 1},
+        "owner": {"type": ["string", "null"]},
+        "packet_id": {"type": ["string", "null"]},
+        "linked_packets": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "findings": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "evidence": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["timestamp", "actor", "note"],
+            "additionalProperties": false,
+            "properties": {
+              "timestamp": {"type": "string", "format": "date-time"},
+              "actor": {"type": "string", "minLength": 1},
+              "note": {"type": "string", "minLength": 1}
+            }
+          }
+        },
+        "history": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["timestamp", "actor", "action"],
+            "additionalProperties": false,
+            "properties": {
+              "timestamp": {"type": "string", "format": "date-time"},
+              "actor": {"type": "string", "minLength": 1},
+              "action": {
+                "type": "string",
+                "enum": ["open", "start", "resolve", "reject", "note"]
+              },
+              "from_status": {"type": ["string", "null"]},
+              "to_status": {"type": ["string", "null"]},
+              "note": {"type": ["string", "null"]},
+              "evidence": {
+                "type": "array",
+                "items": {"type": "string", "minLength": 1}
+              },
+              "findings": {
+                "type": "array",
+                "items": {"type": "string", "minLength": 1}
+              }
+            }
+          }
+        },
+        "started_at": {"type": ["string", "null"], "format": "date-time"},
+        "resolved_at": {"type": ["string", "null"], "format": "date-time"},
+        "resolved_by": {"type": ["string", "null"]},
+        "resolution_summary": {"type": ["string", "null"]},
+        "rejected_at": {"type": ["string", "null"], "format": "date-time"},
+        "rejected_by": {"type": ["string", "null"]},
+        "rejection_reason": {"type": ["string", "null"]},
+        "updated_at": {"type": "string", "format": "date-time"}
+      }
+    }
+  }
+}

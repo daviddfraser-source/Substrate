@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -euo pipefail
+if [ "$#" -lt 3 ]; then
+  echo "Usage: scripts/wbs-done <packet_id> <agent> <notes> [none|declared] [risk-file]" >&2
+  exit 1
+fi
+risk_ack="${4:-none}"
+risk_file="${5:-}"
+if [[ -n "${risk_file}" ]]; then
+  python3 .governance/wbs_cli.py done "$1" "$2" "$3" --risk "${risk_ack}" --risk-file "${risk_file}"
+else
+  python3 .governance/wbs_cli.py done "$1" "$2" "$3" --risk "${risk_ack}"
+fi

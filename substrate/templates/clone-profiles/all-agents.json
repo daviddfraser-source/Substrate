@@ -1,0 +1,5 @@
+{
+  "name": "all-agents",
+  "description": "Keep all optional agent and devcontainer directories.",
+  "remove": []
+}

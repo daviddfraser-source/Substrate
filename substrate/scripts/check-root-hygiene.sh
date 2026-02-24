@@ -21,6 +21,7 @@ allowed=(
   "Makefile"
   "README.md"
   "START.md"
+  "app"
   "bootstrap.ps1"
   "bootstrap.sh"
   "codex.md"

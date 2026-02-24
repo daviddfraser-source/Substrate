@@ -124,8 +124,8 @@ Locking and write safety:
 This template separates **governance tooling** from **user code**:
 
 - `substrate/src/governed_platform/`: Contains the core Substrate logic (CLI, Server, State Machine). **Do not modify** unless you are upgrading the governance system itself.
-- `substrate/src/app/`: **[YOUR CODE HERE]**. This is where your application logic, business rules, and agent implementations should reside.
-- `substrate/tests/`: Add your application tests here.
+- `app/`: **[YOUR CODE HERE]**. Root-level application workspace for clone-and-own product code.
+- `substrate/tests/`: Governance/platform tests; keep or extend as needed.
 
 
 ## Commands

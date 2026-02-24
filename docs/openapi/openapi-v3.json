@@ -1,0 +1,417 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Substrate Scaffold API",
+    "version": "3.0.0",
+    "description": "Contract-first API surface for governance modules."
+  },
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "summary": "Login endpoint",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "x-required-permission": "auth:write"
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "summary": "Logout endpoint",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "x-required-permission": "auth:write"
+      }
+    },
+    "/auth/session": {
+      "get": {
+        "summary": "Session status",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "x-required-permission": "auth:read"
+      }
+    },
+    "/tenants": {
+      "get": {
+        "summary": "List tenants",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "x-required-permission": "tenant:read"
+      },
+      "post": {
+        "summary": "Create tenant",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "x-required-permission": "tenant:write"
+      }
+    },
+    "/users": {
+      "get": {
+        "summary": "List users",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "x-required-permission": "user:read"
+      },
+      "post": {
+        "summary": "Create user",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "x-required-permission": "user:write"
+      }
+    },
+    "/roles": {
+      "get": {
+        "summary": "List roles",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "x-required-permission": "role:read"
+      }
+    },
+    "/roles/assign": {
+      "post": {
+        "summary": "Assign role",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "x-required-permission": "role:write"
+      }
+    },
+    "/projects": {
+      "get": {
+        "summary": "List projects",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "x-required-permission": "project:read"
+      },
+      "post": {
+        "summary": "Create project",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "x-required-permission": "project:write"
+      }
+    },
+    "/packets": {
+      "get": {
+        "summary": "List packets",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "x-required-permission": "packet:read"
+      },
+      "post": {
+        "summary": "Create packet",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "x-required-permission": "packet:write"
+      }
+    },
+    "/dependencies": {
+      "get": {
+        "summary": "List dependencies",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "x-required-permission": "dependency:read"
+      },
+      "post": {
+        "summary": "Create dependency",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "x-required-permission": "dependency:write"
+      }
+    },
+    "/risks": {
+      "get": {
+        "summary": "List risks",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "x-required-permission": "risk:read"
+      },
+      "post": {
+        "summary": "Create risk",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "x-required-permission": "risk:write"
+      }
+    },
+    "/audit": {
+      "get": {
+        "summary": "Query audit entries",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "x-required-permission": "audit:read"
+      }
+    },
+    "/agents": {
+      "get": {
+        "summary": "List agents",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "x-required-permission": "agent:read"
+      },
+      "post": {
+        "summary": "Register agent",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "x-required-permission": "agent:write"
+      }
+    },
+    "/metrics": {
+      "get": {
+        "summary": "Read metrics",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "x-required-permission": "metrics:read"
+      },
+      "post": {
+        "summary": "Write metrics",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "x-required-permission": "metrics:write"
+      }
+    },
+    "/proposals": {
+      "get": {
+        "summary": "List proposals",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "x-required-permission": "proposal:read"
+      },
+      "post": {
+        "summary": "Create proposal",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "x-required-permission": "proposal:write"
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Health check",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "x-required-permission": "health:read"
+      }
+    }
+  }
+}

@@ -6,12 +6,15 @@ import logging
 import mimetypes
 import os
 import re
+import secrets
 import subprocess
 import sys
-from datetime import datetime
+import time
+from datetime import datetime, timezone
+from http.cookies import SimpleCookie
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Optional
 from urllib.parse import parse_qs, urlparse
 
 from wbs_common import GOV, WBS_DEF, load_definition, load_state, get_counts
@@ -34,6 +37,15 @@ DOC_ROOT_HINT_FILES = {
     "SECURITY.md",
     "constitution.md",
 }
+
+SESSION_COOKIE = "wbs_session"
+SESSION_MAX_AGE_SECONDS = int(os.environ.get("WBS_SESSION_MAX_AGE", "28800"))
+DEVELOPER_USERS = {
+    u.strip().lower()
+    for u in os.environ.get("WBS_DEVELOPER_USERS", "developer,developer@example.com").split(",")
+    if u.strip()
+}
+SESSIONS: Dict[str, Dict] = {}
 
 
 def _build_logger() -> logging.Logger:
@@ -62,13 +74,100 @@ def save_definition(defn: dict):
 
 
 class Handler(BaseHTTPRequestHandler):
-    def _write_json(self, data: Dict, status: int = 200) -> None:
+    def _write_json(self, data: Dict, status: int = 200, headers: Optional[Dict[str, str]] = None) -> None:
         """Send a JSON HTTP response with consistent headers and status code."""
         self.send_response(status)
         self.send_header("Content-type", "application/json")
         self.send_header("Access-Control-Allow-Origin", "*")
+        if headers:
+            for key, value in headers.items():
+                self.send_header(key, value)
         self.end_headers()
         self.wfile.write(json.dumps(data).encode())
+
+    def _cookie_value(self, name: str) -> str:
+        raw = self.headers.get("Cookie", "")
+        if not raw:
+            return ""
+        cookie = SimpleCookie()
+        try:
+            cookie.load(raw)
+        except Exception:
+            return ""
+        morsel = cookie.get(name)
+        return morsel.value if morsel else ""
+
+    def _session_for_request(self) -> Dict:
+        token = self._cookie_value(SESSION_COOKIE)
+        if not token:
+            return {}
+        sess = SESSIONS.get(token) or {}
+        expires_at = float(sess.get("expires_at") or 0)
+        if not sess or expires_at <= time.time():
+            if token in SESSIONS:
+                del SESSIONS[token]
+            return {}
+        return sess
+
+    def _deny_auth(self, status: int = 401, message: str = "Authentication required") -> None:
+        self._write_json({"success": False, "message": message}, status=status)
+
+    def _is_developer(self, session: Dict) -> bool:
+        return str(session.get("role", "")).lower() == "developer"
+
+    def _require_developer(self) -> bool:
+        session = self._session_for_request()
+        if not session:
+            self._deny_auth(401, "Authentication required")
+            return False
+        if not self._is_developer(session):
+            self._deny_auth(403, "Developer role required")
+            return False
+        return True
+
+    def _session_user(self, session: Dict) -> Dict:
+        return {
+            "name": session.get("name", ""),
+            "email": session.get("email", ""),
+            "role": session.get("role", "Viewer"),
+            "logged_in_at": session.get("logged_in_at", ""),
+        }
+
+    def api_auth_session(self) -> Dict:
+        session = self._session_for_request()
+        if not session:
+            return {"success": True, "authenticated": False}
+        return {"success": True, "authenticated": True, "user": self._session_user(session)}
+
+    def api_auth_login(self, body: Dict):
+        name = str(body.get("name", "")).strip()
+        email = str(body.get("email", "")).strip()
+        if not name or not email:
+            return {"success": False, "message": "name and email are required"}, 400, None
+
+        role = "Developer" if (name.lower() in DEVELOPER_USERS or email.lower() in DEVELOPER_USERS) else "Viewer"
+        token = secrets.token_urlsafe(32)
+        now = time.time()
+        SESSIONS[token] = {
+            "name": name,
+            "email": email,
+            "role": role,
+            "logged_in_at": datetime.now(timezone.utc).isoformat(),
+            "expires_at": now + SESSION_MAX_AGE_SECONDS,
+        }
+        cookie = f"{SESSION_COOKIE}={token}; Path=/; HttpOnly; SameSite=Lax; Max-Age={SESSION_MAX_AGE_SECONDS}"
+        return (
+            {"success": True, "authenticated": True, "user": self._session_user(SESSIONS[token])},
+            200,
+            {"Set-Cookie": cookie},
+        )
+
+    def api_auth_logout(self):
+        token = self._cookie_value(SESSION_COOKIE)
+        if token and token in SESSIONS:
+            del SESSIONS[token]
+        expired = f"{SESSION_COOKIE}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0"
+        return {"success": True, "authenticated": False}, 200, {"Set-Cookie": expired}
 
     def do_GET(self):
         path = urlparse(self.path).path
@@ -78,6 +177,7 @@ class Handler(BaseHTTPRequestHandler):
             return self.serve_file("index.html")
 
         routes = {
+            "/api/auth/session": self.api_auth_session,
             "/api/status": self.api_status,
             "/api/ready": self.api_ready,
             "/api/progress": self.api_progress,
@@ -88,6 +188,8 @@ class Handler(BaseHTTPRequestHandler):
             "/api/deps-graph": self.api_deps_graph,
         }
         if path in routes:
+            if path.startswith("/api/") and path != "/api/auth/session" and not self._require_developer():
+                return
             return self._write_json(routes[path](), status=200)
 
         if path.startswith("/api/"):
@@ -113,6 +215,8 @@ class Handler(BaseHTTPRequestHandler):
             return self._write_json({"success": False, "message": "Invalid JSON body"}, status=400)
 
         routes = {
+            "/api/auth/login": lambda: self.api_auth_login(body),
+            "/api/auth/logout": self.api_auth_logout,
             "/api/claim": lambda: self.run_cmd("claim", body),
             "/api/done": lambda: self.run_cmd("done", body),
             "/api/note": lambda: self.run_cmd("note", body),
@@ -131,9 +235,19 @@ class Handler(BaseHTTPRequestHandler):
 
         if path in routes:
             try:
+                if path.startswith("/api/") and path not in {"/api/auth/login", "/api/auth/logout"} and not self._require_developer():
+                    return
                 result = routes[path]()
+                status = 200
+                headers = None
+                if isinstance(result, tuple):
+                    payload = result[0]
+                    status = result[1] if len(result) > 1 else 200
+                    headers = result[2] if len(result) > 2 else None
+                else:
+                    payload = result
                 LOGGER.debug("Result: %s", result)
-                return self._write_json(result, status=200)
+                return self._write_json(payload, status=status, headers=headers)
             except Exception as e:
                 LOGGER.exception("Route handler failed: %s", e)
                 return self._write_json({"success": False, "message": str(e)}, status=500)

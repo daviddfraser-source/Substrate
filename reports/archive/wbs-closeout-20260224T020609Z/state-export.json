@@ -1,0 +1,68 @@
+{
+  "packets": {
+    "MIN-1-1": {
+      "status": "pending",
+      "assigned_to": null,
+      "started_at": null,
+      "completed_at": null,
+      "notes": null
+    },
+    "MIN-2-1": {
+      "status": "pending",
+      "assigned_to": null,
+      "started_at": null,
+      "completed_at": null,
+      "notes": null
+    },
+    "MIN-3-1": {
+      "status": "pending",
+      "assigned_to": null,
+      "started_at": null,
+      "completed_at": null,
+      "notes": null
+    },
+    "MIN-4-1": {
+      "status": "pending",
+      "assigned_to": null,
+      "started_at": null,
+      "completed_at": null,
+      "notes": null
+    },
+    "RSK-5-1": {
+      "status": "pending",
+      "assigned_to": null,
+      "started_at": null,
+      "completed_at": null,
+      "notes": null
+    },
+    "RSK-5-2": {
+      "status": "pending",
+      "assigned_to": null,
+      "started_at": null,
+      "completed_at": null,
+      "notes": null
+    },
+    "RSK-5-3": {
+      "status": "pending",
+      "assigned_to": null,
+      "started_at": null,
+      "completed_at": null,
+      "notes": null
+    },
+    "RSK-5-4": {
+      "status": "pending",
+      "assigned_to": null,
+      "started_at": null,
+      "completed_at": null,
+      "notes": null
+    },
+    "RSK-5-5": {
+      "status": "pending",
+      "assigned_to": null,
+      "started_at": null,
+      "completed_at": null,
+      "notes": null
+    }
+  },
+  "area_closeouts": {}
+}

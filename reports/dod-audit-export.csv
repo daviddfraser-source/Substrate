@@ -1,0 +1,3 @@
+entry_id,tenant_id,actor,packet_id,event_type,created_at
+1,tenant-1,dev-admin,packet-1,created,1771903373
+2,tenant-1,dev-admin,packet-1,role_assigned,1771903373

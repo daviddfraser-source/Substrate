@@ -8,7 +8,8 @@ import time
 import unittest
 from pathlib import Path
 from urllib.error import HTTPError
-from urllib.request import Request, urlopen
+from urllib.request import HTTPCookieProcessor, Request, build_opener, urlopen
+from http.cookiejar import CookieJar
 
 ROOT = Path(__file__).resolve().parents[1]
 GOV = ROOT / '.governance'
@@ -20,6 +21,7 @@ from http.server import HTTPServer  # noqa: E402
 CLI = [sys.executable, str(GOV / 'wbs_cli.py')]
 WBS = GOV / 'wbs.json'
 STATE = GOV / 'wbs-state.json'
+DEFAULT_OPENER = None
 
 
 def run_cli(args, expect=0):
@@ -31,25 +33,38 @@ def run_cli(args, expect=0):
     return proc
 
 
-def post_json(base, path, payload):
+def post_json(base, path, payload, opener=None):
     req = Request(
         base + path,
         data=json.dumps(payload).encode(),
         headers={'Content-Type': 'application/json'},
         method='POST',
     )
+    op = opener or DEFAULT_OPENER
+    if op:
+        with op.open(req, timeout=5) as r:
+            return json.loads(r.read().decode())
     with urlopen(req, timeout=5) as r:
         return json.loads(r.read().decode())
 
 
-def get_json(base, path):
-    with urlopen(base + path, timeout=5) as r:
+def get_json(base, path, opener=None):
+    req = Request(base + path, method='GET')
+    op = opener or DEFAULT_OPENER
+    if op:
+        with op.open(req, timeout=5) as r:
+            return json.loads(r.read().decode())
+    with urlopen(req, timeout=5) as r:
         return json.loads(r.read().decode())
 
 
-def request_json(base, path, method='GET'):
+def request_json(base, path, method='GET', opener=None):
     req = Request(base + path, method=method)
+    op = opener or DEFAULT_OPENER
     try:
+        if op:
+            with op.open(req, timeout=5) as r:
+                return r.status, json.loads(r.read().decode())
         with urlopen(req, timeout=5) as r:
             return r.status, json.loads(r.read().decode())
     except HTTPError as e:
@@ -61,6 +76,7 @@ def request_json(base, path, method='GET'):
 class ServerApiTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        global DEFAULT_OPENER
         cls._wbs_backup = WBS.read_bytes() if WBS.exists() else None
         cls._state_backup = STATE.read_bytes() if STATE.exists() else None
 
@@ -69,12 +85,23 @@ class ServerApiTests(unittest.TestCase):
         cls.thread = threading.Thread(target=cls.server.serve_forever, daemon=True)
         cls.thread.start()
         time.sleep(0.1)
+        cls.cookie_jar = CookieJar()
+        cls.opener = build_opener(HTTPCookieProcessor(cls.cookie_jar))
+        post_json(
+            cls.base,
+            '/api/auth/login',
+            {'name': 'Developer', 'email': 'developer@example.com'},
+            opener=cls.opener,
+        )
+        DEFAULT_OPENER = cls.opener
 
     @classmethod
     def tearDownClass(cls):
+        global DEFAULT_OPENER
         cls.server.shutdown()
         cls.thread.join(timeout=2)
         cls.server.server_close()
+        DEFAULT_OPENER = None
 
         if cls._wbs_backup is None:
             WBS.unlink(missing_ok=True)

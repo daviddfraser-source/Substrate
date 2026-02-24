@@ -1,406 +1,776 @@
 {
   "metadata": {
-    "project_name": "Substrate Minimal",
-    "approved_by": "substrate-lead",
-    "approved_at": "2026-02-13",
-    "version": "1.0"
+    "project_name": "Substrate App Scaffold",
+    "approved_by": "david-fraser",
+    "approved_at": "2026-02-24",
+    "version": "3.0",
+    "prd_title": "Substrate App Scaffold PRD v3.0 (Unified Core + Recursive Governance)"
   },
   "work_areas": [
     {
       "id": "1.0",
-      "title": "Scaffold Init",
-      "description": "Initialize scaffold and baseline governance."
+      "title": "Program Governance Baseline",
+      "description": "Establish execution baseline, architecture boundaries, and explicit optional adoption model."
     },
     {
       "id": "2.0",
-      "title": "Core Workflow",
-      "description": "Establish packet lifecycle and reporting."
+      "title": "Authentication and RBAC",
+      "description": "Deliver enterprise authentication and backend-enforced RBAC with auditability."
     },
     {
       "id": "3.0",
-      "title": "Quality Baseline",
-      "description": "Add minimal tests and checks."
+      "title": "Data and API Platform",
+      "description": "Implement database, migrations, and REST API contracts."
     },
     {
       "id": "4.0",
-      "title": "Closeout",
-      "description": "Deliver report and drift closeout."
+      "title": "Governance UX Surface",
+      "description": "Ship WBS/packet grid, dependency graph, audit viewer, and risk register UI."
     },
     {
       "id": "5.0",
-      "title": "Residual Risk Governance",
-      "description": "Integrate execution-time residual risk capture, tracking, and reporting into packet lifecycle governance."
+      "title": "Agent and Recursive Governance",
+      "description": "Deliver agent integration, telemetry, proposal workflow, and rule versioning controls."
+    },
+    {
+      "id": "6.0",
+      "title": "Infrastructure and NFR",
+      "description": "Meet deployment, observability, security, and performance expectations."
+    },
+    {
+      "id": "7.0",
+      "title": "Optional App Scaffold Adoption",
+      "description": "Provide optional user-facing app shell packaging and onboarding paths. This area is non-blocking for core governance engine delivery."
+    },
+    {
+      "id": "8.0",
+      "title": "Release Validation and Closeout",
+      "description": "Execute Definition of Done validation and governance closeout artifacts."
     }
   ],
   "wbs_level_3": [
     {
       "wbs_ref": "1.1",
       "area_id": "1.0",
-      "title": "Initialize governance files"
+      "title": "Map PRD v3.0 scope into governed packet plan"
+    },
+    {
+      "wbs_ref": "1.2",
+      "area_id": "1.0",
+      "title": "Define architecture decisions and optional adoption boundary"
     },
     {
       "wbs_ref": "2.1",
       "area_id": "2.0",
-      "title": "Execute first packet lifecycle"
+      "title": "Design and implement authentication providers and local dev login"
+    },
+    {
+      "wbs_ref": "2.2",
+      "area_id": "2.0",
+      "title": "Implement backend RBAC middleware and policy enforcement"
+    },
+    {
+      "wbs_ref": "2.3",
+      "area_id": "2.0",
+      "title": "Deliver role assignment and role-change audit integration"
     },
     {
       "wbs_ref": "3.1",
       "area_id": "3.0",
-      "title": "Run baseline validation"
+      "title": "Model core entities and migration flow"
+    },
+    {
+      "wbs_ref": "3.2",
+      "area_id": "3.0",
+      "title": "Implement REST endpoint surface with OpenAPI"
+    },
+    {
+      "wbs_ref": "3.3",
+      "area_id": "3.0",
+      "title": "Implement health, metrics, webhooks, and structured logging"
     },
     {
       "wbs_ref": "4.1",
       "area_id": "4.0",
-      "title": "Closeout with drift assessment"
+      "title": "Build WBS and packet AG Grid interface"
+    },
+    {
+      "wbs_ref": "4.2",
+      "area_id": "4.0",
+      "title": "Build dependency graph and cycle detection UX"
+    },
+    {
+      "wbs_ref": "4.3",
+      "area_id": "4.0",
+      "title": "Build audit viewer with export support"
+    },
+    {
+      "wbs_ref": "4.4",
+      "area_id": "4.0",
+      "title": "Build risk register grid, heatmap, and aging views"
+    },
+    {
+      "wbs_ref": "5.1",
+      "area_id": "5.0",
+      "title": "Implement agent identity registry and claim/action endpoints"
+    },
+    {
+      "wbs_ref": "5.2",
+      "area_id": "5.0",
+      "title": "Implement telemetry model and metrics collection"
+    },
+    {
+      "wbs_ref": "5.3",
+      "area_id": "5.0",
+      "title": "Implement bounded recursive proposal workflow"
+    },
+    {
+      "wbs_ref": "5.4",
+      "area_id": "5.0",
+      "title": "Implement governance rule versioning and rollback controls"
+    },
+    {
+      "wbs_ref": "6.1",
+      "area_id": "6.0",
+      "title": "Implement docker-compose, env config, and SQLite dev fallback"
+    },
+    {
+      "wbs_ref": "6.2",
+      "area_id": "6.0",
+      "title": "Prepare Kubernetes-ready deployment and observability endpoints"
+    },
+    {
+      "wbs_ref": "6.3",
+      "area_id": "6.0",
+      "title": "Run performance and security hardening baseline"
+    },
+    {
+      "wbs_ref": "7.1",
+      "area_id": "7.0",
+      "title": "Define optional app scaffold profile and module toggles"
+    },
+    {
+      "wbs_ref": "7.2",
+      "area_id": "7.0",
+      "title": "Ship optional frontend shell hooks and extension points"
+    },
+    {
+      "wbs_ref": "7.3",
+      "area_id": "7.0",
+      "title": "Publish optional adoption and migration playbook"
+    },
+    {
+      "wbs_ref": "8.1",
+      "area_id": "8.0",
+      "title": "Execute Definition of Done end-to-end scenario"
+    },
+    {
+      "wbs_ref": "8.2",
+      "area_id": "8.0",
+      "title": "Produce delivery report and closeout artifacts"
     }
   ],
   "packets": [
     {
-      "id": "MIN-1-1",
+      "id": "PRD-1-1",
       "wbs_ref": "1.1",
       "wbs_l3_ref": "1.1",
       "area_id": "1.0",
-      "title": "Initialize governance files",
-      "scope": "Implement WBS item 1.1: Initialize governance files.",
-      "packet_id": "MIN-1-1",
-      "wbs_refs": [
-        "1.1"
-      ],
-      "purpose": "Deliver Initialize governance files.",
+      "title": "Map PRD v3.0 scope into governed packet plan",
+      "scope": "Create governed packet structure aligned to PRD sections, preserving deterministic and auditable execution boundaries.",
+      "packet_id": "PRD-1-1",
+      "wbs_refs": ["1.1"],
+      "purpose": "Convert PRD requirements into executable governance packets.",
       "status": "PENDING",
       "owner": "unassigned",
-      "priority": "MEDIUM",
+      "priority": "CRITICAL",
       "preconditions": [],
-      "required_inputs": [],
-      "required_actions": [
-        "Implement WBS item 1.1: Initialize governance files."
-      ],
-      "required_outputs": [],
-      "validation_checks": [
-        "Implementation aligns with packet scope",
-        "Evidence path included in packet notes"
-      ],
-      "exit_criteria": [
-        "Packet marked done with evidence references"
-      ],
-      "halt_conditions": [
-        "Required dependencies unresolved",
-        "Evidence missing for completion claim"
-      ],
+      "required_inputs": ["PRD v3.0"],
+      "required_actions": ["Define WBS areas and packet mapping", "Define dependency and sequencing strategy"],
+      "required_outputs": [".governance/wbs.json"],
+      "validation_checks": ["All PRD requirement groups map to at least one packet", "Packet schema fields are complete"],
+      "exit_criteria": ["WBS validates and initializes cleanly"],
+      "halt_conditions": ["Packet map omits mandatory PRD sections"],
       "authority": "Repository packet governance",
       "type": "WBS_PACKET",
-      "references": []
+      "references": ["PRD Section 1-16"]
     },
     {
-      "id": "MIN-2-1",
+      "id": "PRD-1-2",
+      "wbs_ref": "1.2",
+      "wbs_l3_ref": "1.2",
+      "area_id": "1.0",
+      "title": "Define architecture decisions and optional adoption boundary",
+      "scope": "Document architecture decisions and explicitly designate optional app scaffold adoption as non-blocking for core governance engine delivery.",
+      "packet_id": "PRD-1-2",
+      "wbs_refs": ["1.2"],
+      "purpose": "Set hard boundaries for mandatory vs optional delivery.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "CRITICAL",
+      "preconditions": ["PRD-1-1 complete"],
+      "required_inputs": ["PRD v3.0 architecture and positioning sections"],
+      "required_actions": ["Define mandatory core baseline", "Define optional app-shell adoption track"],
+      "required_outputs": ["Architecture decision note with optionality boundary"],
+      "validation_checks": ["Optional area does not block core closeout", "Boundary is explicit in packet dependencies"],
+      "exit_criteria": ["Optional adoption policy approved in governance docs"],
+      "halt_conditions": ["Optional features are coupled as mandatory dependencies"],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": ["PRD 1.1", "PRD 2", "PRD 16"]
+    },
+    {
+      "id": "PRD-2-1",
       "wbs_ref": "2.1",
       "wbs_l3_ref": "2.1",
       "area_id": "2.0",
-      "title": "Execute first packet lifecycle",
-      "scope": "Implement WBS item 2.1: Execute first packet lifecycle.",
-      "packet_id": "MIN-2-1",
-      "wbs_refs": [
-        "2.1"
-      ],
-      "purpose": "Deliver Execute first packet lifecycle.",
+      "title": "Design and implement authentication providers and local dev login",
+      "scope": "Implement OIDC/JWT provider integration and local development authentication mode with session handling.",
+      "packet_id": "PRD-2-1",
+      "wbs_refs": ["2.1"],
+      "purpose": "Deliver enterprise-ready authentication baseline.",
       "status": "PENDING",
       "owner": "unassigned",
-      "priority": "MEDIUM",
-      "preconditions": [],
-      "required_inputs": [],
-      "required_actions": [
-        "Implement WBS item 2.1: Execute first packet lifecycle."
-      ],
-      "required_outputs": [],
-      "validation_checks": [
-        "Implementation aligns with packet scope",
-        "Evidence path included in packet notes"
-      ],
-      "exit_criteria": [
-        "Packet marked done with evidence references"
-      ],
-      "halt_conditions": [
-        "Required dependencies unresolved",
-        "Evidence missing for completion claim"
-      ],
+      "priority": "HIGH",
+      "preconditions": ["PRD-1-2 complete"],
+      "required_inputs": ["OIDC provider requirements", "Backend auth framework decisions"],
+      "required_actions": ["Implement provider config model", "Implement JWT validation", "Implement local dev mode"],
+      "required_outputs": ["Auth service and config contract", "Login/logout/session endpoints"],
+      "validation_checks": ["Token validation is enforced server-side", "Local dev mode is clearly gated by environment"],
+      "exit_criteria": ["Auth flows work for configured provider and local mode"],
+      "halt_conditions": ["Authentication bypass path exists in production profile"],
       "authority": "Repository packet governance",
       "type": "WBS_PACKET",
-      "references": []
+      "references": ["PRD 5.1"]
     },
     {
-      "id": "MIN-3-1",
+      "id": "PRD-2-2",
+      "wbs_ref": "2.2",
+      "wbs_l3_ref": "2.2",
+      "area_id": "2.0",
+      "title": "Implement backend RBAC middleware and policy enforcement",
+      "scope": "Define and enforce role capabilities in backend middleware with tenant and project scope support.",
+      "packet_id": "PRD-2-2",
+      "wbs_refs": ["2.2"],
+      "purpose": "Guarantee backend-authoritative RBAC behavior.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "CRITICAL",
+      "preconditions": ["PRD-2-1 complete"],
+      "required_inputs": ["Role matrix", "Route/resource map"],
+      "required_actions": ["Implement RBAC middleware", "Apply checks to API routes", "Add policy tests"],
+      "required_outputs": ["RBAC policy module", "Authorization test coverage"],
+      "validation_checks": ["Unauthorized access is denied for protected routes", "Tenant/project scoping is enforced"],
+      "exit_criteria": ["RBAC tests pass for all roles in scope"],
+      "halt_conditions": ["Route-level RBAC enforcement is inconsistent"],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": ["PRD 5.2"]
+    },
+    {
+      "id": "PRD-2-3",
+      "wbs_ref": "2.3",
+      "wbs_l3_ref": "2.3",
+      "area_id": "2.0",
+      "title": "Deliver role assignment and role-change audit integration",
+      "scope": "Deliver role assignment APIs/UI contract and immutable audit event generation for role changes.",
+      "packet_id": "PRD-2-3",
+      "wbs_refs": ["2.3"],
+      "purpose": "Enable governed role administration with traceability.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "HIGH",
+      "preconditions": ["PRD-2-2 complete"],
+      "required_inputs": ["RBAC model", "Audit event schema"],
+      "required_actions": ["Implement role assignment endpoints", "Capture role-change audit entries"],
+      "required_outputs": ["Role assignment contract", "Audit integration tests"],
+      "validation_checks": ["Role changes emit complete audit metadata", "Role scope constraints are enforced"],
+      "exit_criteria": ["Role assignment behavior is verifiable in audit viewer path"],
+      "halt_conditions": ["Role-change events are missing actor/timestamp context"],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": ["PRD 5.2", "PRD 5.7"]
+    },
+    {
+      "id": "PRD-3-1",
       "wbs_ref": "3.1",
       "wbs_l3_ref": "3.1",
       "area_id": "3.0",
-      "title": "Run baseline validation",
-      "scope": "Implement WBS item 3.1: Run baseline validation.",
-      "packet_id": "MIN-3-1",
-      "wbs_refs": [
-        "3.1"
-      ],
-      "purpose": "Deliver Run baseline validation.",
+      "title": "Model core entities and migration flow",
+      "scope": "Implement core entity models and Alembic migrations with PostgreSQL default and SQLite fallback compatibility.",
+      "packet_id": "PRD-3-1",
+      "wbs_refs": ["3.1"],
+      "purpose": "Establish governed data model baseline.",
       "status": "PENDING",
       "owner": "unassigned",
-      "priority": "MEDIUM",
-      "preconditions": [],
-      "required_inputs": [],
-      "required_actions": [
-        "Implement WBS item 3.1: Run baseline validation."
-      ],
-      "required_outputs": [],
-      "validation_checks": [
-        "Implementation aligns with packet scope",
-        "Evidence path included in packet notes"
-      ],
-      "exit_criteria": [
-        "Packet marked done with evidence references"
-      ],
-      "halt_conditions": [
-        "Required dependencies unresolved",
-        "Evidence missing for completion claim"
-      ],
+      "priority": "CRITICAL",
+      "preconditions": ["PRD-1-2 complete"],
+      "required_inputs": ["Entity list from PRD", "Existing schema conventions"],
+      "required_actions": ["Define SQLAlchemy models", "Create migration scripts", "Confirm sqlite fallback compatibility"],
+      "required_outputs": ["Migration set", "Schema docs"],
+      "validation_checks": ["Migrations apply cleanly in Postgres and SQLite dev mode", "Entities cover required PRD set"],
+      "exit_criteria": ["Database schema reaches expected version on clean bootstrap"],
+      "halt_conditions": ["Migration path is non-deterministic or lossy"],
       "authority": "Repository packet governance",
       "type": "WBS_PACKET",
-      "references": []
+      "references": ["PRD 5.3"]
     },
     {
-      "id": "MIN-4-1",
+      "id": "PRD-3-2",
+      "wbs_ref": "3.2",
+      "wbs_l3_ref": "3.2",
+      "area_id": "3.0",
+      "title": "Implement REST endpoint surface with OpenAPI",
+      "scope": "Deliver required REST endpoints and OpenAPI documentation for core governance modules.",
+      "packet_id": "PRD-3-2",
+      "wbs_refs": ["3.2"],
+      "purpose": "Provide stable API contract for UI and agents.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "CRITICAL",
+      "preconditions": ["PRD-3-1 complete", "PRD-2-2 complete"],
+      "required_inputs": ["Entity model", "RBAC enforcement rules"],
+      "required_actions": ["Implement endpoint routers", "Attach authorization controls", "Publish OpenAPI docs"],
+      "required_outputs": ["API route implementation", "OpenAPI specification"],
+      "validation_checks": ["Required endpoint families are present", "OpenAPI covers request/response contracts"],
+      "exit_criteria": ["Core endpoint smoke tests pass"],
+      "halt_conditions": ["Endpoint behavior diverges from documented contract"],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": ["PRD 5.4"]
+    },
+    {
+      "id": "PRD-3-3",
+      "wbs_ref": "3.3",
+      "wbs_l3_ref": "3.3",
+      "area_id": "3.0",
+      "title": "Implement health, metrics, webhooks, and structured logging",
+      "scope": "Implement operational integration endpoints and structured observability outputs.",
+      "packet_id": "PRD-3-3",
+      "wbs_refs": ["3.3"],
+      "purpose": "Enable runtime diagnostics and platform integration.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "HIGH",
+      "preconditions": ["PRD-3-2 complete"],
+      "required_inputs": ["Metrics schema", "Logging format standard"],
+      "required_actions": ["Add health and metrics endpoints", "Implement webhook event plumbing", "Emit structured JSON logs"],
+      "required_outputs": ["Operational endpoints", "Log output contract"],
+      "validation_checks": ["Health and metrics endpoints respond consistently", "Logs include required correlation metadata"],
+      "exit_criteria": ["Observability endpoints validated in local runtime"],
+      "halt_conditions": ["Operational endpoints are inaccessible or undocumented"],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": ["PRD 5.4", "PRD 11"]
+    },
+    {
+      "id": "PRD-4-1",
       "wbs_ref": "4.1",
       "wbs_l3_ref": "4.1",
       "area_id": "4.0",
-      "title": "Closeout with drift assessment",
-      "scope": "Implement WBS item 4.1: Closeout with drift assessment.",
-      "packet_id": "MIN-4-1",
-      "wbs_refs": [
-        "4.1"
-      ],
-      "purpose": "Deliver Closeout with drift assessment.",
+      "title": "Build WBS and packet AG Grid interface",
+      "scope": "Implement hierarchical WBS/packet grid with status color coding, filters, search, and role-aware inline editing.",
+      "packet_id": "PRD-4-1",
+      "wbs_refs": ["4.1"],
+      "purpose": "Ship primary governance interaction surface.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "CRITICAL",
+      "preconditions": ["PRD-3-2 complete", "PRD-2-3 complete"],
+      "required_inputs": ["Packet API contract", "RBAC view/edit policy"],
+      "required_actions": ["Implement tree grid", "Implement filters and bulk actions", "Implement role-aware edit controls"],
+      "required_outputs": ["WBS grid UI module"],
+      "validation_checks": ["Grid handles large packet sets efficiently", "Edit controls respect RBAC permissions"],
+      "exit_criteria": ["Core WBS editing and navigation scenarios pass"],
+      "halt_conditions": ["UI allows unauthorized edits"],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": ["PRD 5.5"]
+    },
+    {
+      "id": "PRD-4-2",
+      "wbs_ref": "4.2",
+      "wbs_l3_ref": "4.2",
+      "area_id": "4.0",
+      "title": "Build dependency graph and cycle detection UX",
+      "scope": "Implement visual dependency graph and blocked/cycle visualization with packet navigation.",
+      "packet_id": "PRD-4-2",
+      "wbs_refs": ["4.2"],
+      "purpose": "Expose dependency risk and blocked-state insight.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "HIGH",
+      "preconditions": ["PRD-4-1 complete"],
+      "required_inputs": ["Dependency API", "Graph interaction design"],
+      "required_actions": ["Render dependency graph", "Highlight blocked packets", "Expose cycle detection results"],
+      "required_outputs": ["Dependency graph UI module"],
+      "validation_checks": ["Blocked and cyclic paths are visually distinguishable", "Click-to-navigate behavior resolves packet details"],
+      "exit_criteria": ["Dependency visualization scenarios pass"],
+      "halt_conditions": ["Cycles are not detected or surfaced"],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": ["PRD 5.6"]
+    },
+    {
+      "id": "PRD-4-3",
+      "wbs_ref": "4.3",
+      "wbs_l3_ref": "4.3",
+      "area_id": "4.0",
+      "title": "Build audit viewer with export support",
+      "scope": "Implement audit viewer filters, pagination, and CSV/JSON export for immutable audit display.",
+      "packet_id": "PRD-4-3",
+      "wbs_refs": ["4.3"],
+      "purpose": "Deliver governance-grade audit transparency.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "HIGH",
+      "preconditions": ["PRD-3-2 complete", "PRD-2-3 complete"],
+      "required_inputs": ["Audit schema", "Export format requirements"],
+      "required_actions": ["Implement audit grid", "Add filtering and pagination", "Add CSV/JSON export"],
+      "required_outputs": ["Audit viewer UI and export path"],
+      "validation_checks": ["Audit filters match backend query semantics", "Export output matches visible filters"],
+      "exit_criteria": ["Audit viewer usability scenarios pass"],
+      "halt_conditions": ["Audit export omits required fields"],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": ["PRD 5.7"]
+    },
+    {
+      "id": "PRD-4-4",
+      "wbs_ref": "4.4",
+      "wbs_l3_ref": "4.4",
+      "area_id": "4.0",
+      "title": "Build risk register grid, heatmap, and aging views",
+      "scope": "Implement risk register module with severity scoring, status tracking, escalation level, and linked packet context.",
+      "packet_id": "PRD-4-4",
+      "wbs_refs": ["4.4"],
+      "purpose": "Provide operational risk visibility and governance controls.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "HIGH",
+      "preconditions": ["PRD-4-1 complete", "PRD-3-2 complete"],
+      "required_inputs": ["Risk model and scoring policy"],
+      "required_actions": ["Implement risk grid", "Implement risk heatmap", "Implement aging/linked packet views"],
+      "required_outputs": ["Risk register UI module"],
+      "validation_checks": ["Risk states align with backend model", "Linked packet drill-down works consistently"],
+      "exit_criteria": ["Risk register workflows pass for create/update/review"],
+      "halt_conditions": ["Risk state transitions are not auditable"],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": ["PRD 5.8"]
+    },
+    {
+      "id": "PRD-5-1",
+      "wbs_ref": "5.1",
+      "wbs_l3_ref": "5.1",
+      "area_id": "5.0",
+      "title": "Implement agent identity registry and claim/action endpoints",
+      "scope": "Implement agent identity registry, API key registration flow, claim endpoint integration, and action logging with tenant isolation.",
+      "packet_id": "PRD-5-1",
+      "wbs_refs": ["5.1"],
+      "purpose": "Enable governed machine participation in packet lifecycle.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "HIGH",
+      "preconditions": ["PRD-2-2 complete", "PRD-3-2 complete"],
+      "required_inputs": ["Agent role policy", "API key model"],
+      "required_actions": ["Implement agent registry", "Implement key issuance and rotation paths", "Implement claim/action logs and limits"],
+      "required_outputs": ["Agent integration endpoints", "Agent audit events"],
+      "validation_checks": ["Agent calls are tenant-isolated", "Rate limiting and auth checks are enforced"],
+      "exit_criteria": ["Agent integration smoke tests pass"],
+      "halt_conditions": ["Agent path can bypass governance controls"],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": ["PRD 5.9"]
+    },
+    {
+      "id": "PRD-5-2",
+      "wbs_ref": "5.2",
+      "wbs_l3_ref": "5.2",
+      "area_id": "5.0",
+      "title": "Implement telemetry model and metrics collection",
+      "scope": "Capture required development and operational metrics and persist time-series compatible records.",
+      "packet_id": "PRD-5-2",
+      "wbs_refs": ["5.2"],
+      "purpose": "Create evidence base for operational optimization.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "HIGH",
+      "preconditions": ["PRD-3-3 complete"],
+      "required_inputs": ["Metrics taxonomy from PRD"],
+      "required_actions": ["Define metric events model", "Instrument key flows", "Expose metrics query path"],
+      "required_outputs": ["Telemetry schema and ingestion pipeline"],
+      "validation_checks": ["Required metrics are captured with timestamps", "Metrics can be queried for proposal generation"],
+      "exit_criteria": ["Telemetry smoke checks pass on representative flows"],
+      "halt_conditions": ["Metrics omit core lifecycle KPIs"],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": ["PRD 7"]
+    },
+    {
+      "id": "PRD-5-3",
+      "wbs_ref": "5.3",
+      "wbs_l3_ref": "5.3",
+      "area_id": "5.0",
+      "title": "Implement bounded recursive proposal workflow",
+      "scope": "Implement proposal generation/review/approval workflow that is explicitly governance-bound and prohibits automatic rule or core logic modification.",
+      "packet_id": "PRD-5-3",
+      "wbs_refs": ["5.3"],
+      "purpose": "Deliver structured recursive improvement without uncontrolled autonomy.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "CRITICAL",
+      "preconditions": ["PRD-5-2 complete", "PRD-5-1 complete"],
+      "required_inputs": ["Proposal schema", "Governance officer review policy"],
+      "required_actions": ["Implement proposal creation path", "Implement review/approval states", "Implement denied automatic-change guards"],
+      "required_outputs": ["Proposal lifecycle implementation", "Guardrail validation tests"],
+      "validation_checks": ["No auto-apply path exists for governed changes", "Proposal decisions are auditable"],
+      "exit_criteria": ["Proposal workflow functions end-to-end with manual approval"],
+      "halt_conditions": ["Recursive path can alter rules automatically"],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": ["PRD 8"]
+    },
+    {
+      "id": "PRD-5-4",
+      "wbs_ref": "5.4",
+      "wbs_l3_ref": "5.4",
+      "area_id": "5.0",
+      "title": "Implement governance rule versioning and rollback controls",
+      "scope": "Implement versioned governance rules with explicit approval workflow, rationale logging, and rollback capability.",
+      "packet_id": "PRD-5-4",
+      "wbs_refs": ["5.4"],
+      "purpose": "Preserve deterministic governance evolution controls.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "CRITICAL",
+      "preconditions": ["PRD-5-3 complete"],
+      "required_inputs": ["Rule model and versioning policy"],
+      "required_actions": ["Implement rule version objects", "Implement approval and rollback controls", "Log change rationale"],
+      "required_outputs": ["Rule versioning module", "Rollback procedure tests"],
+      "validation_checks": ["Rule changes require explicit approval", "Rollback path is deterministic"],
+      "exit_criteria": ["Rule version workflow passes governance checks"],
+      "halt_conditions": ["Rule changes can bypass approval path"],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": ["PRD 9"]
+    },
+    {
+      "id": "PRD-6-1",
+      "wbs_ref": "6.1",
+      "wbs_l3_ref": "6.1",
+      "area_id": "6.0",
+      "title": "Implement docker-compose, env config, and SQLite dev fallback",
+      "scope": "Deliver local development mode with docker-compose, environment-based configuration, and SQLite fallback.",
+      "packet_id": "PRD-6-1",
+      "wbs_refs": ["6.1"],
+      "purpose": "Provide fast reproducible local startup path.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "HIGH",
+      "preconditions": ["PRD-3-1 complete"],
+      "required_inputs": ["Service dependency map", "Environment variable contract"],
+      "required_actions": ["Implement compose stack", "Implement config loading and validation", "Test SQLite fallback profile"],
+      "required_outputs": ["Local deployment assets", "Environment configuration guide"],
+      "validation_checks": ["docker-compose startup reaches healthy state", "SQLite fallback boots for dev profile"],
+      "exit_criteria": ["Local stack is reproducible from clean checkout"],
+      "halt_conditions": ["Environment config allows unsafe defaults in production profile"],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": ["PRD 4.3", "PRD 12"]
+    },
+    {
+      "id": "PRD-6-2",
+      "wbs_ref": "6.2",
+      "wbs_l3_ref": "6.2",
+      "area_id": "6.0",
+      "title": "Prepare Kubernetes-ready deployment and observability endpoints",
+      "scope": "Prepare Kubernetes-ready deployment profile and ensure health/metrics endpoints are deployment-addressable.",
+      "packet_id": "PRD-6-2",
+      "wbs_refs": ["6.2"],
+      "purpose": "Enable production deployment portability.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "HIGH",
+      "preconditions": ["PRD-6-1 complete", "PRD-3-3 complete"],
+      "required_inputs": ["Deployment target constraints"],
+      "required_actions": ["Create k8s deployment assets", "Validate probes and metrics exposure", "Document mode-specific configuration"],
+      "required_outputs": ["Kubernetes deployment profile"],
+      "validation_checks": ["Probes align with health endpoint semantics", "Metrics endpoint is scrape-compatible"],
+      "exit_criteria": ["Deployment profile passes readiness checklist"],
+      "halt_conditions": ["Cluster profile omits required runtime dependencies"],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": ["PRD 12"]
+    },
+    {
+      "id": "PRD-6-3",
+      "wbs_ref": "6.3",
+      "wbs_l3_ref": "6.3",
+      "area_id": "6.0",
+      "title": "Run performance and security hardening baseline",
+      "scope": "Execute non-functional baseline checks for latency, scalability path, and security controls.",
+      "packet_id": "PRD-6-3",
+      "wbs_refs": ["6.3"],
+      "purpose": "Validate readiness against performance and security requirements.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "CRITICAL",
+      "preconditions": ["PRD-2-2 complete", "PRD-6-2 complete", "PRD-5-2 complete"],
+      "required_inputs": ["Performance targets", "Security checklist"],
+      "required_actions": ["Run API latency checks", "Run role-based security checks", "Document residual NFR gaps"],
+      "required_outputs": ["NFR validation report"],
+      "validation_checks": ["Latency and scalability tests are reproducible", "Security controls are verified with evidence"],
+      "exit_criteria": ["NFR report published with pass/fail and mitigations"],
+      "halt_conditions": ["Critical security controls remain unverified"],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": ["PRD 13"]
+    },
+    {
+      "id": "PRD-7-1",
+      "wbs_ref": "7.1",
+      "wbs_l3_ref": "7.1",
+      "area_id": "7.0",
+      "title": "Define optional app scaffold profile and module toggles",
+      "scope": "Define optional packaging profile for app scaffold components so users can run core governance without adopting full scaffold UI.",
+      "packet_id": "PRD-7-1",
+      "wbs_refs": ["7.1"],
+      "purpose": "Keep scaffold app usage optional for adopters.",
       "status": "PENDING",
       "owner": "unassigned",
       "priority": "MEDIUM",
-      "preconditions": [],
-      "required_inputs": [],
-      "required_actions": [
-        "Implement WBS item 4.1: Closeout with drift assessment."
-      ],
-      "required_outputs": [],
-      "validation_checks": [
-        "Implementation aligns with packet scope",
-        "Evidence path included in packet notes"
-      ],
-      "exit_criteria": [
-        "Packet marked done with evidence references"
-      ],
-      "halt_conditions": [
-        "Required dependencies unresolved",
-        "Evidence missing for completion claim"
-      ],
+      "preconditions": ["PRD-1-2 complete"],
+      "required_inputs": ["Module inventory", "User adoption scenarios"],
+      "required_actions": ["Define feature toggles", "Define profile defaults", "Document optionality behavior"],
+      "required_outputs": ["Optional profile specification"],
+      "validation_checks": ["Core governance can run with optional profile disabled", "Toggle behavior is deterministic"],
+      "exit_criteria": ["Optional profile is documented and testable"],
+      "halt_conditions": ["Optional components become hard dependencies for core lifecycle"],
       "authority": "Repository packet governance",
       "type": "WBS_PACKET",
-      "references": []
+      "references": ["PRD 1.1", "PRD 2"]
     },
     {
-      "id": "RSK-5-1",
-      "wbs_ref": "5.1",
-      "area_id": "5.0",
-      "title": "Define residual risk register schema and runtime storage",
-      "scope": "Create .governance/residual-risk-register.json contract and supporting validation/storage rules. Define normalized enums for likelihood/impact/confidence/status and ensure runtime-artifact handling aligns with template hygiene controls.",
-      "wbs_l3_ref": "5.1",
-      "packet_id": "RSK-5-1",
-      "wbs_refs": [
-        "5.1"
-      ],
-      "purpose": "Deliver Define residual risk register schema and runtime storage.",
+      "id": "PRD-7-2",
+      "wbs_ref": "7.2",
+      "wbs_l3_ref": "7.2",
+      "area_id": "7.0",
+      "title": "Ship optional frontend shell hooks and extension points",
+      "scope": "Implement optional app shell packaging with developer hooks and extension points that can be adopted incrementally.",
+      "packet_id": "PRD-7-2",
+      "wbs_refs": ["7.2"],
+      "purpose": "Provide optional value-add app surface without coupling core controls.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "MEDIUM",
+      "preconditions": ["PRD-7-1 complete", "PRD-4-1 complete", "PRD-3-2 complete"],
+      "required_inputs": ["Frontend shell requirements", "Developer hooks list"],
+      "required_actions": ["Implement optional shell package", "Expose approved hooks", "Validate disabled mode behavior"],
+      "required_outputs": ["Optional app shell module"],
+      "validation_checks": ["Hooks behave consistently in enabled profile", "Disabled profile preserves core platform behavior"],
+      "exit_criteria": ["Optional shell can be enabled/disabled via profile configuration"],
+      "halt_conditions": ["Core workflows fail when optional shell is disabled"],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": ["PRD 10"]
+    },
+    {
+      "id": "PRD-7-3",
+      "wbs_ref": "7.3",
+      "wbs_l3_ref": "7.3",
+      "area_id": "7.0",
+      "title": "Publish optional adoption and migration playbook",
+      "scope": "Provide guidance for teams adopting optional scaffold modules over time from core-only deployments.",
+      "packet_id": "PRD-7-3",
+      "wbs_refs": ["7.3"],
+      "purpose": "Enable incremental and low-risk adoption.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "MEDIUM",
+      "preconditions": ["PRD-7-2 complete"],
+      "required_inputs": ["Optional profile docs", "Example deployment paths"],
+      "required_actions": ["Document migration paths", "Document operational tradeoffs", "Publish adoption checklist"],
+      "required_outputs": ["Optional adoption playbook"],
+      "validation_checks": ["Playbook includes core-only and opt-in routes", "Adoption steps are reversible"],
+      "exit_criteria": ["Playbook reviewed and linked from developer docs"],
+      "halt_conditions": ["Playbook lacks rollback guidance"],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": ["PRD 2", "PRD 12"]
+    },
+    {
+      "id": "PRD-8-1",
+      "wbs_ref": "8.1",
+      "wbs_l3_ref": "8.1",
+      "area_id": "8.0",
+      "title": "Execute Definition of Done end-to-end scenario",
+      "scope": "Run the PRD Definition of Done scenario end-to-end in a single deployment session for mandatory core capabilities.",
+      "packet_id": "PRD-8-1",
+      "wbs_refs": ["8.1"],
+      "purpose": "Verify integrated readiness of the governed platform.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "CRITICAL",
+      "preconditions": ["PRD-4-4 complete", "PRD-5-4 complete", "PRD-6-3 complete"],
+      "required_inputs": ["Definition of Done checklist", "Deployment profile"],
+      "required_actions": ["Run end-to-end scenario", "Capture evidence artifacts", "Record gaps and residual risks"],
+      "required_outputs": ["DoD execution report"],
+      "validation_checks": ["All mandatory DoD steps are exercised with evidence", "Any failures include concrete remediation items"],
+      "exit_criteria": ["DoD report published and reviewed"],
+      "halt_conditions": ["Critical DoD steps cannot be executed"],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": ["PRD 15"]
+    },
+    {
+      "id": "PRD-8-2",
+      "wbs_ref": "8.2",
+      "wbs_l3_ref": "8.2",
+      "area_id": "8.0",
+      "title": "Produce delivery report and closeout artifacts",
+      "scope": "Publish full delivery report, residual risk summary, and closeout drift assessments for completed level-2 areas.",
+      "packet_id": "PRD-8-2",
+      "wbs_refs": ["8.2"],
+      "purpose": "Close governed delivery with auditable outcome records.",
       "status": "PENDING",
       "owner": "unassigned",
       "priority": "HIGH",
-      "preconditions": [],
-      "required_inputs": [],
-      "required_actions": [
-        "Create .governance/residual-risk-register.json contract and supporting validation/storage rules. Define normalized enums for likelihood/impact/confidence/status and ensure runtime-artifact handling aligns with template hygiene controls."
-      ],
-      "required_outputs": [],
-      "validation_checks": [
-        "Implementation aligns with packet scope",
-        "Evidence path included in packet notes"
-      ],
-      "exit_criteria": [
-        "Packet marked done with evidence references"
-      ],
-      "halt_conditions": [
-        "Required dependencies unresolved",
-        "Evidence missing for completion claim"
-      ],
+      "preconditions": ["PRD-8-1 complete"],
+      "required_inputs": ["Packet status history", "Evidence references", "Residual risk state"],
+      "required_actions": ["Generate delivery report", "Run level-2 closeout commands", "Publish drift assessments"],
+      "required_outputs": ["Delivery report", "Closeout drift artifacts"],
+      "validation_checks": ["Report includes per-packet details and evidence sources", "Closeout records pass CLI constraints"],
+      "exit_criteria": ["Release closeout package committed and reviewable"],
+      "halt_conditions": ["Closeout claims are missing evidence links"],
       "authority": "Repository packet governance",
       "type": "WBS_PACKET",
-      "references": []
-    },
-    {
-      "id": "RSK-5-2",
-      "wbs_ref": "5.2",
-      "area_id": "5.0",
-      "title": "Require risk acknowledgement at packet closure",
-      "scope": "Integrate residual risk acknowledgement into done workflow with non-interactive flags (for example --risk none or --risk-file path). Enforce explicit acknowledgement without forcing interactive prompts, and persist audit-ready event metadata.",
-      "wbs_l3_ref": "5.2",
-      "packet_id": "RSK-5-2",
-      "wbs_refs": [
-        "5.2"
-      ],
-      "purpose": "Deliver Require risk acknowledgement at packet closure.",
-      "status": "PENDING",
-      "owner": "unassigned",
-      "priority": "HIGH",
-      "preconditions": [],
-      "required_inputs": [],
-      "required_actions": [
-        "Integrate residual risk acknowledgement into done workflow with non-interactive flags (for example --risk none or --risk-file path). Enforce explicit acknowledgement without forcing interactive prompts, and persist audit-ready event metadata."
-      ],
-      "required_outputs": [],
-      "validation_checks": [
-        "Implementation aligns with packet scope",
-        "Evidence path included in packet notes"
-      ],
-      "exit_criteria": [
-        "Packet marked done with evidence references"
-      ],
-      "halt_conditions": [
-        "Required dependencies unresolved",
-        "Evidence missing for completion claim"
-      ],
-      "authority": "Repository packet governance",
-      "type": "WBS_PACKET",
-      "references": []
-    },
-    {
-      "id": "RSK-5-3",
-      "wbs_ref": "5.3",
-      "area_id": "5.0",
-      "title": "Implement residual risk CLI lifecycle commands",
-      "scope": "Add CLI commands to create, list, inspect, and transition residual risks (open, mitigated, accepted, transferred) including packet-linked filtering and actor/timestamp capture.",
-      "wbs_l3_ref": "5.3",
-      "packet_id": "RSK-5-3",
-      "wbs_refs": [
-        "5.3"
-      ],
-      "purpose": "Deliver Implement residual risk CLI lifecycle commands.",
-      "status": "PENDING",
-      "owner": "unassigned",
-      "priority": "HIGH",
-      "preconditions": [],
-      "required_inputs": [],
-      "required_actions": [
-        "Add CLI commands to create, list, inspect, and transition residual risks (open, mitigated, accepted, transferred) including packet-linked filtering and actor/timestamp capture."
-      ],
-      "required_outputs": [],
-      "validation_checks": [
-        "Implementation aligns with packet scope",
-        "Evidence path included in packet notes"
-      ],
-      "exit_criteria": [
-        "Packet marked done with evidence references"
-      ],
-      "halt_conditions": [
-        "Required dependencies unresolved",
-        "Evidence missing for completion claim"
-      ],
-      "authority": "Repository packet governance",
-      "type": "WBS_PACKET",
-      "references": []
-    },
-    {
-      "id": "RSK-5-4",
-      "wbs_ref": "5.4",
-      "area_id": "5.0",
-      "title": "Add residual risk reporting and governance documentation",
-      "scope": "Add risk summary/report outputs and document operational policy: ownership, evidence expectations, deduplication approach, and relationship to closeout-l2 drift assessments.",
-      "wbs_l3_ref": "5.4",
-      "packet_id": "RSK-5-4",
-      "wbs_refs": [
-        "5.4"
-      ],
-      "purpose": "Deliver Add residual risk reporting and governance documentation.",
-      "status": "PENDING",
-      "owner": "unassigned",
-      "priority": "HIGH",
-      "preconditions": [],
-      "required_inputs": [],
-      "required_actions": [
-        "Add risk summary/report outputs and document operational policy: ownership, evidence expectations, deduplication approach, and relationship to closeout-l2 drift assessments."
-      ],
-      "required_outputs": [],
-      "validation_checks": [
-        "Implementation aligns with packet scope",
-        "Evidence path included in packet notes"
-      ],
-      "exit_criteria": [
-        "Packet marked done with evidence references"
-      ],
-      "halt_conditions": [
-        "Required dependencies unresolved",
-        "Evidence missing for completion claim"
-      ],
-      "authority": "Repository packet governance",
-      "type": "WBS_PACKET",
-      "references": []
-    },
-    {
-      "id": "RSK-5-5",
-      "wbs_ref": "5.5",
-      "area_id": "5.0",
-      "title": "Validate rollout and optional git-governance linkage",
-      "scope": "Deliver tests and end-to-end validation for residual risk flows, plus optional git-native audit linkage for risk declarations. Publish a rollout/readiness note with residual implementation risks and next steps.",
-      "wbs_l3_ref": "5.5",
-      "packet_id": "RSK-5-5",
-      "wbs_refs": [
-        "5.5"
-      ],
-      "purpose": "Deliver Validate rollout and optional git-governance linkage.",
-      "status": "PENDING",
-      "owner": "unassigned",
-      "priority": "HIGH",
-      "preconditions": [],
-      "required_inputs": [],
-      "required_actions": [
-        "Deliver tests and end-to-end validation for residual risk flows, plus optional git-native audit linkage for risk declarations. Publish a rollout/readiness note with residual implementation risks and next steps."
-      ],
-      "required_outputs": [],
-      "validation_checks": [
-        "Implementation aligns with packet scope",
-        "Evidence path included in packet notes"
-      ],
-      "exit_criteria": [
-        "Packet marked done with evidence references"
-      ],
-      "halt_conditions": [
-        "Required dependencies unresolved",
-        "Evidence missing for completion claim"
-      ],
-      "authority": "Repository packet governance",
-      "type": "WBS_PACKET",
-      "references": []
+      "references": ["PRD 15", "PRD 16"]
     }
   ],
   "dependencies": {
-    "MIN-2-1": [
-      "MIN-1-1"
-    ],
-    "MIN-3-1": [
-      "MIN-2-1"
-    ],
-    "MIN-4-1": [
-      "MIN-3-1"
-    ],
-    "RSK-5-2": [
-      "RSK-5-1"
-    ],
-    "RSK-5-3": [
-      "RSK-5-2"
-    ],
-    "RSK-5-4": [
-      "RSK-5-3"
-    ],
-    "RSK-5-5": [
-      "RSK-5-4"
-    ]
+    "PRD-1-2": ["PRD-1-1"],
+    "PRD-2-1": ["PRD-1-2"],
+    "PRD-2-2": ["PRD-2-1"],
+    "PRD-2-3": ["PRD-2-2"],
+    "PRD-3-1": ["PRD-1-2"],
+    "PRD-3-2": ["PRD-3-1", "PRD-2-2"],
+    "PRD-3-3": ["PRD-3-2"],
+    "PRD-4-1": ["PRD-3-2", "PRD-2-3"],
+    "PRD-4-2": ["PRD-4-1"],
+    "PRD-4-3": ["PRD-3-2", "PRD-2-3"],
+    "PRD-4-4": ["PRD-4-1", "PRD-3-2"],
+    "PRD-5-1": ["PRD-2-2", "PRD-3-2"],
+    "PRD-5-2": ["PRD-3-3"],
+    "PRD-5-3": ["PRD-5-2", "PRD-5-1"],
+    "PRD-5-4": ["PRD-5-3"],
+    "PRD-6-1": ["PRD-3-1"],
+    "PRD-6-2": ["PRD-6-1", "PRD-3-3"],
+    "PRD-6-3": ["PRD-2-2", "PRD-6-2", "PRD-5-2"],
+    "PRD-7-1": ["PRD-1-2"],
+    "PRD-7-2": ["PRD-7-1", "PRD-4-1", "PRD-3-2"],
+    "PRD-7-3": ["PRD-7-2"],
+    "PRD-8-1": ["PRD-4-4", "PRD-5-4", "PRD-6-3"],
+    "PRD-8-2": ["PRD-8-1"]
   }
 }

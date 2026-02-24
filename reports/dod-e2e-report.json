@@ -1,0 +1,54 @@
+{
+  "timestamp": 1771903373.7116892,
+  "steps": [
+    {
+      "step": "Login via OIDC-compatible dev mode",
+      "passed": true
+    },
+    {
+      "step": "Create tenant and project",
+      "passed": true
+    },
+    {
+      "step": "Create packet",
+      "passed": true
+    },
+    {
+      "step": "Assign roles",
+      "passed": true
+    },
+    {
+      "step": "View WBS and dependency graph",
+      "passed": true
+    },
+    {
+      "step": "View audit log",
+      "passed": true
+    },
+    {
+      "step": "Register agent",
+      "passed": true
+    },
+    {
+      "step": "Execute packet",
+      "passed": true
+    },
+    {
+      "step": "View telemetry metrics",
+      "passed": true
+    },
+    {
+      "step": "Generate recursive proposal",
+      "passed": true
+    },
+    {
+      "step": "Approve proposal through governance",
+      "passed": true
+    },
+    {
+      "step": "Export audit logs",
+      "passed": true
+    }
+  ],
+  "passed": true
+}

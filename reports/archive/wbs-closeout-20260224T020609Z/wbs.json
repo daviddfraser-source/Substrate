@@ -1,0 +1,406 @@
+{
+  "metadata": {
+    "project_name": "Substrate Minimal",
+    "approved_by": "substrate-lead",
+    "approved_at": "2026-02-13",
+    "version": "1.0"
+  },
+  "work_areas": [
+    {
+      "id": "1.0",
+      "title": "Scaffold Init",
+      "description": "Initialize scaffold and baseline governance."
+    },
+    {
+      "id": "2.0",
+      "title": "Core Workflow",
+      "description": "Establish packet lifecycle and reporting."
+    },
+    {
+      "id": "3.0",
+      "title": "Quality Baseline",
+      "description": "Add minimal tests and checks."
+    },
+    {
+      "id": "4.0",
+      "title": "Closeout",
+      "description": "Deliver report and drift closeout."
+    },
+    {
+      "id": "5.0",
+      "title": "Residual Risk Governance",
+      "description": "Integrate execution-time residual risk capture, tracking, and reporting into packet lifecycle governance."
+    }
+  ],
+  "wbs_level_3": [
+    {
+      "wbs_ref": "1.1",
+      "area_id": "1.0",
+      "title": "Initialize governance files"
+    },
+    {
+      "wbs_ref": "2.1",
+      "area_id": "2.0",
+      "title": "Execute first packet lifecycle"
+    },
+    {
+      "wbs_ref": "3.1",
+      "area_id": "3.0",
+      "title": "Run baseline validation"
+    },
+    {
+      "wbs_ref": "4.1",
+      "area_id": "4.0",
+      "title": "Closeout with drift assessment"
+    }
+  ],
+  "packets": [
+    {
+      "id": "MIN-1-1",
+      "wbs_ref": "1.1",
+      "wbs_l3_ref": "1.1",
+      "area_id": "1.0",
+      "title": "Initialize governance files",
+      "scope": "Implement WBS item 1.1: Initialize governance files.",
+      "packet_id": "MIN-1-1",
+      "wbs_refs": [
+        "1.1"
+      ],
+      "purpose": "Deliver Initialize governance files.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "MEDIUM",
+      "preconditions": [],
+      "required_inputs": [],
+      "required_actions": [
+        "Implement WBS item 1.1: Initialize governance files."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Evidence path included in packet notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with evidence references"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Evidence missing for completion claim"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "MIN-2-1",
+      "wbs_ref": "2.1",
+      "wbs_l3_ref": "2.1",
+      "area_id": "2.0",
+      "title": "Execute first packet lifecycle",
+      "scope": "Implement WBS item 2.1: Execute first packet lifecycle.",
+      "packet_id": "MIN-2-1",
+      "wbs_refs": [
+        "2.1"
+      ],
+      "purpose": "Deliver Execute first packet lifecycle.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "MEDIUM",
+      "preconditions": [],
+      "required_inputs": [],
+      "required_actions": [
+        "Implement WBS item 2.1: Execute first packet lifecycle."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Evidence path included in packet notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with evidence references"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Evidence missing for completion claim"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "MIN-3-1",
+      "wbs_ref": "3.1",
+      "wbs_l3_ref": "3.1",
+      "area_id": "3.0",
+      "title": "Run baseline validation",
+      "scope": "Implement WBS item 3.1: Run baseline validation.",
+      "packet_id": "MIN-3-1",
+      "wbs_refs": [
+        "3.1"
+      ],
+      "purpose": "Deliver Run baseline validation.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "MEDIUM",
+      "preconditions": [],
+      "required_inputs": [],
+      "required_actions": [
+        "Implement WBS item 3.1: Run baseline validation."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Evidence path included in packet notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with evidence references"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Evidence missing for completion claim"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "MIN-4-1",
+      "wbs_ref": "4.1",
+      "wbs_l3_ref": "4.1",
+      "area_id": "4.0",
+      "title": "Closeout with drift assessment",
+      "scope": "Implement WBS item 4.1: Closeout with drift assessment.",
+      "packet_id": "MIN-4-1",
+      "wbs_refs": [
+        "4.1"
+      ],
+      "purpose": "Deliver Closeout with drift assessment.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "MEDIUM",
+      "preconditions": [],
+      "required_inputs": [],
+      "required_actions": [
+        "Implement WBS item 4.1: Closeout with drift assessment."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Evidence path included in packet notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with evidence references"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Evidence missing for completion claim"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "RSK-5-1",
+      "wbs_ref": "5.1",
+      "area_id": "5.0",
+      "title": "Define residual risk register schema and runtime storage",
+      "scope": "Create .governance/residual-risk-register.json contract and supporting validation/storage rules. Define normalized enums for likelihood/impact/confidence/status and ensure runtime-artifact handling aligns with template hygiene controls.",
+      "wbs_l3_ref": "5.1",
+      "packet_id": "RSK-5-1",
+      "wbs_refs": [
+        "5.1"
+      ],
+      "purpose": "Deliver Define residual risk register schema and runtime storage.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "HIGH",
+      "preconditions": [],
+      "required_inputs": [],
+      "required_actions": [
+        "Create .governance/residual-risk-register.json contract and supporting validation/storage rules. Define normalized enums for likelihood/impact/confidence/status and ensure runtime-artifact handling aligns with template hygiene controls."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Evidence path included in packet notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with evidence references"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Evidence missing for completion claim"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "RSK-5-2",
+      "wbs_ref": "5.2",
+      "area_id": "5.0",
+      "title": "Require risk acknowledgement at packet closure",
+      "scope": "Integrate residual risk acknowledgement into done workflow with non-interactive flags (for example --risk none or --risk-file path). Enforce explicit acknowledgement without forcing interactive prompts, and persist audit-ready event metadata.",
+      "wbs_l3_ref": "5.2",
+      "packet_id": "RSK-5-2",
+      "wbs_refs": [
+        "5.2"
+      ],
+      "purpose": "Deliver Require risk acknowledgement at packet closure.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "HIGH",
+      "preconditions": [],
+      "required_inputs": [],
+      "required_actions": [
+        "Integrate residual risk acknowledgement into done workflow with non-interactive flags (for example --risk none or --risk-file path). Enforce explicit acknowledgement without forcing interactive prompts, and persist audit-ready event metadata."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Evidence path included in packet notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with evidence references"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Evidence missing for completion claim"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "RSK-5-3",
+      "wbs_ref": "5.3",
+      "area_id": "5.0",
+      "title": "Implement residual risk CLI lifecycle commands",
+      "scope": "Add CLI commands to create, list, inspect, and transition residual risks (open, mitigated, accepted, transferred) including packet-linked filtering and actor/timestamp capture.",
+      "wbs_l3_ref": "5.3",
+      "packet_id": "RSK-5-3",
+      "wbs_refs": [
+        "5.3"
+      ],
+      "purpose": "Deliver Implement residual risk CLI lifecycle commands.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "HIGH",
+      "preconditions": [],
+      "required_inputs": [],
+      "required_actions": [
+        "Add CLI commands to create, list, inspect, and transition residual risks (open, mitigated, accepted, transferred) including packet-linked filtering and actor/timestamp capture."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Evidence path included in packet notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with evidence references"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Evidence missing for completion claim"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "RSK-5-4",
+      "wbs_ref": "5.4",
+      "area_id": "5.0",
+      "title": "Add residual risk reporting and governance documentation",
+      "scope": "Add risk summary/report outputs and document operational policy: ownership, evidence expectations, deduplication approach, and relationship to closeout-l2 drift assessments.",
+      "wbs_l3_ref": "5.4",
+      "packet_id": "RSK-5-4",
+      "wbs_refs": [
+        "5.4"
+      ],
+      "purpose": "Deliver Add residual risk reporting and governance documentation.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "HIGH",
+      "preconditions": [],
+      "required_inputs": [],
+      "required_actions": [
+        "Add risk summary/report outputs and document operational policy: ownership, evidence expectations, deduplication approach, and relationship to closeout-l2 drift assessments."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Evidence path included in packet notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with evidence references"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Evidence missing for completion claim"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    },
+    {
+      "id": "RSK-5-5",
+      "wbs_ref": "5.5",
+      "area_id": "5.0",
+      "title": "Validate rollout and optional git-governance linkage",
+      "scope": "Deliver tests and end-to-end validation for residual risk flows, plus optional git-native audit linkage for risk declarations. Publish a rollout/readiness note with residual implementation risks and next steps.",
+      "wbs_l3_ref": "5.5",
+      "packet_id": "RSK-5-5",
+      "wbs_refs": [
+        "5.5"
+      ],
+      "purpose": "Deliver Validate rollout and optional git-governance linkage.",
+      "status": "PENDING",
+      "owner": "unassigned",
+      "priority": "HIGH",
+      "preconditions": [],
+      "required_inputs": [],
+      "required_actions": [
+        "Deliver tests and end-to-end validation for residual risk flows, plus optional git-native audit linkage for risk declarations. Publish a rollout/readiness note with residual implementation risks and next steps."
+      ],
+      "required_outputs": [],
+      "validation_checks": [
+        "Implementation aligns with packet scope",
+        "Evidence path included in packet notes"
+      ],
+      "exit_criteria": [
+        "Packet marked done with evidence references"
+      ],
+      "halt_conditions": [
+        "Required dependencies unresolved",
+        "Evidence missing for completion claim"
+      ],
+      "authority": "Repository packet governance",
+      "type": "WBS_PACKET",
+      "references": []
+    }
+  ],
+  "dependencies": {
+    "MIN-2-1": [
+      "MIN-1-1"
+    ],
+    "MIN-3-1": [
+      "MIN-2-1"
+    ],
+    "MIN-4-1": [
+      "MIN-3-1"
+    ],
+    "RSK-5-2": [
+      "RSK-5-1"
+    ],
+    "RSK-5-3": [
+      "RSK-5-2"
+    ],
+    "RSK-5-4": [
+      "RSK-5-3"
+    ],
+    "RSK-5-5": [
+      "RSK-5-4"
+    ]
+  }
+}

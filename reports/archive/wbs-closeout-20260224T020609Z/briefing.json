@@ -1,0 +1,118 @@
+{
+  "schema_id": "wbs.briefing",
+  "schema_version": "1.0",
+  "generated_at": "2026-02-24T12:06:10.872138",
+  "mode": "full",
+  "truncated": false,
+  "limits": {
+    "recent_events": 10
+  },
+  "project": {
+    "project_name": "Substrate Minimal",
+    "approved_by": "substrate-lead",
+    "approved_at": "2026-02-13"
+  },
+  "counts": {
+    "pending": 9
+  },
+  "ready_packets": [
+    {
+      "id": "MIN-1-1",
+      "wbs_ref": "1.1",
+      "title": "Initialize governance files"
+    },
+    {
+      "id": "RSK-5-1",
+      "wbs_ref": "5.1",
+      "title": "Define residual risk register schema and runtime storage"
+    }
+  ],
+  "blocked_packets": [
+    {
+      "id": "MIN-2-1",
+      "wbs_ref": "2.1",
+      "title": "Execute first packet lifecycle",
+      "status": "pending",
+      "blockers": [
+        {
+          "packet_id": "MIN-1-1",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "MIN-3-1",
+      "wbs_ref": "3.1",
+      "title": "Run baseline validation",
+      "status": "pending",
+      "blockers": [
+        {
+          "packet_id": "MIN-2-1",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "MIN-4-1",
+      "wbs_ref": "4.1",
+      "title": "Closeout with drift assessment",
+      "status": "pending",
+      "blockers": [
+        {
+          "packet_id": "MIN-3-1",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "RSK-5-2",
+      "wbs_ref": "5.2",
+      "title": "Require risk acknowledgement at packet closure",
+      "status": "pending",
+      "blockers": [
+        {
+          "packet_id": "RSK-5-1",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "RSK-5-3",
+      "wbs_ref": "5.3",
+      "title": "Implement residual risk CLI lifecycle commands",
+      "status": "pending",
+      "blockers": [
+        {
+          "packet_id": "RSK-5-2",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "RSK-5-4",
+      "wbs_ref": "5.4",
+      "title": "Add residual risk reporting and governance documentation",
+      "status": "pending",
+      "blockers": [
+        {
+          "packet_id": "RSK-5-3",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "RSK-5-5",
+      "wbs_ref": "5.5",
+      "title": "Validate rollout and optional git-governance linkage",
+      "status": "pending",
+      "blockers": [
+        {
+          "packet_id": "RSK-5-4",
+          "status": "pending"
+        }
+      ]
+    }
+  ],
+  "active_assignments": [],
+  "recent_events": []
+}

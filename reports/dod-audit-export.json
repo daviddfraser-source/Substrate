@@ -1,0 +1,18 @@
+[
+  {
+    "entry_id": "1",
+    "tenant_id": "tenant-1",
+    "actor": "dev-admin",
+    "packet_id": "packet-1",
+    "event_type": "created",
+    "created_at": "1771903373"
+  },
+  {
+    "entry_id": "2",
+    "tenant_id": "tenant-1",
+    "actor": "dev-admin",
+    "packet_id": "packet-1",
+    "event_type": "role_assigned",
+    "created_at": "1771903373"
+  }
+]

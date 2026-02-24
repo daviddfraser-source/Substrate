@@ -1,0 +1,32 @@
+
+======================================================================
+  Substrate Minimal — WBS Status
+======================================================================
+
+[1.0] Scaffold Init (L2 OPEN)
+------------------------------------------------------------
+  MIN-1-1    1.1    PENDING        -            Initialize governance files
+
+[2.0] Core Workflow (L2 OPEN)
+------------------------------------------------------------
+  MIN-2-1    2.1    PENDING        -            Execute first packet lifecycle
+
+[3.0] Quality Baseline (L2 OPEN)
+------------------------------------------------------------
+  MIN-3-1    3.1    PENDING        -            Run baseline validation
+
+[4.0] Closeout (L2 OPEN)
+------------------------------------------------------------
+  MIN-4-1    4.1    PENDING        -            Closeout with drift assessment
+
+[5.0] Residual Risk Governance (L2 OPEN)
+------------------------------------------------------------
+  RSK-5-1    5.1    PENDING        -            Define residual risk register 
+  RSK-5-2    5.2    PENDING        -            Require risk acknowledgement a
+  RSK-5-3    5.3    PENDING        -            Implement residual risk CLI li
+  RSK-5-4    5.4    PENDING        -            Add residual risk reporting an
+  RSK-5-5    5.5    PENDING        -            Validate rollout and optional 
+
+======================================================================
+Summary: pending: 9
+

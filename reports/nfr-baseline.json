@@ -1,0 +1,27 @@
+{
+  "timestamp": 1771903367.0885575,
+  "checks": [
+    {
+      "name": "health_endpoint_latency",
+      "value_ms": 0.0011920928955078125,
+      "target_ms": 200,
+      "passed": true
+    },
+    {
+      "name": "metrics_endpoint_available",
+      "passed": true
+    },
+    {
+      "name": "rbac_denies_unauthorized_write",
+      "passed": true
+    },
+    {
+      "name": "rbac_allows_authorized_write",
+      "passed": true
+    }
+  ],
+  "summary": {
+    "passed": true,
+    "total": 4
+  }
+}

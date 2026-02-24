@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: substrate-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: substrate-api
+  template:
+    metadata:
+      labels:
+        app: substrate-api
+    spec:
+      containers:
+        - name: api
+          image: substrate-api:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: APP_ENV
+              value: production
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: substrate-secrets
+                  key: database_url
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 20

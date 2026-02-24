@@ -1,7 +1,7 @@
 import unittest
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 
 
 def read(path):
@@ -25,12 +25,12 @@ class GovernancePolicyTests(unittest.TestCase):
 
     def test_agents_has_required_commands(self):
         text = read("AGENTS.md")
-        self.assertIn("python3 .governance/wbs_cli.py closeout-l2", text)
-        self.assertIn(".governance/packet-schema.json", text)
+        self.assertIn("python3 substrate/.governance/wbs_cli.py closeout-l2", text)
+        self.assertIn("substrate/.governance/packet-schema.json", text)
 
     def test_roles_and_guide_align_with_execution_discipline(self):
-        roles = read("docs/codex-migration/roles-and-sop.md")
-        guide = read("docs/codex-migration/guide.md")
+        roles = read("substrate/docs/codex-migration/roles-and-sop.md")
+        guide = read("substrate/docs/codex-migration/guide.md")
 
         self.assertIn("## Execution Discipline", roles)
         self.assertIn("## Anti-Drift Controls", roles)

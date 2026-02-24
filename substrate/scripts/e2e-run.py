@@ -7,6 +7,7 @@ import argparse
 import json
 import os
 import re
+import shlex
 import subprocess
 import sys
 import uuid
@@ -146,9 +147,9 @@ def main() -> int:
     run_id = f"e2e-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}-{uuid.uuid4().hex[:8]}"
     started = datetime.now(timezone.utc)
 
+    cmd_argv = shlex.split(args.cmd)
     proc = subprocess.run(
-        args.cmd,
-        shell=True,
+        cmd_argv,
         cwd=repo_root,
         text=True,
         capture_output=True,

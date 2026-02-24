@@ -26,7 +26,7 @@ If you are using a legacy agent or terminal-only workflow without MCP support, f
    ```
 3. **Claim & Contextualize:**
    ```bash
-   python3 substrate/.governance/wbs_cli.py claim <PACKET_ID> <agent>
+   python3 substrate/.governance/wbs_cli.py claim <PACKET_ID> codex
    python3 substrate/.governance/wbs_cli.py context <PACKET_ID> --format json --max-events 40 --max-notes-bytes 4000
    ```
 

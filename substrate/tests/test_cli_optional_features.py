@@ -106,7 +106,18 @@ class OptionalFeatureTests(unittest.TestCase):
         presets = json.loads(run_cli(["--json", "packet-presets"]).stdout)
         self.assertIn("break-fix", presets["presets"])
 
-        run_cli(["add-packet", "C", "1.0", "Preset Packet", "--preset", "doc-only"])
+        run_cli(
+            [
+                "add-packet",
+                "C",
+                "1.0",
+                "Preset Packet",
+                "--preset",
+                "doc-only",
+                "--wbs-approval",
+                "WBS-APPROVED:TEST-ADD-PACKET",
+            ]
+        )
         current = json.loads(WBS.read_text())
         pkt = next(p for p in current["packets"] if p["id"] == "C")
         self.assertIn("documentation-only update", pkt.get("scope", "").lower())

@@ -7,7 +7,16 @@ const configPath = path.join(root, 'docs/codex-migration/ai-substrate/typed-cont
 const indexPath = path.join(root, 'docs/codex-migration/ai-substrate/typed-context-index.json');
 
 const configData = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-const missing = configData.filter((entry) => !fs.existsSync(path.join(root, entry.path)));
+
+function resolveSafePath(relativePath) {
+  const candidate = path.resolve(root, String(relativePath || ''));
+  if (candidate !== root && !candidate.startsWith(root + path.sep)) {
+    throw new Error(`Unsafe context path outside repo root: ${relativePath}`);
+  }
+  return candidate;
+}
+
+const missing = configData.filter((entry) => !fs.existsSync(resolveSafePath(entry.path)));
 if (missing.length) {
   console.error('Missing context files:', missing.map((entry) => entry.path).join(', '));
   process.exit(1);
@@ -17,7 +26,7 @@ const payload = {
   generated_at: new Date().toISOString(),
   entries: configData.map((entry) => ({
     ...entry,
-    resolved: path.relative(root, path.join(root, entry.path))
+    resolved: path.relative(root, resolveSafePath(entry.path))
   }))
 };
 

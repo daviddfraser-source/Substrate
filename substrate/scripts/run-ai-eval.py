@@ -3,26 +3,30 @@ import json
 import subprocess
 import sys
 from datetime import datetime, timezone
+from pathlib import Path
 
-def run(command):
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def run(command, cwd):
     start = datetime.now(timezone.utc).isoformat()
     try:
-        subprocess.run(command, shell=True, check=True)
+        subprocess.run(command, check=True, cwd=cwd)
         result = "success"
     except subprocess.CalledProcessError:
         result = "failure"
     end = datetime.now(timezone.utc).isoformat()
-    return {"command": command, "result": result, "start": start, "end": end}
+    return {"command": " ".join(command), "cwd": str(cwd), "result": result, "start": start, "end": end}
 
 
 def main():
     scenarios = [
-    "cd templates/ai-substrate && npm run test",
-    "node scripts/eval-policy.js"
+        (["npm", "run", "test"], ROOT / "templates" / "ai-substrate"),
+        (["node", "scripts/eval-policy.js"], ROOT),
     ]
     report = {"scenarios": [], "generated_at": datetime.now(timezone.utc).isoformat()}
-    for cmd in scenarios:
-        report["scenarios"].append(run(cmd))
+    for cmd, cwd in scenarios:
+        report["scenarios"].append(run(cmd, cwd))
         if report["scenarios"][-1]["result"] == "failure":
             break
 

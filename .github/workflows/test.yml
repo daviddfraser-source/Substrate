@@ -184,14 +184,18 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Start dashboard server
-        run: |
-          python3 substrate/.governance/wbs_server.py 8090 >/tmp/wbs-server.log 2>&1 &
-          sleep 2
-          curl -fsS http://127.0.0.1:8090/api/status >/dev/null
-
       - name: Run ui-regression skill
         run: |
+          python3 substrate/.governance/wbs_server.py 8090 >/tmp/wbs-server.log 2>&1 &
+          WBS_PID=$!
+          trap 'kill ${WBS_PID} >/dev/null 2>&1 || true' EXIT
+          for i in {1..20}; do
+            if curl -fsS http://127.0.0.1:8090/api/status >/dev/null; then
+              break
+            fi
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:8090/api/status >/dev/null
           chmod +x substrate/skills/ui-regression/scripts/*.sh
           UI_BASE_URL=http://127.0.0.1:8090 ./substrate/skills/ui-regression/scripts/smoke.sh
           UI_BASE_URL=http://127.0.0.1:8090 ./substrate/skills/ui-regression/scripts/run.sh

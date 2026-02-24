@@ -3,18 +3,18 @@ repos:
     hooks:
       - id: wbs-validate
         name: WBS validate
-        entry: python3 .governance/wbs_cli.py validate
+        entry: python3 substrate/.governance/wbs_cli.py validate
         language: system
         pass_filenames: false
 
       - id: packet-validate
         name: Packet schema validate
-        entry: python3 .governance/wbs_cli.py validate-packet .governance/wbs.json
+        entry: python3 substrate/.governance/wbs_cli.py validate-packet substrate/templates/wbs-codex-minimal.json
         language: system
         pass_filenames: false
 
       - id: docs-command-check
         name: Docs legacy command check
-        entry: ./scripts/check_docs_no_legacy_commands.sh
+        entry: ./substrate/scripts/check_docs_no_legacy_commands.sh
         language: system
         pass_filenames: false

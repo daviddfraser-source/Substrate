@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.pyc
+
+# JavaScript/TypeScript
+node_modules/
+dist/
+.next/
+coverage/
+
+# Local env
+.env
+.env.local

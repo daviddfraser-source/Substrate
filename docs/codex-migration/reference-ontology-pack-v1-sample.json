@@ -1,0 +1,41 @@
+{
+  "metadata": {
+    "pack_id": "ontology.infrastructure.v1",
+    "version": "1.0.0",
+    "domain": "infrastructure-programme"
+  },
+  "entities": [
+    {
+      "id": "packet",
+      "type": "Packet",
+      "description": "Governed work unit"
+    },
+    {
+      "id": "risk",
+      "type": "Risk",
+      "description": "Formal risk object"
+    },
+    {
+      "id": "asset",
+      "type": "Asset",
+      "description": "Infrastructure asset"
+    }
+  ],
+  "relationships": [
+    {
+      "type": "depends_on",
+      "source_type": "Packet",
+      "target_type": "Packet"
+    },
+    {
+      "type": "mitigates",
+      "source_type": "Risk",
+      "target_type": "Packet"
+    },
+    {
+      "type": "produces",
+      "source_type": "Packet",
+      "target_type": "Asset"
+    }
+  ]
+}

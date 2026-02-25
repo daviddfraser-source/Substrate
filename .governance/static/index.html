@@ -3,45 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WBS Manager</title>
+    <title>Substrate Governance</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/ag-grid-enterprise@31.0.0/dist/ag-grid-enterprise.min.js"></script>
+    <script src="https://unpkg.com/d3@7"></script>
     <style>
+        /* ═══ Design Token System ═══ */
         :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
+            /* — Color Scales — */
+            --primary-50: #eff6ff; --primary-100: #dbeafe; --primary-200: #bfdbfe;
+            --primary-300: #93c5fd; --primary-400: #60a5fa; --primary-500: #3b82f6;
+            --primary-600: #2563eb; --primary-700: #1d4ed8; --primary-800: #1e40af; --primary-900: #1e3a8a;
+            --primary: #2563eb; --primary-dark: #1d4ed8;
+
+            --success-50: #ecfdf5; --success-100: #d1fae5; --success-200: #a7f3d0;
+            --success-500: #10b981; --success-600: #059669; --success-700: #047857;
             --success: #059669;
+
+            --warning-50: #fffbeb; --warning-100: #fef3c7; --warning-200: #fde68a;
+            --warning-500: #f59e0b; --warning-600: #d97706; --warning-700: #b45309;
             --warning: #d97706;
+
+            --danger-50: #fef2f2; --danger-100: #fee2e2; --danger-200: #fecaca;
+            --danger-500: #ef4444; --danger-600: #dc2626; --danger-700: #b91c1c;
             --danger: #dc2626;
-            --gray-50: #f9fafb;
-            --gray-100: #f3f4f6;
-            --gray-200: #e5e7eb;
-            --gray-300: #d1d5db;
-            --gray-400: #9ca3af;
-            --gray-500: #6b7280;
-            --gray-600: #4b5563;
-            --gray-700: #374151;
-            --gray-800: #1f2937;
-            --gray-900: #111827;
+
+            --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb;
+            --gray-300: #d1d5db; --gray-400: #9ca3af; --gray-500: #6b7280;
+            --gray-600: #4b5563; --gray-700: #374151; --gray-800: #1f2937; --gray-900: #111827;
+
+            /* — Semantic Aliases (Light) — */
+            --bg-primary: #ffffff; --bg-secondary: #f9fafb; --bg-elevated: #ffffff;
+            --bg-inset: #f3f4f6; --bg-canvas: #f3f4f6;
+            --border-default: #e5e7eb; --border-muted: #f3f4f6; --border-strong: #d1d5db;
+            --text-primary: #111827; --text-secondary: #4b5563; --text-tertiary: #9ca3af;
+            --text-inverse: #ffffff; --text-link: #2563eb;
+
+            /* — Spacing (4px base) — */
+            --space-0: 0; --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+            --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px; --space-12: 48px;
+
+            /* — Typography — */
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-mono: 'JetBrains Mono', 'SF Mono', Monaco, Consolas, monospace;
+            --text-xs: 11px; --text-sm: 13px; --text-base: 14px; --text-lg: 16px;
+            --text-xl: 18px; --text-2xl: 20px; --text-3xl: 24px; --text-4xl: 28px;
+            --font-normal: 400; --font-medium: 500; --font-semibold: 600; --font-bold: 700;
+            --leading-tight: 1.25; --leading-normal: 1.5; --leading-relaxed: 1.65;
+
+            /* — Shadows — */
+            --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -2px rgba(0,0,0,0.04);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+            --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.04);
+            --shadow-2xl: 0 25px 50px -12px rgba(0,0,0,0.2);
+
+            /* — Radii — */
+            --radius-sm: 4px; --radius-md: 6px; --radius-lg: 8px;
+            --radius-xl: 12px; --radius-2xl: 16px; --radius-full: 9999px;
+
+            /* — Transitions — */
+            --transition-fast: 100ms ease; --transition-base: 150ms ease; --transition-slow: 300ms ease;
+            --transition-spring: 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+            /* — Z-Index — */
+            --z-dropdown: 100; --z-sticky: 200; --z-overlay: 300; --z-modal: 400; --z-toast: 500; --z-tooltip: 600;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--gray-100); color: var(--gray-900); }
+        /* ═══ Dark Mode ═══ */
+        [data-theme="dark"] {
+            --bg-primary: #0f172a; --bg-secondary: #1e293b; --bg-elevated: #1e293b;
+            --bg-inset: #0b1120; --bg-canvas: #0f172a;
+            --border-default: #334155; --border-muted: #1e293b; --border-strong: #475569;
+            --text-primary: #f1f5f9; --text-secondary: #94a3b8; --text-tertiary: #64748b;
+            --text-inverse: #0f172a; --text-link: #60a5fa;
+            --gray-50: #1e293b; --gray-100: #1e293b; --gray-200: #334155;
+            --gray-300: #475569; --gray-400: #64748b; --gray-500: #94a3b8;
+            --gray-600: #cbd5e1; --gray-700: #e2e8f0; --gray-800: #f1f5f9; --gray-900: #f8fafc;
+            --shadow-xs: 0 1px 2px rgba(0,0,0,0.2);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.3);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.3);
+        }
+        html.theme-transitioning, html.theme-transitioning *, html.theme-transitioning *::before, html.theme-transitioning *::after {
+            transition: background-color 0.3s ease, color 0.2s ease, border-color 0.3s ease, box-shadow 0.3s ease !important;
+        }
+
+        /* ═══ Reset & Base ═══ */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
+        body { font-family: var(--font-sans); background: var(--bg-canvas); color: var(--text-primary); line-height: var(--leading-normal); }
+        .skip-link { position: absolute; left: -9999px; top: auto; z-index: 1000; padding: 8px 16px; background: var(--primary); color: white; border-radius: var(--radius-md); font-size: var(--text-sm); }
+        .skip-link:focus { left: 16px; top: 16px; }
         .app-shell { display: flex; min-height: 100vh; }
         .app-nav {
-            width: 320px;
-            background: white;
-            border-right: 1px solid var(--gray-200);
-            padding: 16px 12px;
+            width: 280px;
+            background: var(--bg-primary);
+            border-right: 1px solid var(--border-default);
+            padding: var(--space-4) var(--space-3);
             overflow-y: auto;
+            transition: width var(--transition-slow);
+            flex-shrink: 0;
         }
+        .app-nav.collapsed { width: 56px; padding: var(--space-4) var(--space-1); }
+        .app-nav.collapsed .app-nav-title,
+        .app-nav.collapsed .app-menu-label,
+        .app-nav.collapsed .nav-theme-toggle span { display: none; }
+        .nav-collapse-btn { display: flex; align-items: center; justify-content: center; width: 100%; height: 32px; border: none; background: transparent; color: var(--text-tertiary); cursor: pointer; border-radius: var(--radius-md); margin-top: var(--space-2); font-size: var(--text-sm); }
+        .nav-collapse-btn:hover { background: var(--bg-inset); color: var(--text-secondary); }
+        .nav-theme-toggle { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-2); border: none; background: transparent; color: var(--text-secondary); cursor: pointer; border-radius: var(--radius-md); font-size: var(--text-sm); width: 100%; }
+        .nav-theme-toggle:hover { background: var(--bg-inset); color: var(--text-primary); }
+        .nav-theme-toggle svg { width: 18px; height: 18px; flex-shrink: 0; }
         .app-nav-title {
-            font-size: 12px;
-            font-weight: 700;
+            font-size: var(--text-xs);
+            font-weight: var(--font-bold);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            color: var(--gray-500);
-            margin-bottom: 12px;
-            padding: 0 8px;
+            color: var(--text-tertiary);
+            margin-bottom: var(--space-3);
+            padding: 0 var(--space-2);
         }
         .app-menu-list { list-style: none; }
         .app-menu-item { margin-bottom: 4px; }
@@ -52,11 +135,11 @@
             padding: 8px 10px;
             border-radius: 8px;
         }
-        .app-menu-row:hover { background: var(--gray-50); }
+        .app-menu-row:hover { background: var(--bg-inset); }
         .app-menu-row.active {
-            background: #e0e7ff;
-            color: var(--primary-dark);
-            font-weight: 600;
+            background: var(--primary-50);
+            color: var(--primary-700);
+            font-weight: var(--font-semibold);
         }
         .app-menu-row.locked { opacity: 0.55; }
         .app-menu-toggle {
@@ -73,278 +156,433 @@
             background: transparent;
             text-align: left;
             cursor: pointer;
-            font-size: 14px;
+            font-size: var(--text-base);
             color: inherit;
             flex: 1;
         }
         .app-main { flex: 1; min-width: 0; }
+        .app-context {
+            width: 280px;
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--border-default);
+            padding: var(--space-4);
+            overflow-y: auto;
+            transition: width var(--transition-slow), padding var(--transition-slow);
+            flex-shrink: 0;
+        }
+        .app-context.collapsed { width: 0; padding: 0; overflow: hidden; }
+        .context-collapse-btn { position: absolute; right: 8px; top: 8px; width: 24px; height: 24px; border: 1px solid var(--border-default); background: var(--bg-primary); color: var(--text-tertiary); cursor: pointer; border-radius: var(--radius-sm); font-size: var(--text-xs); display: flex; align-items: center; justify-content: center; z-index: 10; }
+        .context-collapse-btn:hover { background: var(--bg-inset); }
+        .context-title { font-size: var(--text-xs); font-weight: var(--font-bold); text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-tertiary); margin-bottom: var(--space-3); }
+        .context-card { background: var(--bg-primary); border: 1px solid var(--border-default); border-radius: var(--radius-xl); padding: var(--space-3); margin-bottom: var(--space-3); }
+        .context-card h4 { font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-1); font-weight: var(--font-semibold); }
+        .context-value { font-size: var(--text-base); color: var(--text-primary); word-break: break-word; }
+        .context-kv { display: flex; justify-content: space-between; font-size: var(--text-xs); color: var(--text-secondary); margin-top: var(--space-1); }
         .app-home {
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--gray-500);
-            font-size: 16px;
-            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            padding: var(--space-6);
+            background: var(--bg-canvas);
         }
-        .page-view { min-height: 100vh; padding: 28px; background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); overflow: auto; }
-        .guide-wrap { max-width: 980px; margin: 0 auto; background: #ffffff; border: 1px solid var(--gray-200); border-radius: 12px; padding: 24px; box-shadow: 0 8px 24px rgba(17,24,39,0.06); }
-        .guide-title { font-size: 28px; font-weight: 700; color: var(--gray-900); margin-bottom: 8px; }
-        .guide-subtitle { font-size: 14px; color: var(--gray-500); margin-bottom: 20px; }
-        .guide-section { margin-top: 20px; }
-        .guide-section h2 { font-size: 18px; margin-bottom: 8px; color: var(--gray-800); }
-        .guide-section p, .guide-section li { font-size: 14px; color: var(--gray-700); line-height: 1.55; }
+        .dashboard-wrap { max-width: 1100px; margin: 0 auto; }
+        .dashboard-head { display: flex; justify-content: space-between; align-items: center; gap: var(--space-3); margin-bottom: var(--space-5); }
+        .dashboard-title { font-size: var(--text-4xl); font-weight: var(--font-bold); color: var(--text-primary); }
+        .dashboard-sub { font-size: var(--text-sm); color: var(--text-tertiary); margin-top: var(--space-1); }
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--space-3); margin-bottom: var(--space-4); }
+        .dashboard-card { border: 1px solid var(--border-default); background: var(--bg-primary); border-radius: var(--radius-xl); padding: var(--space-4); position: relative; overflow: hidden; transition: box-shadow var(--transition-base); }
+        .dashboard-card:hover { box-shadow: var(--shadow-sm); }
+        .dashboard-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; border-radius: 3px 0 0 3px; }
+        .dashboard-card.accent-warning::before { background: var(--warning); }
+        .dashboard-card.accent-primary::before { background: var(--primary); }
+        .dashboard-card.accent-danger::before { background: var(--danger); }
+        .dashboard-card.accent-success::before { background: var(--success); }
+        .dashboard-card h4 { font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: var(--space-1); text-transform: uppercase; letter-spacing: .4px; }
+        .dashboard-val { font-size: var(--text-3xl); font-weight: var(--font-bold); color: var(--text-primary); }
+        .dashboard-trend { font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-1); }
+        .dashboard-sparkline { margin-top: var(--space-2); height: 24px; }
+        .dashboard-panels { display: grid; grid-template-columns: 1.5fr 1fr; gap: var(--space-3); }
+        .dashboard-panel { border: 1px solid var(--border-default); background: var(--bg-primary); border-radius: var(--radius-xl); padding: var(--space-4); }
+        .dashboard-list { font-size: var(--text-sm); color: var(--text-secondary); line-height: var(--leading-relaxed); white-space: pre-line; }
+        .page-view { min-height: 100vh; padding: var(--space-6); background: var(--bg-canvas); overflow: auto; }
+        .guide-wrap { max-width: 980px; margin: 0 auto; background: var(--bg-primary); border: 1px solid var(--border-default); border-radius: var(--radius-xl); padding: var(--space-6); box-shadow: var(--shadow-sm); }
+        .guide-title { font-size: var(--text-4xl); font-weight: var(--font-bold); color: var(--text-primary); margin-bottom: var(--space-2); }
+        .guide-subtitle { font-size: var(--text-base); color: var(--text-tertiary); margin-bottom: var(--space-5); }
+        .guide-section { margin-top: var(--space-5); }
+        .guide-section h2 { font-size: var(--text-xl); margin-bottom: var(--space-2); color: var(--text-primary); }
+        .guide-section p, .guide-section li { font-size: var(--text-base); color: var(--text-secondary); line-height: var(--leading-relaxed); }
         .guide-section ul { padding-left: 18px; }
-        .guide-pill-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin-top: 10px; }
-        .guide-pill { border: 1px solid var(--gray-200); border-radius: 8px; padding: 10px; background: #f8fafc; font-size: 13px; color: var(--gray-700); }
+        .guide-pill-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--space-3); margin-top: var(--space-3); }
+        .guide-pill { border: 1px solid var(--border-default); border-radius: var(--radius-lg); padding: var(--space-3); background: var(--bg-secondary); font-size: var(--text-sm); color: var(--text-secondary); }
 
         /* Header */
         .header {
-            background: linear-gradient(135deg, var(--gray-900) 0%, var(--gray-800) 100%);
-            color: white;
-            padding: 0 24px;
-            height: 64px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            padding: 0 var(--space-6);
+            height: 48px;
             display: flex;
             align-items: center;
-            gap: 24px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            gap: var(--space-4);
+            border-bottom: 1px solid var(--border-default);
         }
-        .logo { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+        .logo { font-size: var(--text-lg); font-weight: var(--font-bold); letter-spacing: -0.5px; }
         .logo span { color: var(--primary); }
-        .header-divider { width: 1px; height: 32px; background: var(--gray-700); }
+        .header-divider { width: 1px; height: 24px; background: var(--border-default); }
         .project-info { flex: 1; }
-        .project-name { font-size: 16px; font-weight: 600; }
-        .project-meta { font-size: 12px; color: var(--gray-400); }
+        .project-name { font-size: var(--text-base); font-weight: var(--font-semibold); }
+        .project-meta { font-size: var(--text-xs); color: var(--text-tertiary); }
 
-        .header-stats { display: flex; gap: 32px; }
+        .header-stats { display: flex; gap: var(--space-6); }
         .stat { text-align: center; }
-        .stat-value { font-size: 24px; font-weight: 700; }
+        .stat-value { font-size: var(--text-xl); font-weight: var(--font-bold); }
         .stat-value.pending { color: var(--warning); }
         .stat-value.progress { color: var(--primary); }
         .stat-value.done { color: var(--success); }
-        .stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gray-400); }
+        .stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-tertiary); }
 
-        .header-actions { display: flex; gap: 12px; }
+        .header-actions { display: flex; gap: var(--space-2); align-items: center; }
         .refresh-indicator {
             align-self: center;
-            color: var(--gray-400);
-            font-size: 12px;
+            color: var(--text-tertiary);
+            font-size: var(--text-xs);
             min-width: 130px;
             text-align: right;
         }
 
         /* Buttons */
         .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
+            padding: var(--space-2) var(--space-4);
+            border: 1px solid transparent;
+            border-radius: var(--radius-lg);
+            font-size: var(--text-base);
+            font-weight: var(--font-medium);
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            transition: all 0.15s;
+            justify-content: center;
+            gap: var(--space-2);
+            transition: all var(--transition-base);
+            line-height: var(--leading-tight);
+            white-space: nowrap;
         }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
-        .btn-secondary { background: var(--gray-700); color: white; }
-        .btn-secondary:hover { background: var(--gray-600); }
-        .btn-success { background: var(--success); color: white; }
-        .btn-ghost { background: transparent; color: var(--gray-400); }
-        .btn-ghost:hover { color: white; background: var(--gray-700); }
-        .btn-sm { padding: 6px 12px; font-size: 13px; }
-        .btn-icon { width: 36px; height: 36px; padding: 0; justify-content: center; border-radius: 8px; }
+        .btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+        .btn:disabled, .btn.loading { opacity: 0.55; cursor: not-allowed; pointer-events: none; }
+        .btn.loading::after { content: ''; width: 14px; height: 14px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: spin 0.5s linear infinite; margin-left: 4px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .btn-primary { background: var(--primary); color: var(--text-inverse); }
+        .btn-primary:hover { background: var(--primary-dark); box-shadow: var(--shadow-sm); }
+        .btn-secondary { background: var(--bg-inset); color: var(--text-primary); border-color: var(--border-default); }
+        .btn-secondary:hover { background: var(--bg-secondary); border-color: var(--border-strong); }
+        .btn-success { background: var(--success); color: var(--text-inverse); }
+        .btn-success:hover { background: var(--success-700); }
+        .btn-danger { background: var(--danger); color: var(--text-inverse); }
+        .btn-danger:hover { background: var(--danger-700); }
+        .btn-outline { background: transparent; color: var(--text-secondary); border-color: var(--border-default); }
+        .btn-outline:hover { background: var(--bg-inset); color: var(--text-primary); border-color: var(--border-strong); }
+        .btn-ghost { background: transparent; color: var(--text-secondary); }
+        .btn-ghost:hover { color: var(--text-primary); background: var(--bg-inset); }
+        .btn-sm { padding: var(--space-1) var(--space-3); font-size: var(--text-sm); }
+        .btn-xs { padding: 2px var(--space-2); font-size: var(--text-xs); }
+        .btn-icon { width: 32px; height: 32px; padding: 0; border-radius: var(--radius-md); }
 
         /* Main Layout */
-        .main { display: flex; height: calc(100vh - 64px); }
+        .main { display: flex; height: calc(100vh - 48px); }
 
         /* Sidebar */
         .sidebar {
-            width: 280px;
-            background: white;
-            border-right: 1px solid var(--gray-200);
+            width: 260px;
+            background: var(--bg-primary);
+            border-right: 1px solid var(--border-default);
             display: flex;
             flex-direction: column;
+            flex-shrink: 0;
         }
         .sidebar-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--gray-200);
+            padding: var(--space-4);
+            border-bottom: 1px solid var(--border-default);
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
-        .sidebar-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gray-500); }
-        .sidebar-list { flex: 1; overflow-y: auto; padding: 12px; }
-        .sidebar-menu-list { padding: 12px; border-bottom: 1px solid var(--gray-200); }
+        .sidebar-title { font-size: var(--text-xs); font-weight: var(--font-semibold); text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-tertiary); }
+        .sidebar-list { flex: 1; overflow-y: auto; padding: var(--space-3); }
+        .sidebar-menu-list { padding: var(--space-3); border-bottom: 1px solid var(--border-default); }
         .sidebar-item {
-            padding: 12px 16px;
-            border-radius: 8px;
+            padding: var(--space-3) var(--space-4);
+            border-radius: var(--radius-lg);
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 4px;
-            transition: all 0.15s;
+            gap: var(--space-3);
+            margin-bottom: 2px;
+            transition: all var(--transition-base);
         }
-        .sidebar-item:hover { background: var(--gray-50); }
-        .sidebar-item.active { background: var(--primary); color: white; }
-        .sidebar-item-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--gray-100); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; }
+        .sidebar-item:hover { background: var(--bg-inset); }
+        .sidebar-item.active { background: var(--primary); color: var(--text-inverse); }
+        .sidebar-item-icon { width: 28px; height: 28px; border-radius: var(--radius-md); background: var(--bg-inset); display: flex; align-items: center; justify-content: center; font-weight: var(--font-semibold); font-size: var(--text-sm); flex-shrink: 0; }
         .sidebar-item.active .sidebar-item-icon { background: rgba(255,255,255,0.2); }
         .sidebar-item-content { flex: 1; min-width: 0; }
-        .sidebar-item-title { font-weight: 500; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .sidebar-item-meta { font-size: 12px; color: var(--gray-400); }
+        .sidebar-item-title { font-weight: var(--font-medium); font-size: var(--text-sm); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .sidebar-item-meta { font-size: var(--text-xs); color: var(--text-tertiary); }
         .sidebar-item.active .sidebar-item-meta { color: rgba(255,255,255,0.7); }
-        .sidebar-item-count { background: var(--gray-200); padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: 500; }
+        .sidebar-item-count { background: var(--bg-inset); padding: 2px var(--space-2); border-radius: var(--radius-full); font-size: var(--text-xs); font-weight: var(--font-medium); }
         .sidebar-item.active .sidebar-item-count { background: rgba(255,255,255,0.2); }
-        .sidebar-footer { padding: 16px; border-top: 1px solid var(--gray-200); }
+        .sidebar-footer { padding: var(--space-4); border-top: 1px solid var(--border-default); }
 
         /* Content */
         .content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
         .content-header {
-            padding: 20px 24px;
-            background: white;
-            border-bottom: 1px solid var(--gray-200);
+            padding: var(--space-3) var(--space-6);
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-default);
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: var(--space-3);
+            position: sticky;
+            top: 0;
+            z-index: var(--z-sticky);
         }
-        .content-title { font-size: 20px; font-weight: 600; flex: 1; }
-        .content-body { flex: 1; padding: 24px; overflow: hidden; }
+        .content-title { font-size: var(--text-lg); font-weight: var(--font-semibold); flex: 1; }
+        .content-body { flex: 1; padding: var(--space-4); overflow: hidden; }
+
+        /* Segmented Control */
+        .segmented-control { display: inline-flex; background: var(--bg-inset); border-radius: var(--radius-lg); padding: 2px; gap: 2px; }
+        .segmented-btn { padding: var(--space-1) var(--space-3); border: none; background: transparent; font-size: var(--text-sm); font-weight: var(--font-medium); color: var(--text-secondary); cursor: pointer; border-radius: var(--radius-md); transition: all var(--transition-base); }
+        .segmented-btn:hover { color: var(--text-primary); }
+        .segmented-btn.active { background: var(--bg-primary); color: var(--text-primary); box-shadow: var(--shadow-xs); }
+
+        /* Breadcrumbs */
+        .breadcrumbs { font-size: var(--text-xs); color: var(--text-tertiary); padding: var(--space-1) var(--space-6); background: var(--bg-primary); border-bottom: 1px solid var(--border-muted); display: flex; align-items: center; gap: var(--space-1); }
+        .breadcrumbs a { color: var(--text-link); text-decoration: none; }
+        .breadcrumbs a:hover { text-decoration: underline; }
+        .breadcrumb-sep { color: var(--text-tertiary); }
+
+        /* Command Palette */
+        .cmd-palette-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: var(--z-modal); align-items: flex-start; justify-content: center; padding-top: 20vh; backdrop-filter: blur(2px); }
+        .cmd-palette-overlay.show { display: flex; }
+        .cmd-palette { background: var(--bg-primary); border: 1px solid var(--border-default); border-radius: var(--radius-2xl); width: 520px; max-width: 90vw; box-shadow: var(--shadow-2xl); overflow: hidden; }
+        .cmd-palette-input { width: 100%; padding: var(--space-4); border: none; border-bottom: 1px solid var(--border-muted); font-size: var(--text-lg); font-family: var(--font-sans); background: transparent; color: var(--text-primary); outline: none; }
+        .cmd-palette-results { max-height: 300px; overflow-y: auto; }
+        .cmd-palette-item { padding: var(--space-3) var(--space-4); cursor: pointer; display: flex; align-items: center; gap: var(--space-3); font-size: var(--text-sm); color: var(--text-secondary); transition: background var(--transition-fast); }
+        .cmd-palette-item:hover, .cmd-palette-item.selected { background: var(--primary-50); color: var(--primary-700); }
+        [data-theme="dark"] .cmd-palette-item:hover, [data-theme="dark"] .cmd-palette-item.selected { background: rgba(59,130,246,0.12); color: var(--primary-400); }
+        .cmd-palette-item .cmd-icon { width: 20px; text-align: center; flex-shrink: 0; }
+        .cmd-palette-item .cmd-shortcut { margin-left: auto; font-size: var(--text-xs); color: var(--text-tertiary); font-family: var(--font-mono); }
+        .cmd-palette-item mark { background: var(--warning-100); color: inherit; border-radius: 2px; padding: 0 1px; }
+        .cmd-palette-empty { padding: var(--space-4); text-align: center; color: var(--text-tertiary); font-size: var(--text-sm); }
+
+        /* Shortcut Help */
+        .shortcut-help-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: var(--z-modal); align-items: center; justify-content: center; backdrop-filter: blur(2px); }
+        .shortcut-help-overlay.show { display: flex; }
+        .shortcut-help { background: var(--bg-primary); border: 1px solid var(--border-default); border-radius: var(--radius-2xl); padding: var(--space-6); width: 420px; max-width: 90vw; box-shadow: var(--shadow-2xl); }
+        .shortcut-help h3 { font-size: var(--text-lg); margin-bottom: var(--space-4); }
+        .shortcut-row { display: flex; justify-content: space-between; padding: var(--space-2) 0; font-size: var(--text-sm); border-bottom: 1px solid var(--border-muted); }
+        .shortcut-key { font-family: var(--font-mono); background: var(--bg-inset); padding: 2px 6px; border-radius: var(--radius-sm); font-size: var(--text-xs); }
+
+        /* Quick Filter */
+        .quick-filter { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-4); background: var(--bg-primary); border-bottom: 1px solid var(--border-muted); }
+        .quick-filter input { flex: 1; padding: var(--space-1) var(--space-3); border: 1px solid var(--border-default); border-radius: var(--radius-md); font-size: var(--text-sm); background: var(--bg-primary); color: var(--text-primary); }
+        .quick-filter input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(37,99,235,0.1); }
+        .quick-filter-count { font-size: var(--text-xs); color: var(--text-tertiary); white-space: nowrap; }
 
         /* Grid Container */
         .grid-wrapper {
             height: 100%;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            background: var(--bg-primary);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xs);
             overflow: hidden;
+            border: 1px solid var(--border-default);
         }
         /* AG Grid Customization */
         .ag-theme-alpine {
-            --ag-header-background-color: var(--gray-50);
-            --ag-header-foreground-color: var(--gray-600);
-            --ag-row-hover-color: var(--gray-50);
-            --ag-selected-row-background-color: #eff6ff;
-            --ag-font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            --ag-font-size: 14px;
-            --ag-row-height: 52px;
-            --ag-header-height: 48px;
+            --ag-header-background-color: var(--bg-secondary);
+            --ag-header-foreground-color: var(--text-secondary);
+            --ag-background-color: var(--bg-primary);
+            --ag-row-hover-color: var(--primary-50);
+            --ag-selected-row-background-color: var(--primary-50);
+            --ag-odd-row-background-color: var(--bg-primary);
+            --ag-border-color: var(--border-muted);
+            --ag-font-family: var(--font-sans);
+            --ag-font-size: var(--text-base);
+            --ag-row-height: 48px;
+            --ag-header-height: 40px;
+            --ag-cell-horizontal-padding: 16px;
         }
-        .ag-theme-alpine .ag-header-cell-label { font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .ag-theme-alpine .ag-row { border-bottom: 1px solid var(--gray-100); }
+        [data-theme="dark"] .ag-theme-alpine {
+            --ag-background-color: var(--bg-primary);
+            --ag-header-background-color: var(--bg-secondary);
+            --ag-row-hover-color: rgba(59,130,246,0.08);
+            --ag-selected-row-background-color: rgba(59,130,246,0.12);
+            --ag-foreground-color: var(--text-primary);
+            --ag-secondary-foreground-color: var(--text-secondary);
+            --ag-border-color: var(--border-default);
+        }
+        .ag-theme-alpine .ag-header-cell-label { font-weight: var(--font-semibold); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.5px; }
+        .ag-theme-alpine .ag-row { border-bottom: 1px solid var(--border-muted); }
         .ag-theme-alpine .ag-cell { display: flex; align-items: center; }
 
         /* WBS Number Cell */
-        .wbs-number { font-family: 'SF Mono', Monaco, monospace; font-size: 13px; color: var(--primary); font-weight: 600; }
+        .wbs-number { font-family: var(--font-mono); font-size: var(--text-sm); color: var(--text-link); font-weight: var(--font-semibold); }
 
         /* Status Badge */
         .status-badge {
-            padding: 4px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: var(--radius-full);
+            font-size: var(--text-xs);
+            font-weight: var(--font-semibold);
             text-transform: uppercase;
             letter-spacing: 0.3px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
-        .status-pending { background: #fef3c7; color: #92400e; }
-        .status-in_progress { background: #dbeafe; color: #1e40af; }
-        .status-done { background: #d1fae5; color: #065f46; }
-        .status-blocked { background: var(--gray-100); color: var(--gray-500); }
+        .status-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+        .status-pending { background: var(--warning-50); color: #92400e; }
+        .status-pending::before { background: var(--warning); }
+        .status-in_progress { background: var(--primary-50); color: var(--primary-800); }
+        .status-in_progress::before { background: var(--primary); animation: pulse-dot 2s ease-in-out infinite; }
+        @keyframes pulse-dot { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+        .status-done { background: var(--success-50); color: #065f46; }
+        .status-done::before { background: var(--success); }
+        .status-failed { background: var(--danger-50); color: var(--danger-700); }
+        .status-failed::before { background: var(--danger); }
+        .status-blocked { background: var(--bg-inset); color: var(--text-tertiary); }
+        .status-blocked::before { background: var(--text-tertiary); }
 
         /* Row Type Styling */
         .row-category { background: var(--gray-50) !important; font-weight: 600; }
         .row-category .ag-cell { font-weight: 600; }
 
-        /* Action Buttons in Grid */
-        .grid-actions { display: flex; gap: 8px; }
+        /* Row status left border */
+        .ag-theme-alpine .ag-row[data-status="pending"] { border-left: 3px solid var(--warning); }
+        .ag-theme-alpine .ag-row[data-status="in_progress"] { border-left: 3px solid var(--primary); }
+        .ag-theme-alpine .ag-row[data-status="done"] { border-left: 3px solid var(--success); }
+        .ag-theme-alpine .ag-row[data-status="failed"] { border-left: 3px solid var(--danger); }
+        .ag-theme-alpine .ag-row[data-status="blocked"] { border-left: 3px solid var(--gray-400); }
+
+        /* Action Buttons in Grid — icon buttons, hover reveal */
+        .grid-actions { display: flex; gap: 4px; opacity: 0; transition: opacity var(--transition-fast); }
+        .ag-row:hover .grid-actions { opacity: 1; }
+        .grid-actions.always-show { opacity: 1; }
         .grid-btn {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 500;
+            width: 28px; height: 28px; padding: 0;
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            font-size: 14px;
             cursor: pointer;
             transition: all 0.15s;
+            display: inline-flex; align-items: center; justify-content: center;
+            background: var(--bg-primary); color: var(--text-secondary);
         }
-        .grid-btn-claim { background: var(--primary); color: white; }
-        .grid-btn-claim:hover { background: var(--primary-dark); }
-        .grid-btn-done { background: var(--success); color: white; }
-        .grid-btn-edit { background: var(--gray-100); color: var(--gray-600); }
-        .grid-btn-edit:hover { background: var(--gray-200); }
+        .grid-btn:hover { background: var(--bg-inset); color: var(--text-primary); border-color: var(--border-strong); }
+        .grid-btn-claim { background: var(--primary-50); color: var(--primary-700); border-color: var(--primary-200); }
+        .grid-btn-claim:hover { background: var(--primary-100); }
+        .grid-btn-done { background: var(--success-50); color: var(--success-700); border-color: var(--success-200); }
+        .grid-btn-done:hover { background: var(--success-100); }
 
         /* Modal */
         .modal-overlay {
             display: none;
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
+            background: rgba(0,0,0,0.4);
+            z-index: var(--z-modal);
             align-items: center;
             justify-content: center;
             backdrop-filter: blur(4px);
         }
         .modal-overlay.show { display: flex; }
+        .modal-overlay.show .modal { animation: modalIn 0.2s ease-out; }
+        .modal-overlay.closing { pointer-events: none; animation: overlayOut 0.15s ease-in forwards; }
+        .modal-overlay.closing .modal { animation: modalOut 0.15s ease-in forwards; }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.96) translateY(8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        @keyframes modalOut { to { opacity: 0; transform: scale(0.96) translateY(8px); } }
+        @keyframes overlayOut { to { opacity: 0; } }
         .modal {
-            background: white;
-            border-radius: 16px;
+            background: var(--bg-primary);
+            border-radius: var(--radius-2xl);
             width: 90%;
             max-width: 560px;
             max-height: 90vh;
             overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            box-shadow: var(--shadow-2xl);
+            border: 1px solid var(--border-default);
         }
         .modal-header {
-            padding: 24px;
-            border-bottom: 1px solid var(--gray-200);
+            padding: var(--space-5) var(--space-6);
+            border-bottom: 1px solid var(--border-default);
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
-        .modal-title { font-size: 18px; font-weight: 600; }
-        .modal-close { background: none; border: none; font-size: 24px; color: var(--gray-400); cursor: pointer; }
-        .modal-close:hover { color: var(--gray-600); }
-        .modal-body { padding: 24px; overflow-y: auto; }
-        .modal-footer { padding: 20px 24px; border-top: 1px solid var(--gray-200); display: flex; justify-content: flex-end; gap: 12px; }
+        .modal-title { font-size: var(--text-xl); font-weight: var(--font-semibold); }
+        .modal-close { background: none; border: none; font-size: 20px; color: var(--text-tertiary); cursor: pointer; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-md); transition: all var(--transition-base); }
+        .modal-close:hover { color: var(--text-primary); background: var(--bg-inset); }
+        .modal-body { padding: var(--space-6); overflow-y: auto; max-height: calc(90vh - 140px); }
+        .modal-footer { padding: var(--space-4) var(--space-6); border-top: 1px solid var(--border-default); display: flex; justify-content: flex-end; gap: var(--space-3); }
 
         /* Form */
-        .form-group { margin-bottom: 20px; }
-        .form-label { display: block; font-size: 14px; font-weight: 500; color: var(--gray-700); margin-bottom: 8px; }
+        .form-group { margin-bottom: var(--space-5); }
+        .form-label { display: block; font-size: var(--text-sm); font-weight: var(--font-medium); color: var(--text-primary); margin-bottom: var(--space-2); }
         .form-input, .form-textarea, .form-select {
             width: 100%;
-            padding: 12px 16px;
-            border: 1px solid var(--gray-300);
-            border-radius: 8px;
-            font-size: 14px;
-            transition: all 0.15s;
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-base);
+            font-family: var(--font-sans);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all var(--transition-base);
         }
         .form-input:focus, .form-textarea:focus, .form-select:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
         }
+        .form-input.error, .form-textarea.error { border-color: var(--danger); }
+        .form-input.error:focus, .form-textarea.error:focus { box-shadow: 0 0 0 3px rgba(220,38,38,0.1); }
+        .form-input.success, .form-textarea.success { border-color: var(--success); }
+        .form-input.success:focus, .form-textarea.success:focus { box-shadow: 0 0 0 3px rgba(5,150,105,0.1); }
+        .form-error { font-size: var(--text-xs); color: var(--danger); margin-top: var(--space-1); }
+        .form-success { font-size: var(--text-xs); color: var(--success); margin-top: var(--space-1); }
         .form-textarea { min-height: 100px; resize: vertical; }
-        .form-hint { font-size: 12px; color: var(--gray-500); margin-top: 6px; }
+        .form-hint { font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-1); }
+
+        /* Card */
+        .card { background: var(--bg-primary); border: 1px solid var(--border-default); border-radius: var(--radius-xl); padding: var(--space-4); transition: box-shadow var(--transition-base); }
+        .card:hover { box-shadow: var(--shadow-sm); }
 
         /* Toast */
+        .toast-container { position: fixed; bottom: var(--space-6); right: var(--space-6); z-index: var(--z-toast); display: flex; flex-direction: column-reverse; gap: var(--space-2); }
         .toast {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            padding: 16px 24px;
-            background: var(--gray-900);
-            color: white;
-            border-radius: 12px;
-            font-weight: 500;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.3s;
-            z-index: 2000;
+            padding: var(--space-3) var(--space-4);
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-xl);
+            font-weight: var(--font-medium);
+            font-size: var(--text-sm);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            min-width: 280px;
+            max-width: 420px;
+            animation: toastIn 0.3s ease-out;
         }
-        .toast.show { opacity: 1; transform: translateY(0); }
-        .toast.error { background: var(--danger); }
-        .toast.success { background: var(--success); }
+        @keyframes toastIn { from { opacity: 0; transform: translateY(16px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        .toast.removing { animation: toastOut 0.2s ease-in forwards; }
+        @keyframes toastOut { to { opacity: 0; transform: translateY(-8px) scale(0.96); } }
+        .toast-icon { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 12px; font-weight: bold; }
+        .toast-icon.success { background: var(--success-100); color: var(--success-700); }
+        .toast-icon.error { background: var(--danger-100); color: var(--danger-700); }
+        .toast-icon.info { background: var(--primary-100); color: var(--primary-700); }
+        .toast-text { flex: 1; }
+        .toast-dismiss { background: none; border: none; color: var(--text-tertiary); cursor: pointer; padding: 2px; font-size: 16px; line-height: 1; }
+        .toast-dismiss:hover { color: var(--text-primary); }
+        .toast-progress { position: absolute; bottom: 0; left: 0; height: 2px; background: var(--primary-400); border-radius: 0 0 var(--radius-xl) var(--radius-xl); animation: toastProgress 3s linear forwards; }
+        @keyframes toastProgress { from { width: 100%; } to { width: 0; } }
         .packet-viewer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .viewer-card { border: 1px solid var(--gray-200); border-radius: 8px; padding: 10px; background: var(--gray-50); }
         .viewer-label { font-size: 12px; color: var(--gray-500); margin-bottom: 4px; }
@@ -354,7 +592,32 @@
         .viewer-events { max-height: 220px; overflow: auto; border: 1px solid var(--gray-200); border-radius: 8px; }
         .viewer-event { padding: 8px 10px; border-bottom: 1px solid var(--gray-200); font-size: 12px; }
         .viewer-event:last-child { border-bottom: none; }
-        .viewer-file { width: 100%; min-height: 180px; border: 1px solid var(--gray-200); border-radius: 8px; padding: 10px; background: #0b1020; color: #d6def8; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; white-space: pre-wrap; overflow: auto; }
+        .viewer-file { width: 100%; min-height: 180px; border: 1px solid var(--border-default); border-radius: var(--radius-lg); padding: var(--space-3); background: #0b1020; color: #d6def8; font-family: var(--font-mono); font-size: var(--text-xs); white-space: pre-wrap; overflow: auto; }
+        .viewer-tabs { display: flex; gap: 2px; flex-wrap: wrap; margin-bottom: var(--space-3); background: var(--bg-inset); padding: 2px; border-radius: var(--radius-lg); }
+        .viewer-tab { border: none; border-radius: var(--radius-md); background: transparent; padding: var(--space-1) var(--space-3); font-size: var(--text-sm); cursor: pointer; color: var(--text-secondary); font-weight: var(--font-medium); transition: all var(--transition-base); }
+        .viewer-tab:hover { color: var(--text-primary); }
+        .viewer-tab.active { background: var(--bg-primary); color: var(--primary-700); box-shadow: var(--shadow-xs); }
+        .viewer-pane { display: none; }
+        .viewer-pane.active { display: block; }
+        .deps-toolbar { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 12px; color: var(--gray-600); }
+        .deps-canvas { width: 100%; height: 520px; border: 1px solid var(--gray-200); border-radius: 8px; background: #f8fafc; }
+        .terminal-drawer { position: fixed; left: 280px; right: 280px; bottom: 0; height: 280px; background: #0b1020; color: #d6def8; border-top: 2px solid #334155; z-index: var(--z-overlay); display: none; }
+        .terminal-resize { height: 4px; background: transparent; cursor: ns-resize; position: absolute; top: -2px; left: 0; right: 0; }
+        .terminal-resize:hover { background: var(--primary-400); }
+        .terminal-head { display: flex; justify-content: space-between; align-items: center; padding: var(--space-2) var(--space-3); font-size: var(--text-xs); background: #111827; border-bottom: 1px solid #1e293b; color: #94a3b8; }
+        .terminal-body { height: calc(100% - 92px); overflow: auto; padding: var(--space-3); font-family: var(--font-mono); font-size: var(--text-sm); white-space: pre-wrap; line-height: var(--leading-relaxed); }
+        .terminal-prompt { color: #22c55e; }
+        .terminal-error { color: #f87171; }
+        .terminal-warn { color: #fbbf24; }
+        .terminal-ok { color: #4ade80; }
+        .terminal-input-wrap { padding: var(--space-2) var(--space-3); border-top: 1px solid #1e293b; position: relative; }
+        .terminal-input { width: 100%; background: #020617; color: #e2e8f0; border: 1px solid #334155; border-radius: var(--radius-md); padding: var(--space-2); font-family: var(--font-mono); font-size: var(--text-sm); }
+        .terminal-input:focus { outline: none; border-color: var(--primary-400); }
+        .terminal-suggest { margin-top: var(--space-1); font-size: var(--text-xs); color: #93c5fd; }
+        .terminal-autocomplete { position: absolute; bottom: 100%; left: var(--space-3); right: var(--space-3); background: #1e293b; border: 1px solid #334155; border-radius: var(--radius-md); max-height: 160px; overflow-y: auto; display: none; }
+        .terminal-autocomplete.show { display: block; }
+        .terminal-autocomplete-item { padding: var(--space-1) var(--space-3); font-size: var(--text-sm); font-family: var(--font-mono); color: #e2e8f0; cursor: pointer; }
+        .terminal-autocomplete-item:hover, .terminal-autocomplete-item.selected { background: #334155; color: #93c5fd; }
         .docs-explorer-layout { display: grid; grid-template-columns: 340px 1fr; gap: 12px; min-height: 540px; }
         .docs-sidebar { border: 1px solid var(--gray-200); border-radius: 10px; padding: 12px; background: var(--gray-50); display: flex; flex-direction: column; gap: 10px; min-height: 0; }
         .docs-filters { display: grid; gap: 8px; }
@@ -373,12 +636,32 @@
         .docs-empty { padding: 20px 12px; color: var(--gray-500); font-size: 13px; text-align: center; }
         .docs-stats { font-size: 12px; color: var(--gray-500); }
 
+        /* Dashboard trends & sparklines */
+        .dashboard-trend { font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-1); }
+        .dashboard-trend .up { color: var(--danger); }
+        .dashboard-trend .down { color: var(--success); }
+        .dashboard-trend .steady { color: var(--text-tertiary); }
+        .dash-sparkline { display: block; margin-top: var(--space-2); }
+        .dash-sparkline path { fill: none; stroke-width: 1.5; }
+
         /* Progress Ring */
         .progress-ring { position: relative; width: 80px; height: 80px; }
         .progress-ring svg { transform: rotate(-90deg); }
         .progress-ring-bg { fill: none; stroke: var(--gray-200); stroke-width: 8; }
         .progress-ring-fill { fill: none; stroke: var(--success); stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 0.5s; }
         .progress-ring-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 18px; font-weight: 700; }
+
+        /* View Transitions */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+        .view-enter { animation: fadeIn 0.2s ease-out; }
+
+        /* Skeleton Loading */
+        .skeleton { background: var(--bg-inset); border-radius: var(--radius-md); position: relative; overflow: hidden; }
+        .skeleton::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent); animation: shimmer 1.5s infinite; }
+        @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+        .skeleton-card { height: 80px; border-radius: var(--radius-xl); }
+        .skeleton-row { height: 48px; margin-bottom: 2px; }
+        .skeleton-sidebar { height: 44px; border-radius: var(--radius-lg); margin-bottom: 4px; }
 
         /* Empty State */
         .empty-state { text-align: center; padding: 80px 40px; }
@@ -389,18 +672,61 @@
             .packet-viewer-grid { grid-template-columns: 1fr; }
             .docs-explorer-layout { grid-template-columns: 1fr; }
             .docs-sidebar { max-height: 320px; }
+            .app-context { display: none; }
+            .terminal-drawer { left: 0; right: 0; }
         }
     </style>
 </head>
 <body>
+    <a class="skip-link" href="#app-main-content">Skip to main content</a>
     <div class="app-shell">
-        <aside class="app-nav">
+        <aside class="app-nav" id="app-nav" role="navigation" aria-label="Main navigation">
             <div class="app-nav-title">Navigation</div>
             <ul class="app-menu-list" id="app-menu-list"></ul>
+            <button class="nav-collapse-btn" onclick="toggleNavCollapse()" title="Collapse navigation" aria-label="Collapse navigation" aria-expanded="true">◀</button>
+            <button class="nav-theme-toggle" onclick="toggleTheme()" title="Toggle dark mode" aria-label="Toggle dark mode">
+                <svg id="theme-icon-sun" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                <svg id="theme-icon-moon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                <span>Toggle theme</span>
+            </button>
         </aside>
-        <div class="app-main">
+        <div class="app-main" id="app-main-content" role="main">
             <div class="app-home" id="app-home-view">
-                Select an item from the left menu.
+                <div class="dashboard-wrap">
+                    <div class="dashboard-head">
+                        <div>
+                            <div class="dashboard-title">Operational Dashboard</div>
+                            <div class="dashboard-sub">Deterministic governance snapshot</div>
+                        </div>
+                        <div style="display:flex;gap:8px">
+                            <button class="btn btn-sm btn-secondary" onclick="showOnboardingWizard()">Onboard</button>
+                            <button class="btn btn-sm btn-ghost" onclick="showHelpDrawer()">Help</button>
+                            <button class="btn btn-sm btn-primary" onclick="refreshDashboard()">Refresh</button>
+                        </div>
+                    </div>
+                    <div class="dashboard-grid">
+                        <div class="dashboard-card accent-warning"><h4>Pending</h4><div class="dashboard-val" id="dash-pending">0</div><div class="dashboard-trend" id="dash-pending-trend"></div><svg class="dash-sparkline" id="spark-pending" width="100" height="24"></svg></div>
+                        <div class="dashboard-card accent-primary"><h4>In Progress</h4><div class="dashboard-val" id="dash-progress">0</div><div class="dashboard-trend" id="dash-progress-trend"></div><svg class="dash-sparkline" id="spark-progress" width="100" height="24"></svg></div>
+                        <div class="dashboard-card accent-danger"><h4>Blocked</h4><div class="dashboard-val" id="dash-blocked">0</div><div class="dashboard-trend" id="dash-blocked-trend"></div><svg class="dash-sparkline" id="spark-blocked" width="100" height="24"></svg></div>
+                        <div class="dashboard-card accent-danger"><h4>Risk Flags</h4><div class="dashboard-val" id="dash-risk">0</div><div class="dashboard-trend" id="dash-risk-trend"></div></div>
+                        <div class="dashboard-card accent-warning"><h4>Drift Alerts</h4><div class="dashboard-val" id="dash-drift">0</div><div class="dashboard-trend" id="dash-drift-trend-arrow"></div></div>
+                        <div class="dashboard-card accent-success"><h4>Completion</h4><div id="dash-progress-ring" class="progress-ring"><svg viewBox="0 0 80 80" width="80" height="80"><circle class="progress-ring-bg" cx="40" cy="40" r="36"/><circle class="progress-ring-fill" id="progress-ring-circle" cx="40" cy="40" r="36" stroke-dasharray="226.2" stroke-dashoffset="226.2"/></svg><div class="progress-ring-text" id="progress-ring-pct">0%</div></div></div>
+                    </div>
+                    <div class="dashboard-panels">
+                        <div class="dashboard-panel">
+                            <div class="dashboard-sub" style="margin-bottom:8px">Critical Path (top dependencies)</div>
+                            <div class="dashboard-list" id="dash-critical-path">No data loaded.</div>
+                        </div>
+                        <div class="dashboard-panel">
+                            <div class="dashboard-sub" style="margin-bottom:8px">Active Alerts</div>
+                            <div class="dashboard-list" id="dash-alerts">No active alerts.</div>
+                            <div class="dashboard-sub" style="margin:10px 0 6px">Risk Heatmap</div>
+                            <div class="dashboard-list" id="dash-heatmap">High:0 | Medium:0 | Low:0</div>
+                            <div class="dashboard-sub" style="margin:10px 0 6px">Drift Trend</div>
+                            <div class="dashboard-list" id="dash-drift-trend">No trend data yet.</div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="page-view" id="identity-view" style="display:none">
                 <div class="guide-wrap">
@@ -415,6 +741,11 @@
                             <div class="form-group">
                                 <label class="form-label">Email</label>
                                 <input type="email" class="form-input" id="identity-email" required placeholder="name@example.com">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Password</label>
+                                <input type="password" class="form-input" id="identity-password" required placeholder="Enter password">
+                                <div class="form-hint">Default local users: developer/developer@example.com, admin/admin@example.com, viewer/viewer@example.com (password equals username).</div>
                             </div>
                             <div class="modal-footer" style="justify-content:flex-start;padding:0;margin-top:8px">
                                 <button type="submit" class="btn btn-primary">Login</button>
@@ -529,7 +860,7 @@
                     </div>
                     <div class="header-actions">
                         <span class="refresh-indicator" id="last-refresh">Last refresh: --</span>
-                        <button class="btn btn-ghost btn-icon" onclick="refreshData()" title="Refresh">↻</button>
+                        <button class="btn btn-ghost btn-icon" onclick="refreshData()" title="Refresh" aria-label="Refresh data">↻</button>
                         <button class="btn btn-success" onclick="showCloseoutL2()">L2 Closeout</button>
                         <button class="btn btn-secondary" onclick="showAddCategory()">+ Category</button>
                         <button class="btn btn-primary" onclick="showAddPacket()">+ Work Item</button>
@@ -547,32 +878,93 @@
                         </div>
                     </div>
                     <div class="content">
+                        <div id="wbs-breadcrumbs" class="breadcrumbs">
+                            <a href="#" onclick="showAppView('home');return false">Home</a>
+                            <span class="breadcrumb-sep">/</span>
+                            <span id="breadcrumb-current">WBS Manager</span>
+                        </div>
                         <div class="content-header">
                             <div class="content-title" id="content-title">All Work Items</div>
-                            <div style="display:flex;gap:8px" id="content-actions">
-                                <button class="btn btn-sm btn-ghost" onclick="showDocsExplorer()">Docs Explorer</button>
-                                <button class="btn btn-sm btn-ghost" onclick="showDepsGraph()">Deps Graph</button>
-                                <button class="btn btn-sm btn-ghost" onclick="expandAll()">Expand All</button>
-                                <button class="btn btn-sm btn-ghost" onclick="collapseAll()">Collapse All</button>
+                            <div class="segmented-control" id="content-actions">
+                                <button class="segmented-btn active" onclick="switchWorkspaceView('table')" data-view="table">Table</button>
+                                <button class="segmented-btn" onclick="switchWorkspaceView('kanban')" data-view="kanban">Kanban</button>
+                                <button class="segmented-btn" onclick="switchWorkspaceView('tree')" data-view="tree">Tree</button>
+                                <button class="segmented-btn" onclick="switchWorkspaceView('graph')" data-view="graph">Graph</button>
                             </div>
+                            <div style="display:flex;gap:6px;margin-left:auto">
+                                <button class="btn btn-sm btn-ghost" onclick="showDocsExplorer()">Docs</button>
+                                <button class="btn btn-sm btn-ghost" onclick="showDepsGraph()">Deps</button>
+                                <button class="btn btn-sm btn-ghost" onclick="expandAll()">Expand</button>
+                                <button class="btn btn-sm btn-ghost" onclick="collapseAll()">Collapse</button>
+                            </div>
+                        </div>
+                        <div class="quick-filter" id="quick-filter-bar">
+                            <input type="text" id="grid-quick-filter" placeholder="Filter packets..." oninput="applyQuickFilter(this.value)">
+                            <span class="quick-filter-count" id="quick-filter-count"></span>
                         </div>
                         <div class="content-body">
                             <div class="grid-wrapper" id="wbs-viewer">
                                 <div id="wbs-grid" class="ag-theme-alpine" style="height:100%;width:100%"></div>
                             </div>
+                            <div class="grid-wrapper" id="kanban-view" style="display:none;padding:12px;overflow:auto"></div>
+                            <div class="grid-wrapper" id="tree-view" style="display:none;padding:12px;overflow:auto"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <aside class="app-context" id="app-context-panel" style="position:relative" role="complementary" aria-label="Context panel">
+            <button class="context-collapse-btn" onclick="toggleContextCollapse()" title="Close panel" aria-label="Close context panel">✕</button>
+            <div class="context-title">Context Panel</div>
+            <div class="context-card">
+                <h4>Current User</h4>
+                <div class="context-value" id="context-user">Not logged in</div>
+            </div>
+            <div class="context-card">
+                <h4>Current View</h4>
+                <div class="context-value" id="context-view">Home</div>
+            </div>
+            <div class="context-card">
+                <h4>WBS Snapshot</h4>
+                <div class="context-kv"><span>Pending</span><span id="context-pending">0</span></div>
+                <div class="context-kv"><span>In Progress</span><span id="context-progress">0</span></div>
+                <div class="context-kv"><span>Done</span><span id="context-done">0</span></div>
+                <div class="context-kv"><span>Area</span><span id="context-area">All</span></div>
+            </div>
+            <div class="context-card" id="context-devtools" style="display:none">
+                <h4>Developer Tools</h4>
+                <button class="btn btn-sm btn-primary" onclick="toggleTerminal(true)">Dev Mode Terminal</button>
+                <div class="context-kv"><span>Term Avg</span><span id="context-term-avg">0ms</span></div>
+                <div class="context-kv"><span>Term P95</span><span id="context-term-p95">0ms</span></div>
+            </div>
+        </aside>
+    </div>
+
+    <div class="terminal-drawer" id="terminal-drawer">
+        <div class="terminal-resize" id="terminal-resize"></div>
+        <div class="terminal-head">
+            <span>Sandboxed Developer Terminal</span>
+            <div style="display:flex;gap:6px">
+                <button class="btn btn-sm btn-ghost" onclick="clearTerminalOutput()">Clear</button>
+                <button class="btn btn-sm btn-ghost" onclick="toggleTerminal(false)">Close</button>
+            </div>
+        </div>
+        <div class="terminal-body" id="terminal-output" aria-live="polite">$ terminal ready\n</div>
+        <div class="terminal-input-wrap">
+            <div style="position:relative">
+                <input class="terminal-input" id="terminal-input" placeholder="substrate validate" aria-label="Terminal command input" onkeydown="handleTerminalKey(event)" oninput="updateTerminalAutocomplete()">
+                <span id="terminal-ghost" style="position:absolute;left:9px;top:50%;transform:translateY(-50%);font-family:var(--font-mono);font-size:var(--text-sm);color:#475569;pointer-events:none;white-space:pre"></span>
+            </div>
+            <div class="terminal-autocomplete" id="terminal-autocomplete"></div>
+        </div>
     </div>
 
     <!-- Add Category Modal -->
     <div class="modal-overlay" id="modal-category">
-        <div class="modal">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-category-title">
             <div class="modal-header">
-                <span class="modal-title">Add Work Area</span>
-                <button class="modal-close" onclick="closeModal('modal-category')">&times;</button>
+                <span class="modal-title" id="modal-category-title">Add Work Area</span>
+                <button class="modal-close" onclick="closeModal('modal-category')" aria-label="Close dialog">&times;</button>
             </div>
             <form onsubmit="saveCategory(event)">
                 <div class="modal-body">
@@ -600,10 +992,10 @@
 
     <!-- Add Packet Modal -->
     <div class="modal-overlay" id="modal-packet">
-        <div class="modal">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="packet-modal-title">
             <div class="modal-header">
                 <span class="modal-title" id="packet-modal-title">Add Work Item</span>
-                <button class="modal-close" onclick="closeModal('modal-packet')">&times;</button>
+                <button class="modal-close" onclick="closeModal('modal-packet')" aria-label="Close dialog">&times;</button>
             </div>
             <form onsubmit="savePacket(event)">
                 <input type="hidden" id="pkt-edit-mode">
@@ -636,10 +1028,10 @@
 
     <!-- Action Modal -->
     <div class="modal-overlay" id="modal-action">
-        <div class="modal">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="action-title">
             <div class="modal-header">
                 <span class="modal-title" id="action-title">Claim Work Item</span>
-                <button class="modal-close" onclick="closeModal('modal-action')">&times;</button>
+                <button class="modal-close" onclick="closeModal('modal-action')" aria-label="Close dialog">&times;</button>
             </div>
             <form onsubmit="submitAction(event)">
                 <input type="hidden" id="action-id">
@@ -664,52 +1056,83 @@
 
     <!-- Packet Viewer Modal -->
     <div class="modal-overlay" id="modal-packet-viewer">
-        <div class="modal" style="max-width: 960px;">
+        <div class="modal" style="max-width: 960px;" role="dialog" aria-modal="true" aria-labelledby="viewer-title">
             <div class="modal-header">
                 <span class="modal-title" id="viewer-title">Packet Viewer</span>
-                <button class="modal-close" onclick="closeModal('modal-packet-viewer')">&times;</button>
+                <button class="modal-close" onclick="closeModal('modal-packet-viewer')" aria-label="Close dialog">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="packet-viewer-grid">
-                    <div class="viewer-card">
-                        <div class="viewer-label">Summary</div>
-                        <div class="viewer-value" id="viewer-summary">-</div>
+                <div class="viewer-tabs">
+                    <button class="viewer-tab active" id="tab-overview" onclick="setViewerTab('overview')">Overview</button>
+                    <button class="viewer-tab" id="tab-dependencies" onclick="setViewerTab('dependencies')">Dependencies</button>
+                    <button class="viewer-tab" id="tab-risks" onclick="setViewerTab('risks')">Risks</button>
+                    <button class="viewer-tab" id="tab-audit" onclick="setViewerTab('audit')">Audit</button>
+                    <button class="viewer-tab" id="tab-json" onclick="setViewerTab('json')">Canonical JSON</button>
+                </div>
+
+                <div class="viewer-pane active" id="pane-overview">
+                    <div class="packet-viewer-grid">
+                        <div class="viewer-card">
+                            <div class="viewer-label">Summary</div>
+                            <div class="viewer-value" id="viewer-summary">-</div>
+                        </div>
+                        <div class="viewer-card">
+                            <div class="viewer-label">Status</div>
+                            <div class="viewer-value" id="viewer-status">-</div>
+                        </div>
+                        <div class="viewer-card">
+                            <div class="viewer-label">Notes</div>
+                            <div class="viewer-value" id="viewer-notes">-</div>
+                        </div>
+                        <div class="viewer-card">
+                            <div class="viewer-label">Scope</div>
+                            <div class="viewer-value" id="viewer-scope">-</div>
+                        </div>
                     </div>
-                    <div class="viewer-card">
-                        <div class="viewer-label">Status</div>
-                        <div class="viewer-value" id="viewer-status">-</div>
+                    <div style="display:flex;gap:8px;margin-top:10px">
+                        <button class="btn btn-sm btn-primary" type="button" onclick="viewerTransition('claim')">Claim</button>
+                        <button class="btn btn-sm btn-success" type="button" onclick="viewerTransition('done')">Complete</button>
                     </div>
-                    <div class="viewer-card">
-                        <div class="viewer-label">Notes</div>
-                        <div class="viewer-value" id="viewer-notes">-</div>
-                    </div>
+                </div>
+
+                <div class="viewer-pane" id="pane-dependencies">
                     <div class="viewer-card">
                         <div class="viewer-label">Dependencies / Dependents</div>
                         <div class="viewer-value" id="viewer-deps">-</div>
                     </div>
                 </div>
-                <div class="viewer-card" style="margin-top: 12px;">
-                    <div class="viewer-label">Scope</div>
-                    <div class="viewer-value" id="viewer-scope">-</div>
+
+                <div class="viewer-pane" id="pane-risks">
+                    <div class="viewer-card">
+                        <div class="viewer-label">Risk Summary</div>
+                        <div class="viewer-value" id="viewer-risk">No linked risk records.</div>
+                    </div>
                 </div>
-                <div class="viewer-card" style="margin-top: 12px;">
-                    <div class="viewer-label">Canonical Packet JSON</div>
-                    <pre class="viewer-file" id="viewer-packet-json">-</pre>
+
+                <div class="viewer-pane" id="pane-audit">
+                    <div class="viewer-card">
+                        <div class="viewer-label">Packet Events</div>
+                        <div class="viewer-events" id="viewer-events"></div>
+                    </div>
                 </div>
-                <div class="viewer-card" style="margin-top: 12px;">
-                    <div class="viewer-label">Structured Fields</div>
-                    <pre class="viewer-file" id="viewer-structured">-</pre>
+
+                <div class="viewer-pane" id="pane-json">
+                    <div class="viewer-card">
+                        <div class="viewer-label">Canonical Packet JSON</div>
+                        <pre class="viewer-file" id="viewer-packet-json">-</pre>
+                    </div>
+                    <div class="viewer-card" style="margin-top: 12px;">
+                        <div class="viewer-label">Structured Fields</div>
+                        <pre class="viewer-file" id="viewer-structured">-</pre>
+                    </div>
                 </div>
+
                 <div class="viewer-card" style="margin-top: 12px;">
                     <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
                         <div class="viewer-label" style="margin-bottom:0">Linked Documents</div>
                         <button class="btn btn-sm btn-ghost" type="button" onclick="showDocsExplorer()">Open Full Explorer</button>
                     </div>
                     <div id="viewer-docs">No documents detected.</div>
-                </div>
-                <div class="viewer-card" style="margin-top: 12px;">
-                    <div class="viewer-label">Packet Events</div>
-                    <div class="viewer-events" id="viewer-events"></div>
                 </div>
                 <div class="viewer-card" style="margin-top: 12px;">
                     <div class="viewer-label">Document Preview</div>
@@ -721,10 +1144,10 @@
 
     <!-- Project Documentation Explorer Modal -->
     <div class="modal-overlay" id="modal-docs-explorer">
-        <div class="modal" style="max-width: 1200px;">
+        <div class="modal" style="max-width: 1200px;" role="dialog" aria-modal="true" aria-labelledby="modal-docs-title">
             <div class="modal-header">
-                <span class="modal-title">Project Documentation Explorer</span>
-                <button class="modal-close" onclick="closeModal('modal-docs-explorer')">&times;</button>
+                <span class="modal-title" id="modal-docs-title">Project Documentation Explorer</span>
+                <button class="modal-close" onclick="closeModal('modal-docs-explorer')" aria-label="Close dialog">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="docs-explorer-layout">
@@ -758,23 +1181,29 @@
 
     <!-- Dependency Graph Modal -->
     <div class="modal-overlay" id="modal-deps-graph">
-        <div class="modal" style="max-width: 960px;">
+        <div class="modal" style="max-width: 960px;" role="dialog" aria-modal="true" aria-labelledby="modal-deps-title">
             <div class="modal-header">
-                <span class="modal-title">Dependency Graph</span>
-                <button class="modal-close" onclick="closeModal('modal-deps-graph')">&times;</button>
+                <span class="modal-title" id="modal-deps-title">Dependency Graph</span>
+                <button class="modal-close" onclick="closeModal('modal-deps-graph')" aria-label="Close dialog">&times;</button>
             </div>
             <div class="modal-body">
-                <pre class="viewer-file" id="deps-graph-content">Loading...</pre>
+                <div class="deps-toolbar">
+                    <label>Depth <input type="range" id="deps-depth" min="1" max="8" value="8" oninput="renderDepsGraph()"></label>
+                    <button class="btn btn-sm btn-ghost" type="button" onclick="renderDepsGraph(true)">Highlight Critical Path</button>
+                    <button class="btn btn-sm btn-ghost" type="button" onclick="resetDepsGraphView()">Reset View</button>
+                    <span id="deps-graph-meta">Loading...</span>
+                </div>
+                <svg id="deps-graph-canvas" class="deps-canvas"></svg>
             </div>
         </div>
     </div>
 
     <!-- Level-2 Closeout Modal -->
     <div class="modal-overlay" id="modal-closeout-l2">
-        <div class="modal">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-closeout-title">
             <div class="modal-header">
-                <span class="modal-title">Level-2 Drift Closeout</span>
-                <button class="modal-close" onclick="closeModal('modal-closeout-l2')">&times;</button>
+                <span class="modal-title" id="modal-closeout-title">Level-2 Drift Closeout</span>
+                <button class="modal-close" onclick="closeModal('modal-closeout-l2')" aria-label="Close dialog">&times;</button>
             </div>
             <form onsubmit="submitCloseoutL2(event)">
                 <div class="modal-body">
@@ -804,7 +1233,70 @@
         </div>
     </div>
 
-    <div class="toast" id="toast"></div>
+    <div class="modal-overlay" id="modal-help-drawer">
+        <div class="modal" style="max-width:760px" role="dialog" aria-modal="true" aria-labelledby="modal-help-title">
+            <div class="modal-header">
+                <span class="modal-title" id="modal-help-title">Template Help</span>
+                <button class="modal-close" onclick="closeModal('modal-help-drawer')" aria-label="Close dialog">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:13px;color:var(--gray-700);line-height:1.5">Use the dashboard for operations, WBS Manager for governed execution, and Identity Management for role/session control.</p>
+                <ul style="margin-top:10px;padding-left:18px;font-size:13px;color:var(--gray-700);line-height:1.5">
+                    <li>Development > WBS Manager: claim, complete, and track packets</li>
+                    <li>Dashboard: monitor blocked work, drift alerts, and critical path</li>
+                    <li>Docs Explorer: open governance and implementation references</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="showAppView('guide');closeModal('modal-help-drawer');">Open Full Guide</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-onboarding">
+        <div class="modal" style="max-width:760px" role="dialog" aria-modal="true" aria-labelledby="modal-onboard-title">
+            <div class="modal-header">
+                <span class="modal-title" id="modal-onboard-title">Onboarding Wizard</span>
+                <button class="modal-close" onclick="closeModal('modal-onboarding')" aria-label="Close dialog">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="viewer-value" id="onboard-time">Elapsed: 0s</div>
+                <div style="display:grid;gap:8px;margin-top:10px">
+                    <div class="viewer-card"><strong>1) Create Work Area</strong><br><button class="btn btn-sm btn-primary" onclick="showAddCategory();markOnboardStep('area')">Open Area Form</button></div>
+                    <div class="viewer-card"><strong>2) Add Packet</strong><br><button class="btn btn-sm btn-primary" onclick="showAddPacket();markOnboardStep('packet')">Open Packet Form</button></div>
+                    <div class="viewer-card"><strong>3) Claim Packet</strong><br><button class="btn btn-sm btn-primary" onclick="runOnboardingAction('claim')">Claim First Pending</button></div>
+                    <div class="viewer-card"><strong>4) Close Packet</strong><br><button class="btn btn-sm btn-success" onclick="runOnboardingAction('done')">Close First In-Progress</button></div>
+                    <div class="viewer-card"><strong>5) Reveal Dependency Graph</strong><br><button class="btn btn-sm btn-ghost" onclick=\"showDepsGraph();markOnboardStep('graph')\">Open Graph</button></div>
+                </div>
+                <div class="viewer-value" id="onboard-status" style="margin-top:10px">Status: not started</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Command Palette -->
+    <div class="cmd-palette-overlay" id="cmd-palette-overlay" onclick="if(event.target===this)closeCmdPalette()">
+        <div class="cmd-palette" role="dialog" aria-modal="true" aria-label="Command palette">
+            <input class="cmd-palette-input" id="cmd-palette-input" placeholder="Type a command..." oninput="filterCmdPalette(this.value)" onkeydown="handleCmdPaletteKey(event)" aria-label="Search commands">
+            <div class="cmd-palette-results" id="cmd-palette-results" role="listbox"></div>
+        </div>
+    </div>
+
+    <!-- Shortcut Help -->
+    <div class="shortcut-help-overlay" id="shortcut-help-overlay" onclick="if(event.target===this)this.classList.remove('show')">
+        <div class="shortcut-help" role="dialog" aria-modal="true" aria-labelledby="shortcut-help-title">
+            <h3 id="shortcut-help-title">Keyboard Shortcuts</h3>
+            <div class="shortcut-row"><span>Command palette</span><span class="shortcut-key">Ctrl+K</span></div>
+            <div class="shortcut-row"><span>Show this help</span><span class="shortcut-key">?</span></div>
+            <div class="shortcut-row"><span>Go to Dashboard</span><span class="shortcut-key">g d</span></div>
+            <div class="shortcut-row"><span>Go to WBS Manager</span><span class="shortcut-key">g w</span></div>
+            <div class="shortcut-row"><span>New work item</span><span class="shortcut-key">n</span></div>
+            <div class="shortcut-row"><span>Refresh data</span><span class="shortcut-key">r</span></div>
+            <div class="shortcut-row"><span>Toggle terminal</span><span class="shortcut-key">Ctrl+`</span></div>
+            <div class="shortcut-row"><span>Close / Escape</span><span class="shortcut-key">Esc</span></div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="true"></div>
 
     <script>
         // Suppress license warning for demo
@@ -815,9 +1307,33 @@
         let selectedArea = null;
         let wbsBootstrapped = false;
         let wbsRefreshTimer = null;
-        let selectedMenuNode = null;
+        let viewerPacketId = '';
+        let selectedMenuNode = localStorage.getItem('app-selected-menu') || null;
+        let currentViewId = 'home';
+        let onboardingStartedAt = 0;
+        let onboardingTimer = null;
+        let onboardingPrompted = false;
+        let depsGraphState = { nodes: [], edges: [] };
+        let depsGraphZoom = null;
+        let workspaceView = localStorage.getItem('workspace-view') || 'table';
+        let terminalOpen = false;
+        let terminalHistory = JSON.parse(localStorage.getItem('terminal-history') || '[]');
+        let terminalHistoryIndex = -1;
+        const appMetrics = { terminal_latency_ms: 0, dashboard_refresh_ms: 0, grid_refresh_ms: 0 };
+        let terminalServerMetrics = { terminal_latency_avg_ms: 0, terminal_latency_p95_ms: 0 };
+        const extensionRegistry = {
+            dashboardMetrics: [],
+            packetActions: [],
+            terminalCommands: [],
+            panels: []
+        };
         let authUser = null;
-        const expandedMenuNodes = new Set(['template-l1', 'development', 'development-docs', 'settings']);
+        let expandedSeed = ['template-l1', 'development', 'development-docs', 'settings'];
+        try {
+            const rawExpanded = localStorage.getItem('app-expanded-menu');
+            if (rawExpanded) expandedSeed = JSON.parse(rawExpanded);
+        } catch (_) {}
+        const expandedMenuNodes = new Set(expandedSeed);
         const appMenuTree = [
             {
                 id: 'template-l1',
@@ -852,12 +1368,23 @@
         let docsIndex = { documents: [], categories: [], kinds: [], total: 0 };
         let docsSelectedPath = '';
 
-        // Toast
-        function toast(msg, type = '') {
-            const t = document.getElementById('toast');
-            t.textContent = msg;
-            t.className = 'toast show ' + type;
-            setTimeout(() => t.className = 'toast', 3000);
+        // Toast (stacking queue with icons, dismiss, progress bar)
+        function toast(msg, type = 'info') {
+            let container = document.getElementById('toast-container');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'toast-container';
+                container.className = 'toast-container';
+                document.body.appendChild(container);
+            }
+            const iconMap = { success: '✓', error: '✕', info: 'i', '': 'i' };
+            const toastType = type || 'info';
+            const el = document.createElement('div');
+            el.className = 'toast';
+            el.innerHTML = `<span class="toast-icon ${toastType}">${iconMap[toastType] || 'i'}</span><span class="toast-text">${escapeHtml(msg)}</span><button class="toast-dismiss" onclick="this.parentElement.remove()">✕</button><div class="toast-progress"></div>`;
+            el.style.position = 'relative';
+            container.appendChild(el);
+            setTimeout(() => { el.classList.add('removing'); setTimeout(() => el.remove(), 200); }, 3000);
         }
 
         function escapeHtml(value) {
@@ -883,6 +1410,7 @@
             }
             renderIdentityView();
             renderAppMenu();
+            updateContextPanel();
         }
 
         function isDeveloperUser() {
@@ -926,17 +1454,497 @@
             }
         }
 
+        function updateContextPanel() {
+            const userEl = document.getElementById('context-user');
+            const viewEl = document.getElementById('context-view');
+            const pEl = document.getElementById('context-pending');
+            const iEl = document.getElementById('context-progress');
+            const dEl = document.getElementById('context-done');
+            const areaEl = document.getElementById('context-area');
+            const devTools = document.getElementById('context-devtools');
+            const termAvgEl = document.getElementById('context-term-avg');
+            const termP95El = document.getElementById('context-term-p95');
+            if (!userEl || !viewEl || !pEl || !iEl || !dEl || !areaEl) return;
+
+            userEl.textContent = authUser ? `${authUser.name} (${authUser.role})` : 'Not logged in';
+            viewEl.textContent = currentViewId;
+            pEl.textContent = String(wbsData.counts?.pending || 0);
+            iEl.textContent = String(wbsData.counts?.in_progress || 0);
+            dEl.textContent = String(wbsData.counts?.done || 0);
+            if (selectedArea === null) areaEl.textContent = 'All';
+            else {
+                const area = wbsData.areas.find(a => a.id === selectedArea);
+                areaEl.textContent = area ? area.title : selectedArea;
+            }
+            if (devTools) devTools.style.display = isDeveloperUser() ? '' : 'none';
+            if (termAvgEl) termAvgEl.textContent = `${terminalServerMetrics.terminal_latency_avg_ms || appMetrics.terminal_latency_ms || 0}ms`;
+            if (termP95El) termP95El.textContent = `${terminalServerMetrics.terminal_latency_p95_ms || appMetrics.terminal_latency_ms || 0}ms`;
+        }
+
+        async function refreshTerminalMetrics() {
+            if (!isDeveloperUser()) return;
+            try {
+                const res = await fetch('/api/terminal/metrics');
+                const data = await res.json();
+                if (res.ok && data?.success && data.metrics) {
+                    terminalServerMetrics = data.metrics;
+                    updateContextPanel();
+                }
+            } catch (_) {}
+        }
+
+        function renderKanbanView() {
+            const el = document.getElementById('kanban-view');
+            if (!el) return;
+            const cols = ['pending', 'in_progress', 'done'];
+            const labels = { pending: 'Pending', in_progress: 'In Progress', done: 'Done' };
+            el.innerHTML = `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">${cols.map(col => {
+                const items = wbsData.packets.filter(p => (p.status || 'pending') === col);
+                return `<div class="viewer-card"><div class="viewer-label">${labels[col]} (${items.length})</div>${items.map(p =>
+                    `<div style="padding:8px;border:1px solid var(--gray-200);border-radius:8px;background:white;margin-top:6px;cursor:pointer" onclick="showPacketViewer('${p.id}')">${escapeHtml(p.wbs_ref)} - ${escapeHtml(p.title)}</div>`
+                ).join('')}</div>`;
+            }).join('')}</div>`;
+        }
+
+        function renderTreeView() {
+            const el = document.getElementById('tree-view');
+            if (!el) return;
+            el.innerHTML = wbsData.areas.map(area => {
+                const packets = wbsData.packets.filter(p => p.area_id === area.id);
+                return `<div class="viewer-card" style="margin-bottom:8px">
+                    <div class="viewer-label">${escapeHtml(area.title)} (${packets.length})</div>
+                    <div class="viewer-value">${packets.map(p => `<div style="padding:4px 0;cursor:pointer" onclick="showPacketViewer('${p.id}')">${escapeHtml(p.wbs_ref)} - ${escapeHtml(p.title)} <span style="color:var(--gray-500)">[${escapeHtml(p.status || 'pending')}]</span></div>`).join('') || '-'}</div>
+                </div>`;
+            }).join('');
+        }
+
+        function switchWorkspaceView(view) {
+            workspaceView = view;
+            localStorage.setItem('workspace-view', view);
+            const wbs = document.getElementById('wbs-viewer');
+            const kanban = document.getElementById('kanban-view');
+            const tree = document.getElementById('tree-view');
+            if (!wbs || !kanban || !tree) return;
+            // Update segmented control active state
+            document.querySelectorAll('#content-actions .segmented-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-view') === view);
+            });
+            wbs.style.display = view === 'table' ? '' : 'none';
+            kanban.style.display = view === 'kanban' ? '' : 'none';
+            tree.style.display = view === 'tree' ? '' : 'none';
+            if (view === 'kanban') renderKanbanView();
+            if (view === 'tree') renderTreeView();
+            if (view === 'graph') {
+                showDepsGraph();
+                workspaceView = 'table';
+                localStorage.setItem('workspace-view', 'table');
+                wbs.style.display = '';
+                kanban.style.display = 'none';
+                tree.style.display = 'none';
+            }
+        }
+
+        function showHelpDrawer() {
+            showModal('modal-help-drawer');
+        }
+
+        function registerDashboardMetric(def) { extensionRegistry.dashboardMetrics.push(def || {}); }
+        function registerPacketAction(def) { extensionRegistry.packetActions.push(def || {}); }
+        function registerTerminalCommand(def) { extensionRegistry.terminalCommands.push(def || {}); }
+        function registerPanel(def) { extensionRegistry.panels.push(def || {}); }
+        window.registerDashboardMetric = registerDashboardMetric;
+        window.registerPacketAction = registerPacketAction;
+        window.registerTerminalCommand = registerTerminalCommand;
+        window.registerPanel = registerPanel;
+
+        function toggleTerminal(forceOpen = null) {
+            terminalOpen = forceOpen === null ? !terminalOpen : !!forceOpen;
+            const drawer = document.getElementById('terminal-drawer');
+            if (!drawer) return;
+            drawer.style.display = terminalOpen ? 'block' : 'none';
+            if (terminalOpen) {
+                document.getElementById('terminal-input').focus();
+                updateTerminalSuggest();
+            }
+        }
+
+        function clearTerminalOutput() {
+            document.getElementById('terminal-output').textContent = '$ terminal cleared\n';
+        }
+
+        function appendTerminalOutput(text) {
+            const out = document.getElementById('terminal-output');
+            const line = document.createElement('div');
+            const colored = escapeHtml(text)
+                .replace(/\[OK\]/g, '<span class="terminal-ok">[OK]</span>')
+                .replace(/\[ERR\]/g, '<span class="terminal-error">[ERR]</span>')
+                .replace(/\[WARN\]/g, '<span class="terminal-warn">[WARN]</span>');
+            line.innerHTML = text.startsWith('$ ') ? `<span class="terminal-prompt">$ </span>${colored.slice(2)}` : colored;
+            out.appendChild(line);
+            out.scrollTop = out.scrollHeight;
+        }
+
+        function updateTerminalSuggest() {
+            const input = document.getElementById('terminal-input');
+            const suggest = document.getElementById('terminal-suggest');
+            if (!input || !suggest) return;
+            const value = input.value.trim();
+            const commands = [
+                'substrate claim ',
+                'substrate close ',
+                'substrate block ',
+                'substrate validate',
+                'substrate graph',
+                'substrate audit ',
+                'substrate drift-check',
+                'substrate export '
+            ];
+            extensionRegistry.terminalCommands.forEach(cmd => {
+                if (cmd?.name) commands.push(cmd.name);
+            });
+            const packetHint = wbsData.packets.length ? wbsData.packets[0].id : 'PACKET_ID';
+            const matches = commands.filter(c => c.startsWith(value) || value === '').slice(0, 3);
+            suggest.textContent = matches.length
+                ? `suggestions: ${matches.map(m => m.includes(' ') && m.endsWith(' ') ? `${m}${packetHint}` : m).join(' | ')}`
+                : 'No suggestion';
+        }
+
+        async function executeTerminalCommand(cmd) {
+            appendTerminalOutput(`$ ${cmd}`);
+            const startedAt = performance.now();
+            if (cmd === 'substrate help') {
+                const builtins = ['claim', 'close', 'block', 'validate', 'graph', 'audit', 'drift-check', 'export'];
+                const custom = extensionRegistry.terminalCommands.map(c => c.name).filter(Boolean);
+                appendTerminalOutput(`Built-in: ${builtins.join(', ')}${custom.length ? `\nCustom: ${custom.join(', ')}` : ''}`);
+                return;
+            }
+            const custom = extensionRegistry.terminalCommands.find(c => c?.name === cmd);
+            if (custom && typeof custom.run === 'function') {
+                try {
+                    const output = await Promise.resolve(custom.run({ wbsData, authUser }));
+                    appendTerminalOutput(output || 'custom command completed');
+                } catch (e) {
+                    appendTerminalOutput(`ERR: ${e.message}`);
+                }
+                return;
+            }
+            try {
+                const res = await fetch('/api/terminal/execute', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ command: cmd })
+                });
+                const data = await res.json();
+                if (!res.ok || !data.success) {
+                    appendTerminalOutput(`ERR: ${data.message || `HTTP ${res.status}`}`);
+                    appMetrics.terminal_latency_ms = Math.round(performance.now() - startedAt);
+                    return;
+                }
+                appendTerminalOutput(data.output || 'ok');
+                refreshData();
+                refreshDashboard();
+                appMetrics.terminal_latency_ms = Math.round(performance.now() - startedAt);
+                refreshTerminalMetrics();
+            } catch (e) {
+                appendTerminalOutput(`ERR: ${e.message}`);
+                appMetrics.terminal_latency_ms = Math.round(performance.now() - startedAt);
+                refreshTerminalMetrics();
+            }
+        }
+
+        async function handleTerminalKey(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const input = event.target;
+                const cmd = input.value.trim();
+                if (!cmd) return;
+                terminalHistory.push(cmd);
+                terminalHistory = terminalHistory.slice(-100);
+                localStorage.setItem('terminal-history', JSON.stringify(terminalHistory));
+                terminalHistoryIndex = terminalHistory.length;
+                input.value = '';
+                updateTerminalSuggest();
+                await executeTerminalCommand(cmd);
+                return;
+            }
+            if (event.key === 'ArrowUp') {
+                event.preventDefault();
+                const dd = document.getElementById('terminal-autocomplete');
+                if (dd && dd.classList.contains('show')) { navigateTerminalAutocomplete(-1); return; }
+                if (!terminalHistory.length) return;
+                terminalHistoryIndex = Math.max(0, terminalHistoryIndex - 1);
+                event.target.value = terminalHistory[terminalHistoryIndex] || '';
+                updateTerminalAutocomplete();
+                return;
+            }
+            if (event.key === 'ArrowDown') {
+                event.preventDefault();
+                const dd = document.getElementById('terminal-autocomplete');
+                if (dd && dd.classList.contains('show')) { navigateTerminalAutocomplete(1); return; }
+                if (!terminalHistory.length) return;
+                terminalHistoryIndex = Math.min(terminalHistory.length, terminalHistoryIndex + 1);
+                event.target.value = terminalHistory[terminalHistoryIndex] || '';
+                updateTerminalAutocomplete();
+                return;
+            }
+            if (event.key === 'Tab') {
+                event.preventDefault();
+                const dd = document.getElementById('terminal-autocomplete');
+                const selected = dd?.querySelector('.terminal-autocomplete-item.selected');
+                if (selected) { selectTerminalAutocomplete(selected.textContent); return; }
+                // Ghost completion accept
+                const ghost = document.getElementById('terminal-ghost');
+                if (ghost && ghost.textContent) { event.target.value = ghost.textContent; ghost.textContent = ''; dd?.classList.remove('show'); return; }
+                const val = event.target.value.trim();
+                if (val === 'substrate claim' || val === 'substrate close' || val === 'substrate block' || val === 'substrate audit' || val === 'substrate export') {
+                    event.target.value = `${val} ${wbsData.packets[0]?.id || 'PACKET_ID'}`;
+                }
+                updateTerminalAutocomplete();
+                return;
+            }
+            if (event.key === 'Escape') {
+                const dd = document.getElementById('terminal-autocomplete');
+                if (dd) dd.classList.remove('show');
+                document.getElementById('terminal-ghost').textContent = '';
+                return;
+            }
+            setTimeout(updateTerminalAutocomplete, 0);
+        }
+
+        // Terminal resize drag
+        (function initTerminalResize() {
+            const handle = document.getElementById('terminal-resize');
+            const drawer = document.getElementById('terminal-drawer');
+            if (!handle || !drawer) return;
+            const saved = localStorage.getItem('terminal-height');
+            if (saved) drawer.style.height = saved + 'px';
+            let startY, startH;
+            handle.addEventListener('mousedown', (e) => {
+                startY = e.clientY;
+                startH = drawer.offsetHeight;
+                const onMove = (e2) => {
+                    const h = Math.max(120, Math.min(window.innerHeight - 48, startH + (startY - e2.clientY)));
+                    drawer.style.height = h + 'px';
+                };
+                const onUp = () => {
+                    document.removeEventListener('mousemove', onMove);
+                    document.removeEventListener('mouseup', onUp);
+                    localStorage.setItem('terminal-height', drawer.offsetHeight);
+                };
+                document.addEventListener('mousemove', onMove);
+                document.addEventListener('mouseup', onUp);
+                e.preventDefault();
+            });
+        })();
+
+        // Terminal autocomplete dropdown with arrow keys
+        let termAutoIndex = -1;
+        function getTerminalCommands() {
+            const cmds = ['substrate claim ', 'substrate close ', 'substrate block ', 'substrate validate', 'substrate graph', 'substrate audit ', 'substrate drift-check', 'substrate export ', 'substrate help'];
+            extensionRegistry.terminalCommands.forEach(cmd => { if (cmd?.name) cmds.push(cmd.name); });
+            return cmds;
+        }
+        function updateTerminalAutocomplete() {
+            const input = document.getElementById('terminal-input');
+            const ghost = document.getElementById('terminal-ghost');
+            const dropdown = document.getElementById('terminal-autocomplete');
+            if (!input || !dropdown) return;
+            const val = input.value;
+            const commands = getTerminalCommands();
+            const matches = val ? commands.filter(c => c.startsWith(val) && c !== val) : [];
+            termAutoIndex = -1;
+            // Ghost inline completion
+            if (ghost) ghost.textContent = matches.length ? matches[0] : '';
+            // Dropdown
+            if (matches.length > 0 && val.length > 0) {
+                dropdown.innerHTML = matches.slice(0, 6).map((m, i) => `<div class="terminal-autocomplete-item" data-idx="${i}" onmousedown="selectTerminalAutocomplete('${escapeHtml(m)}')">${escapeHtml(m)}</div>`).join('');
+                dropdown.classList.add('show');
+            } else {
+                dropdown.classList.remove('show');
+            }
+        }
+        function selectTerminalAutocomplete(val) {
+            const input = document.getElementById('terminal-input');
+            input.value = val;
+            document.getElementById('terminal-autocomplete').classList.remove('show');
+            document.getElementById('terminal-ghost').textContent = '';
+            input.focus();
+        }
+        function navigateTerminalAutocomplete(dir) {
+            const dropdown = document.getElementById('terminal-autocomplete');
+            const items = dropdown.querySelectorAll('.terminal-autocomplete-item');
+            if (!items.length) return false;
+            items.forEach(el => el.classList.remove('selected'));
+            termAutoIndex = Math.max(0, Math.min(items.length - 1, termAutoIndex + dir));
+            items[termAutoIndex].classList.add('selected');
+            return true;
+        }
+
+        function markOnboardStep(step) {
+            const steps = JSON.parse(localStorage.getItem('onboard-steps') || '{}');
+            steps[step] = true;
+            localStorage.setItem('onboard-steps', JSON.stringify(steps));
+            const tracked = ['area', 'packet', 'claim', 'close', 'graph'];
+            const doneCount = tracked.filter(k => steps[k]).length;
+            const elapsed = onboardingStartedAt ? Math.max(0, Math.floor((Date.now() - onboardingStartedAt) / 1000)) : 0;
+            document.getElementById('onboard-status').textContent =
+                `Status: ${doneCount}/5 steps complete${doneCount >= 5 ? ` (completed in ${elapsed}s)` : ''}`;
+        }
+
+        function showOnboardingWizard() {
+            if (!onboardingStartedAt) onboardingStartedAt = Date.now();
+            if (onboardingTimer) clearInterval(onboardingTimer);
+            onboardingTimer = setInterval(() => {
+                const elapsed = onboardingStartedAt ? Math.floor((Date.now() - onboardingStartedAt) / 1000) : 0;
+                const el = document.getElementById('onboard-time');
+                if (el) el.textContent = `Elapsed: ${elapsed}s`;
+            }, 1000);
+            markOnboardStep('started');
+            showModal('modal-onboarding');
+        }
+
+        function runOnboardingAction(type) {
+            const packet = type === 'claim'
+                ? wbsData.packets.find(p => p.status === 'pending')
+                : wbsData.packets.find(p => p.status === 'in_progress');
+            if (!packet) {
+                toast(type === 'claim' ? 'No pending packets found' : 'No in-progress packets found', 'error');
+                return;
+            }
+            showAction(packet.id, type);
+            if (type === 'claim') markOnboardStep('claim');
+            if (type === 'done') markOnboardStep('close');
+        }
+
+        function renderDashboardFromStatus(data) {
+            const areas = data.areas || [];
+            const deps = data.dependencies || {};
+            const packets = [];
+            areas.forEach(area => (area.packets || []).forEach(pkt => packets.push({ ...pkt, area_id: area.id })));
+            const byId = Object.fromEntries(packets.map(p => [p.id, p]));
+            const blocked = packets.filter(p => (deps[p.id] || []).some(depId => (byId[depId]?.status || 'pending') !== 'done')).length;
+            const risk = packets.filter(p => /risk/i.test(p.notes || '')).length;
+            const drift = packets.filter(p => /drift/i.test(p.notes || '')).length;
+            const riskHigh = packets.filter(p => /risk.*high|high.*risk/i.test(p.notes || '')).length;
+            const riskMedium = packets.filter(p => /risk.*medium|medium.*risk/i.test(p.notes || '')).length;
+            const riskLow = Math.max(0, risk - riskHigh - riskMedium);
+            const now = Date.now();
+            const overdue = packets.filter(p => p.status === 'in_progress' && p.started_at && (now - new Date(p.started_at).getTime()) > (48 * 3600 * 1000)).length;
+            const counts = data.counts || {};
+
+            const pending = counts.pending || 0;
+            const inProgress = counts.in_progress || 0;
+            const done = counts.done || 0;
+            const total = packets.length || 1;
+            document.getElementById('dash-pending').textContent = pending;
+            document.getElementById('dash-progress').textContent = inProgress;
+            document.getElementById('dash-blocked').textContent = blocked;
+            document.getElementById('dash-risk').textContent = risk;
+            document.getElementById('dash-drift').textContent = drift;
+
+            // Progress ring
+            const pct = Math.round((done / total) * 100);
+            const circumference = 2 * Math.PI * 36; // r=36
+            const ringEl = document.getElementById('progress-ring-circle');
+            const ringText = document.getElementById('progress-ring-pct');
+            if (ringEl) ringEl.style.strokeDashoffset = circumference - (pct / 100) * circumference;
+            if (ringText) ringText.textContent = pct + '%';
+
+            // Metric history for sparklines + trends
+            function updateMetricHistory(key, val) {
+                const h = JSON.parse(localStorage.getItem('dash-hist-' + key) || '[]');
+                h.push(val);
+                while (h.length > 8) h.shift();
+                localStorage.setItem('dash-hist-' + key, JSON.stringify(h));
+                return h;
+            }
+            function renderTrend(elId, history) {
+                const el = document.getElementById(elId);
+                if (!el || history.length < 2) { if (el) el.textContent = ''; return; }
+                const delta = history[history.length - 1] - history[history.length - 2];
+                const cls = delta > 0 ? 'up' : delta < 0 ? 'down' : 'steady';
+                const arrow = delta > 0 ? '↑' : delta < 0 ? '↓' : '→';
+                el.innerHTML = `<span class="${cls}">${arrow} ${delta >= 0 ? '+' : ''}${delta}</span>`;
+            }
+            function renderSparkline(svgId, history, color) {
+                const svg = document.getElementById(svgId);
+                if (!svg || history.length < 2) return;
+                const w = 100, h = 24;
+                const max = Math.max(...history, 1);
+                const points = history.map((v, i) => `${(i / (history.length - 1)) * w},${h - (v / max) * (h - 2)}`).join(' ');
+                svg.innerHTML = `<polyline points="${points}" stroke="${color}" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+            }
+            const hPend = updateMetricHistory('pending', pending);
+            const hProg = updateMetricHistory('progress', inProgress);
+            const hBlock = updateMetricHistory('blocked', blocked);
+            renderTrend('dash-pending-trend', hPend);
+            renderTrend('dash-progress-trend', hProg);
+            renderTrend('dash-blocked-trend', hBlock);
+            renderTrend('dash-risk-trend', updateMetricHistory('risk', risk));
+            renderTrend('dash-drift-trend-arrow', updateMetricHistory('drift', drift));
+            renderSparkline('spark-pending', hPend, '#d97706');
+            renderSparkline('spark-progress', hProg, '#2563eb');
+            renderSparkline('spark-blocked', hBlock, '#dc2626');
+
+            // Critical path — clickable
+            const dependentCount = {};
+            Object.entries(deps).forEach(([target, srcs]) => {
+                dependentCount[target] = dependentCount[target] || 0;
+                srcs.forEach(src => dependentCount[src] = (dependentCount[src] || 0) + 1);
+            });
+            const critical = packets
+                .map(p => ({ id: p.id, title: p.title, score: dependentCount[p.id] || 0, status: p.status }))
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 5);
+            document.getElementById('dash-critical-path').innerHTML = critical.length
+                ? critical.map(p => `<div style="padding:4px 0;cursor:pointer" onclick="showAppView('wbs-manager');setTimeout(()=>showPacketViewer('${p.id}'),300)"><span class="status-badge status-${p.status}" style="font-size:10px">${p.status.replace('_',' ')}</span> <strong>${escapeHtml(p.id)}</strong> — ${p.score} dependents</div>`).join('')
+                : 'No dependency hotspots.';
+
+            const alerts = [];
+            if (blocked > 0) alerts.push(`${blocked} packets blocked by unmet dependencies.`);
+            if (inProgress > 0 && packets.some(p => p.status === 'in_progress' && p.started_at && (now - new Date(p.started_at).getTime()) > (48 * 3600 * 1000))) alerts.push(`Overdue packets in-progress for >48h.`);
+            if (drift > 0) alerts.push(`${drift} packets flagged with drift evidence.`);
+            document.getElementById('dash-alerts').textContent = alerts.length ? alerts.join('\n') : 'No active alerts.';
+            document.getElementById('dash-heatmap').textContent = `High:${riskHigh} | Medium:${riskMedium} | Low:${riskLow}`;
+
+            const trend = JSON.parse(localStorage.getItem('dash-drift-history') || '[]');
+            trend.push({ ts: Date.now(), drift });
+            while (trend.length > 8) trend.shift();
+            localStorage.setItem('dash-drift-history', JSON.stringify(trend));
+            const delta = trend.length > 1 ? drift - trend[trend.length - 2].drift : 0;
+            const marker = delta > 0 ? 'up' : delta < 0 ? 'down' : 'steady';
+            document.getElementById('dash-drift-trend').textContent =
+                `Current ${drift}, trend ${marker} (${delta >= 0 ? '+' : ''}${delta})`;
+        }
+
+        async function refreshDashboard() {
+            if (!isDeveloperUser()) return;
+            const startedAt = performance.now();
+            try {
+                const res = await fetch('/api/status');
+                const data = await res.json();
+                if (!res.ok || data?.success === false) return;
+                renderDashboardFromStatus(data);
+                if (!onboardingPrompted && !(data.areas || []).length) {
+                    onboardingPrompted = true;
+                    showOnboardingWizard();
+                }
+                appMetrics.dashboard_refresh_ms = Math.round(performance.now() - startedAt);
+            } catch (_) {}
+        }
+
         async function handleIdentityLogin(event) {
             event.preventDefault();
             const name = document.getElementById('identity-name').value.trim();
             const email = document.getElementById('identity-email').value.trim();
-            if (!name || !email) return;
+            const password = document.getElementById('identity-password').value;
+            if (!name || !email || !password) return;
 
             try {
                 const res = await fetch('/api/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, email })
+                    body: JSON.stringify({ name, email, password })
                 });
                 const data = await res.json();
                 if (!res.ok || !data?.success || !data?.authenticated) {
@@ -971,9 +1979,83 @@
             showAppView('identity');
         }
 
-        // Modal
-        function showModal(id) { document.getElementById(id).classList.add('show'); }
-        function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+        // Modal with focus trap, Escape, overlay click, exit animation
+        let _modalTrigger = null;
+        function showModal(id) {
+            _modalTrigger = document.activeElement;
+            const overlay = document.getElementById(id);
+            overlay.classList.add('show');
+            overlay.classList.remove('closing');
+            // Focus first focusable element
+            requestAnimationFrame(() => {
+                const focusable = overlay.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                if (focusable.length) focusable[0].focus();
+            });
+        }
+        function closeModal(id) {
+            const overlay = document.getElementById(id);
+            overlay.classList.add('closing');
+            setTimeout(() => {
+                overlay.classList.remove('show', 'closing');
+                if (_modalTrigger) { _modalTrigger.focus(); _modalTrigger = null; }
+            }, 150);
+            if (id === 'modal-onboarding' && onboardingTimer) {
+                clearInterval(onboardingTimer);
+                onboardingTimer = null;
+            }
+        }
+        // Escape key and overlay click for modals
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const open = document.querySelector('.modal-overlay.show:not(.closing)');
+                if (open) { closeModal(open.id); e.preventDefault(); return; }
+                const cmdPalette = document.getElementById('cmd-palette-overlay');
+                if (cmdPalette && cmdPalette.classList.contains('show')) { closeCmdPalette(); e.preventDefault(); return; }
+                const shortcutHelp = document.getElementById('shortcut-help-overlay');
+                if (shortcutHelp && shortcutHelp.classList.contains('show')) { shortcutHelp.classList.remove('show'); e.preventDefault(); }
+            }
+        });
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal-overlay') && e.target.classList.contains('show')) {
+                closeModal(e.target.id);
+            }
+        });
+        // Focus trap
+        document.addEventListener('keydown', (e) => {
+            if (e.key !== 'Tab') return;
+            let overlay = document.querySelector('.modal-overlay.show:not(.closing)');
+            if (!overlay) {
+                const cmdPalette = document.getElementById('cmd-palette-overlay');
+                if (cmdPalette && cmdPalette.classList.contains('show')) overlay = cmdPalette;
+            }
+            if (!overlay) {
+                const shortcutHelp = document.getElementById('shortcut-help-overlay');
+                if (shortcutHelp && shortcutHelp.classList.contains('show')) overlay = shortcutHelp;
+            }
+            if (!overlay) return;
+            const focusable = Array.from(overlay.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'));
+            if (!focusable.length) return;
+            const first = focusable[0], last = focusable[focusable.length - 1];
+            if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+            else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+        });
+
+        function setViewerTab(tab) {
+            const tabs = ['overview', 'dependencies', 'risks', 'audit', 'json'];
+            tabs.forEach(name => {
+                const tabEl = document.getElementById(`tab-${name}`);
+                const paneEl = document.getElementById(`pane-${name}`);
+                if (!tabEl || !paneEl) return;
+                const active = name === tab;
+                tabEl.classList.toggle('active', active);
+                paneEl.classList.toggle('active', active);
+            });
+        }
+
+        function viewerTransition(type) {
+            if (!viewerPacketId) return;
+            showAction(viewerPacketId, type);
+        }
 
         // Initialize Grid
         function initGrid() {
@@ -994,7 +2076,8 @@
                     width: 140,
                     cellRenderer: params => {
                         if (!params.value || params.data.type === 'area') return '';
-                        return `<span class="status-badge status-${params.value}">${params.value.replace('_', ' ')}</span>`;
+                        const icons = { pending: '○', in_progress: '◉', done: '✓', failed: '✕', blocked: '⊘' };
+                        return `<span class="status-badge status-${params.value}">${icons[params.value] || '·'} ${params.value.replace('_', ' ')}</span>`;
                     }
                 },
                 { field: 'assigned_to', headerName: 'Assigned', width: 120 },
@@ -1004,21 +2087,20 @@
                     cellRenderer: params => {
                         if (params.data.type === 'area') {
                             const areaData = wbsData.areas.find(a => a.id === params.data.id) || {};
-                            const closeoutLabel = areaData.closeout ? 'Re-close L2' : 'Closeout L2';
-                            return `<button class="grid-btn grid-btn-edit" onclick="showAddPacketToArea('${params.data.id}')">+ Add Item</button> <button class="grid-btn grid-btn-done" onclick="showCloseoutL2('${params.data.id}')">${closeoutLabel}</button>`;
+                            return `<div class="grid-actions always-show"><button class="grid-btn" onclick="showAddPacketToArea('${params.data.id}')" title="Add item">+</button><button class="grid-btn grid-btn-done" onclick="showCloseoutL2('${params.data.id}')" title="Closeout L2">⊞</button></div>`;
                         }
                         const status = params.data.status;
                         if (status === 'pending') {
                             const blocked = isBlocked(params.data.id);
                             if (blocked) {
-                                return `<span style="color:var(--gray-400);margin-right:8px;">Blocked</span><button class="grid-btn grid-btn-edit" onclick="showPacketViewer('${params.data.id}')">View</button>`;
+                                return `<div class="grid-actions always-show"><span style="color:var(--gray-400);font-size:var(--text-xs)">Blocked</span><button class="grid-btn" onclick="showPacketViewer('${params.data.id}')" title="View">👁</button></div>`;
                             }
-                            return `<button class="grid-btn grid-btn-claim" onclick="showAction('${params.data.id}', 'claim')">Claim</button> <button class="grid-btn grid-btn-edit" onclick="showPacketViewer('${params.data.id}')">View</button>`;
+                            return `<div class="grid-actions"><button class="grid-btn grid-btn-claim" onclick="showAction('${params.data.id}', 'claim')" title="Claim">⤓</button><button class="grid-btn" onclick="showPacketViewer('${params.data.id}')" title="View">👁</button></div>`;
                         }
                         if (status === 'in_progress') {
-                            return `<button class="grid-btn grid-btn-done" onclick="showAction('${params.data.id}', 'done')">Complete</button> <button class="grid-btn grid-btn-edit" onclick="showPacketViewer('${params.data.id}')">View</button>`;
+                            return `<div class="grid-actions"><button class="grid-btn grid-btn-done" onclick="showAction('${params.data.id}', 'done')" title="Complete">✓</button><button class="grid-btn" onclick="showPacketViewer('${params.data.id}')" title="View">👁</button></div>`;
                         }
-                        return `<button class="grid-btn grid-btn-edit" onclick="showPacketViewer('${params.data.id}')">View</button>`;
+                        return `<div class="grid-actions"><button class="grid-btn" onclick="showPacketViewer('${params.data.id}')" title="View">👁</button></div>`;
                     }
                 }
             ];
@@ -1036,6 +2118,15 @@
                 rowSelection: 'multiple',
                 getRowId: params => params.data.id,
                 getRowClass: params => params.data.type === 'area' ? 'row-category' : '',
+                onRowDataUpdated: () => {
+                    document.querySelectorAll('.ag-row').forEach(row => {
+                        const rowId = row.getAttribute('row-id');
+                        if (rowId) {
+                            const pkt = wbsData.packets.find(p => p.id === rowId);
+                            if (pkt) row.setAttribute('data-status', pkt.status || 'pending');
+                        }
+                    });
+                },
                 onCellValueChanged: onCellEdit
             };
 
@@ -1071,7 +2162,27 @@
         }
 
         // Load data
+        // Button loading state helper
+        function setButtonLoading(btn, loading) {
+            if (!btn) return;
+            if (loading) { btn.classList.add('loading'); btn.dataset.origText = btn.textContent; }
+            else { btn.classList.remove('loading'); if (btn.dataset.origText) btn.textContent = btn.dataset.origText; }
+        }
+
+        // Skeleton helpers
+        function showSkeletons() {
+            const sidebar = document.getElementById('sidebar-list');
+            if (sidebar && !sidebar.querySelector('.skeleton')) {
+                sidebar.innerHTML = Array(5).fill('<div class="skeleton skeleton-sidebar"></div>').join('');
+            }
+        }
+        function clearSkeletons() {
+            document.querySelectorAll('.skeleton').forEach(el => el.remove());
+        }
+
         async function refreshData() {
+            showSkeletons();
+            const startedAt = performance.now();
             try {
                 const res = await fetch('/api/status');
                 const data = await res.json();
@@ -1144,10 +2255,17 @@
                 document.getElementById('stat-done').textContent = counts.done || 0;
 
                 // Update sidebar
+                clearSkeletons();
                 renderSidebar();
 
                 // Update dropdowns
                 updateDropdowns();
+                updateContextPanel();
+                renderDashboardFromStatus(data);
+                renderKanbanView();
+                renderTreeView();
+                switchWorkspaceView(workspaceView);
+                appMetrics.grid_refresh_ms = Math.round(performance.now() - startedAt);
 
             } catch (e) {
                 console.error(e);
@@ -1206,6 +2324,7 @@
         function toggleMenuNode(nodeId) {
             if (expandedMenuNodes.has(nodeId)) expandedMenuNodes.delete(nodeId);
             else expandedMenuNodes.add(nodeId);
+            localStorage.setItem('app-expanded-menu', JSON.stringify(Array.from(expandedMenuNodes)));
             renderAppMenu();
         }
 
@@ -1221,7 +2340,14 @@
             wbsBootstrapped = true;
         }
 
+        function showViewWithTransition(el) {
+            el.style.display = '';
+            el.classList.remove('view-enter');
+            void el.offsetWidth; // force reflow
+            el.classList.add('view-enter');
+        }
         function showAppView(viewId) {
+            currentViewId = viewId;
             const home = document.getElementById('app-home-view');
             const identityView = document.getElementById('identity-view');
             const guideView = document.getElementById('guide-view');
@@ -1235,30 +2361,33 @@
 
             if (isDevelopmentView(viewId) && !isDeveloperUser()) {
                 toast('Developer role required to access Development menu', 'error');
-                identityView.style.display = '';
+                showViewWithTransition(identityView);
                 renderIdentityView();
+                updateContextPanel();
                 return;
             }
 
             if (viewId === 'wbs-manager') {
-                wbsView.style.display = '';
+                showViewWithTransition(wbsView);
                 ensureWbsManagerLoaded();
                 return;
             }
             if (viewId === 'identity') {
-                identityView.style.display = '';
+                showViewWithTransition(identityView);
                 renderIdentityView();
                 return;
             }
             if (viewId === 'guide') {
-                guideView.style.display = '';
+                showViewWithTransition(guideView);
                 return;
             }
             if (viewId === 'architecture') {
-                architectureView.style.display = '';
+                showViewWithTransition(architectureView);
                 return;
             }
-            home.style.display = '';
+            showViewWithTransition(home);
+            refreshDashboard();
+            updateContextPanel();
         }
 
         function selectMenuNode(nodeId) {
@@ -1269,7 +2398,9 @@
             }
             const node = findMenuNodeById(nodeId);
             selectedMenuNode = nodeId;
+            localStorage.setItem('app-selected-menu', nodeId);
             renderAppMenu();
+            updateContextPanel();
             if (node?.view) showAppView(node.view);
         }
 
@@ -1312,13 +2443,16 @@
             }
             selectedArea = areaId;
             renderSidebar();
+            updateContextPanel();
 
             if (areaId === null) {
                 document.getElementById('content-title').textContent = 'All Work Items';
+                updateBreadcrumb('WBS Manager');
                 gridApi.setGridOption('isExternalFilterPresent', () => false);
             } else {
                 const area = wbsData.areas.find(a => a.id === areaId);
                 document.getElementById('content-title').textContent = area ? area.title : areaId;
+                updateBreadcrumb(null, area ? area.title : areaId);
                 gridApi.setGridOption('isExternalFilterPresent', () => true);
                 gridApi.setGridOption('doesExternalFilterPass', node => {
                     return node.data.path[0] === areaId;
@@ -1353,6 +2487,20 @@
         // Expand/Collapse
         function expandAll() { gridApi.expandAll(); }
         function collapseAll() { gridApi.collapseAll(); }
+
+        // Quick filter with debounce
+        let _quickFilterTimer;
+        function applyQuickFilter(value) {
+            clearTimeout(_quickFilterTimer);
+            _quickFilterTimer = setTimeout(() => {
+                gridApi.setGridOption('quickFilterText', value);
+                const count = document.getElementById('quick-filter-count');
+                if (count) {
+                    const displayed = gridApi.getDisplayedRowCount();
+                    count.textContent = value ? `${displayed} result${displayed !== 1 ? 's' : ''}` : '';
+                }
+            }, 250);
+        }
 
         // Add Category
         function showAddCategory() {
@@ -1501,8 +2649,20 @@
             const agent = document.getElementById('action-agent').value;
             const notes = document.getElementById('action-notes').value;
 
+            if (!agent || !agent.trim()) {
+                toast('Operator name is required', 'error');
+                return;
+            }
+            if (type === 'done' && (!notes || notes.trim().length < 8)) {
+                toast('Completion notes must be at least 8 characters', 'error');
+                return;
+            }
+
             localStorage.setItem('wbs-operator', agent);
             localStorage.setItem('wbs-agent', agent); // Backward compatible key
+
+            const submitBtn = document.getElementById('action-submit');
+            setButtonLoading(submitBtn, true);
 
             const data = { packet_id: packetId, agent_name: agent };
             if (type === 'done') data.notes = notes;
@@ -1514,10 +2674,16 @@
             });
             const result = await res.json();
 
+            setButtonLoading(submitBtn, false);
             if (result.success) {
                 toast(type === 'claim' ? 'Work item claimed by operator' : 'Work item completed', 'success');
+                const parityCmd = type === 'claim'
+                    ? `substrate claim ${packetId}`
+                    : `substrate close ${packetId}`;
+                appendTerminalOutput(`> ${parityCmd}\n✔ success (via UI parity bridge)`);
                 closeModal('modal-action');
                 refreshData();
+                refreshDashboard();
             } else {
                 toast(result.message || 'Failed', 'error');
             }
@@ -1817,39 +2983,175 @@
         }
 
         async function showDepsGraph() {
-            const content = document.getElementById('deps-graph-content');
-            content.textContent = 'Loading dependency graph...';
             showModal('modal-deps-graph');
             try {
                 const res = await fetch('/api/deps-graph');
                 const raw = await res.text();
                 const data = raw ? JSON.parse(raw) : null;
                 if (!res.ok || !data) {
-                    content.textContent = `Failed to load dependency graph (HTTP ${res.status}).`;
+                    document.getElementById('deps-graph-meta').textContent = `Failed to load dependency graph (HTTP ${res.status}).`;
                     return;
                 }
-                const nodes = data.nodes || [];
-                const edges = data.edges || [];
-                const statusById = Object.fromEntries(nodes.map(n => [n.id, n.status || 'pending']));
-                const lines = [];
-                lines.push(`nodes=${nodes.length}, edges=${edges.length}`);
-                lines.push('');
-                lines.push('Edges:');
-                for (const edge of edges) {
-                    lines.push(`  ${edge.from} (${statusById[edge.from] || '-'}) -> ${edge.to} (${statusById[edge.to] || '-'})`);
-                }
-                if (edges.length === 0) {
-                    lines.push('  (no dependency edges)');
-                }
-                lines.push('');
-                lines.push('Nodes:');
-                for (const node of nodes) {
-                    lines.push(`  ${node.id} [${node.status}] ${node.wbs_ref} ${node.title}`);
-                }
-                content.textContent = lines.join('\n');
+                depsGraphState = {
+                    nodes: data.nodes || [],
+                    edges: data.edges || []
+                };
+                renderDepsGraph();
             } catch (e) {
-                content.textContent = `Failed to load dependency graph: ${e.message}`;
+                document.getElementById('deps-graph-meta').textContent = `Failed to load dependency graph: ${e.message}`;
             }
+        }
+
+        function resetDepsGraphView() {
+            const svg = d3.select('#deps-graph-canvas');
+            if (!depsGraphZoom || !svg.node()) return;
+            svg.transition().duration(220).call(depsGraphZoom.transform, d3.zoomIdentity);
+        }
+
+        function renderDepsGraph(highlightCritical = false) {
+            const svg = d3.select('#deps-graph-canvas');
+            const width = Math.max(300, document.getElementById('deps-graph-canvas').clientWidth || 900);
+            const height = 520;
+            svg.selectAll('*').remove();
+            svg.attr('viewBox', `0 0 ${width} ${height}`);
+            svg.style('cursor', 'grab');
+            svg.on('mousedown', () => svg.style('cursor', 'grabbing'));
+            svg.on('mouseup', () => svg.style('cursor', 'grab'));
+            svg.on('mouseleave', () => svg.style('cursor', 'grab'));
+            const viewport = svg.append('g').attr('class', 'deps-viewport');
+
+            const allNodes = depsGraphState.nodes || [];
+            const allEdges = depsGraphState.edges || [];
+            const depth = Number(document.getElementById('deps-depth')?.value || 8);
+
+            const incoming = {};
+            allEdges.forEach(e => incoming[e.to] = (incoming[e.to] || 0) + 1);
+            const roots = allNodes.filter(n => !incoming[n.id]).map(n => n.id);
+            const allowed = new Set(roots);
+            let frontier = [...roots];
+            for (let i = 0; i < depth; i += 1) {
+                const next = [];
+                for (const id of frontier) {
+                    allEdges.filter(e => e.from === id).forEach(e => {
+                        if (!allowed.has(e.to)) next.push(e.to);
+                        allowed.add(e.to);
+                    });
+                }
+                frontier = next;
+            }
+
+            const nodes = allNodes.filter(n => allowed.has(n.id));
+            const nodeIds = new Set(nodes.map(n => n.id));
+            const links = allEdges
+                .filter(e => nodeIds.has(e.from) && nodeIds.has(e.to))
+                .map(e => ({
+                    from: e.from,
+                    to: e.to,
+                    source: e.from,
+                    target: e.to
+                }));
+            const statusColor = { done: '#16a34a', in_progress: '#2563eb', pending: '#6b7280', failed: '#dc2626', blocked: '#dc2626' };
+
+            const dependents = {};
+            links.forEach(e => dependents[e.from] = (dependents[e.from] || 0) + 1);
+            const criticalNode = nodes.slice().sort((a, b) => (dependents[b.id] || 0) - (dependents[a.id] || 0))[0];
+            const criticalEdges = new Set();
+            if (highlightCritical && criticalNode) {
+                let current = criticalNode.id;
+                const guard = new Set();
+                while (!guard.has(current)) {
+                    guard.add(current);
+                    const edge = links.find(l => l.from === current);
+                    if (!edge) break;
+                    criticalEdges.add(`${edge.from}->${edge.to}`);
+                    current = edge.to;
+                }
+            }
+
+            const simulation = d3.forceSimulation(nodes)
+                .force('link', d3.forceLink(links).id(d => d.id).distance(95))
+                .force('charge', d3.forceManyBody().strength(-260))
+                .force('center', d3.forceCenter(width / 2, height / 2));
+
+            depsGraphZoom = d3.zoom()
+                .scaleExtent([0.3, 4])
+                .on('zoom', (event) => {
+                    viewport.attr('transform', event.transform);
+                });
+            svg.call(depsGraphZoom);
+            svg.on('dblclick.zoom', null);
+            svg.call(depsGraphZoom.transform, d3.zoomIdentity);
+
+            const link = viewport.append('g')
+                .attr('stroke', '#94a3b8')
+                .attr('stroke-width', 1.4)
+                .selectAll('line')
+                .data(links)
+                .join('line')
+                .attr('stroke', d => criticalEdges.has(`${d.from}->${d.to}`) ? '#f59e0b' : '#94a3b8')
+                .attr('stroke-width', d => criticalEdges.has(`${d.from}->${d.to}`) ? 2.8 : 1.4);
+
+            const node = viewport.append('g')
+                .selectAll('circle')
+                .data(nodes)
+                .join('circle')
+                .attr('r', 8)
+                .attr('fill', d => statusColor[d.status] || '#6b7280')
+                .style('cursor', 'pointer')
+                .on('click', (event, d) => {
+                    if (event.defaultPrevented) return;
+                    showPacketViewer(d.id);
+                })
+                .on('dblclick', (event, d) => {
+                    d.fx = null;
+                    d.fy = null;
+                    simulation.alpha(0.25).restart();
+                    event.stopPropagation();
+                })
+                .call(
+                    d3.drag()
+                        .on('start', (event, d) => {
+                            if (!event.active) simulation.alphaTarget(0.3).restart();
+                            d.fx = d.x;
+                            d.fy = d.y;
+                        })
+                        .on('drag', (event, d) => {
+                            d.fx = event.x;
+                            d.fy = event.y;
+                        })
+                        .on('end', (event) => {
+                            if (!event.active) simulation.alphaTarget(0);
+                        })
+                );
+            node.append('title')
+                .text(d => `${d.id} ${d.wbs_ref} ${d.title}`);
+
+            const label = viewport.append('g')
+                .selectAll('text')
+                .data(nodes)
+                .join('text')
+                .text(d => d.wbs_ref || d.id)
+                .attr('font-size', '11px')
+                .attr('fill', '#334155');
+
+            simulation.on('tick', () => {
+                link
+                    .attr('x1', d => d.source.x)
+                    .attr('y1', d => d.source.y)
+                    .attr('x2', d => d.target.x)
+                    .attr('y2', d => d.target.y);
+
+                node
+                    .attr('cx', d => d.x)
+                    .attr('cy', d => d.y);
+
+                label
+                    .attr('x', d => d.x + 10)
+                    .attr('y', d => d.y + 4);
+            });
+
+            document.getElementById('deps-graph-meta').textContent =
+                `nodes=${nodes.length}, edges=${links.length}${criticalNode ? `, hotspot=${criticalNode.id}` : ''} | drag: node pin, dblclick node: unpin, wheel: zoom, drag canvas: pan`;
         }
 
         async function showPacketViewer(packetId) {
@@ -1871,6 +3173,8 @@
             }
 
             const p = data.packet || {};
+            viewerPacketId = p.id || packetId;
+            setViewerTab('overview');
             document.getElementById('viewer-title').textContent = `Packet Viewer: ${p.id || '-'}`;
             document.getElementById('viewer-summary').textContent =
                 `${p.wbs_ref || '-'} - ${p.title || '-'} (${p.area_title || p.area_id || '-'})`;
@@ -1880,6 +3184,9 @@
             document.getElementById('viewer-scope').textContent = p.scope || '-';
             document.getElementById('viewer-deps').textContent =
                 `depends on: ${(p.dependencies || []).join(', ') || '-'} | dependents: ${(p.dependents || []).join(', ') || '-'}`;
+            document.getElementById('viewer-risk').textContent = /risk/i.test(p.notes || '')
+                ? 'Risk marker detected in packet notes.'
+                : 'No linked risk records.';
             document.getElementById('viewer-packet-json').textContent =
                 JSON.stringify(data.packet_definition || p, null, 2);
             const full = data.packet_definition || {};
@@ -1918,10 +3225,19 @@
             if (events.length === 0) {
                 eventsEl.innerHTML = '<div class="viewer-event">No events recorded.</div>';
             } else {
+                const labelMap = {
+                    claimed: 'Claimed',
+                    completed: 'Status Changed to Done',
+                    failed: 'Marked Failed',
+                    noted: 'Notes Updated',
+                    reset: 'Reset to Pending',
+                    area_closed: 'Area Closed'
+                };
                 eventsEl.innerHTML = events.map(e => `
                     <div class="viewer-event">
-                        <strong>${e.event || '-'}</strong> | ${e.timestamp || '-'} | ${e.agent || '-'}<br>
-                        ${e.notes || ''}
+                        <strong>${labelMap[e.event] || e.event || 'Event'}</strong><br>
+                        <span style="color:var(--gray-500)">${e.timestamp || '-'} by ${e.agent || '-'}</span><br>
+                        <span>${e.notes || 'No metadata'}</span>
                     </div>
                 `).join('');
             }
@@ -1930,12 +3246,190 @@
             showModal('modal-packet-viewer');
         }
 
+        // Command palette
+        const cmdCommands = [
+            { label: 'Go to Dashboard', icon: '⌂', action: () => showAppView('home'), shortcut: 'g d', section: 'nav' },
+            { label: 'Go to WBS Manager', icon: '▤', action: () => showAppView('wbs-manager'), shortcut: 'g w', section: 'nav' },
+            { label: 'Go to Identity', icon: '⚙', action: () => showAppView('identity'), section: 'nav' },
+            { label: 'Go to Guide', icon: '📖', action: () => showAppView('guide'), section: 'nav' },
+            { label: 'Go to Architecture', icon: '🏗', action: () => showAppView('architecture'), section: 'nav' },
+            { label: 'View: Table', icon: '▦', action: () => { showAppView('wbs-manager'); switchWorkspaceView('table'); }, section: 'view' },
+            { label: 'View: Kanban', icon: '▥', action: () => { showAppView('wbs-manager'); switchWorkspaceView('kanban'); }, section: 'view' },
+            { label: 'View: Tree', icon: '🌳', action: () => { showAppView('wbs-manager'); switchWorkspaceView('tree'); }, section: 'view' },
+            { label: 'View: Dependency Graph', icon: '◎', action: () => { showAppView('wbs-manager'); showDepsGraph(); }, section: 'view' },
+            { label: 'New work item', icon: '+', action: () => showAddPacket(), shortcut: 'n', section: 'action' },
+            { label: 'Refresh data', icon: '↻', action: () => refreshData(), shortcut: 'r', section: 'action' },
+            { label: 'Toggle terminal', icon: '▸', action: () => toggleTerminal(), section: 'action' },
+            { label: 'Toggle dark mode', icon: '◑', action: () => toggleTheme(), section: 'action' },
+            { label: 'Keyboard shortcuts', icon: '?', action: () => document.getElementById('shortcut-help-overlay').classList.add('show'), shortcut: '?', section: 'action' },
+        ];
+        let cmdIndex = 0, cmdFiltered = [];
+
+        function openCmdPalette() {
+            const overlay = document.getElementById('cmd-palette-overlay');
+            overlay.classList.add('show');
+            const input = document.getElementById('cmd-palette-input');
+            input.value = '';
+            input.focus();
+            filterCmdPalette('');
+        }
+        function closeCmdPalette() {
+            document.getElementById('cmd-palette-overlay').classList.remove('show');
+        }
+        function fuzzyMatch(text, query) {
+            let qi = 0;
+            const lower = text.toLowerCase(), q = query.toLowerCase();
+            for (let i = 0; i < lower.length && qi < q.length; i++) {
+                if (lower[i] === q[qi]) qi++;
+            }
+            return qi === q.length;
+        }
+        function highlightMatch(text, query) {
+            if (!query) return escapeHtml(text);
+            let result = '', qi = 0;
+            const q = query.toLowerCase();
+            for (let i = 0; i < text.length; i++) {
+                if (qi < q.length && text[i].toLowerCase() === q[qi]) {
+                    result += '<mark>' + escapeHtml(text[i]) + '</mark>';
+                    qi++;
+                } else {
+                    result += escapeHtml(text[i]);
+                }
+            }
+            return result;
+        }
+        function filterCmdPalette(query) {
+            cmdFiltered = query ? cmdCommands.filter(c => fuzzyMatch(c.label, query)) : cmdCommands;
+            cmdIndex = 0;
+            renderCmdResults(query);
+        }
+        function renderCmdResults(query) {
+            const el = document.getElementById('cmd-palette-results');
+            if (!cmdFiltered.length) { el.innerHTML = '<div class="cmd-palette-empty">No matching commands</div>'; return; }
+            el.innerHTML = cmdFiltered.map((c, i) => `<div class="cmd-palette-item ${i === cmdIndex ? 'selected' : ''}" role="option" aria-selected="${i === cmdIndex}" onmouseenter="cmdIndex=${i};renderCmdResults('${escapeHtml(query||'')}')" onclick="executeCmdItem(${i})"><span class="cmd-icon" aria-hidden="true">${c.icon}</span><span>${highlightMatch(c.label, query)}</span>${c.shortcut ? `<span class="cmd-shortcut" aria-hidden="true">${c.shortcut}</span>` : ''}</div>`).join('');
+        }
+        function executeCmdItem(idx) {
+            const cmd = cmdFiltered[idx];
+            if (cmd) { closeCmdPalette(); cmd.action(); }
+        }
+        function handleCmdPaletteKey(e) {
+            if (e.key === 'ArrowDown') { e.preventDefault(); cmdIndex = Math.min(cmdFiltered.length - 1, cmdIndex + 1); renderCmdResults(e.target.value); }
+            else if (e.key === 'ArrowUp') { e.preventDefault(); cmdIndex = Math.max(0, cmdIndex - 1); renderCmdResults(e.target.value); }
+            else if (e.key === 'Enter') { e.preventDefault(); executeCmdItem(cmdIndex); }
+            else if (e.key === 'Escape') { closeCmdPalette(); }
+        }
+
+        // Global keyboard shortcuts
+        let _pendingKey = null;
+        document.addEventListener('keydown', (e) => {
+            // Skip if typing in input/textarea
+            const tag = (e.target.tagName || '').toLowerCase();
+            if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+
+            // Cmd/Ctrl + K
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); openCmdPalette(); return; }
+
+            // Two-key combos: g+d, g+w
+            if (_pendingKey === 'g') {
+                _pendingKey = null;
+                if (e.key === 'd') { showAppView('home'); return; }
+                if (e.key === 'w') { showAppView('wbs-manager'); return; }
+            }
+            _pendingKey = null;
+            if (e.key === 'g') { _pendingKey = 'g'; setTimeout(() => _pendingKey = null, 500); return; }
+
+            // Single keys
+            if (e.key === '?') { document.getElementById('shortcut-help-overlay').classList.add('show'); return; }
+            if (e.key === 'n') { showAddPacket(); return; }
+            if (e.key === 'r') { refreshData(); return; }
+        });
+
+        // Sidebar collapse
+        function toggleNavCollapse() {
+            const nav = document.getElementById('app-nav');
+            nav.classList.toggle('collapsed');
+            const collapsed = nav.classList.contains('collapsed');
+            localStorage.setItem('nav-collapsed', collapsed ? '1' : '');
+            const btn = nav.querySelector('.nav-collapse-btn');
+            btn.textContent = collapsed ? '▶' : '◀';
+            btn.setAttribute('aria-expanded', !collapsed);
+            btn.setAttribute('aria-label', collapsed ? 'Expand navigation' : 'Collapse navigation');
+        }
+
+        function toggleContextCollapse() {
+            const panel = document.getElementById('app-context-panel');
+            panel.classList.toggle('collapsed');
+            localStorage.setItem('context-collapsed', panel.classList.contains('collapsed') ? '1' : '');
+        }
+
+        function initSidebarState() {
+            if (localStorage.getItem('nav-collapsed') === '1') {
+                const nav = document.getElementById('app-nav');
+                nav.classList.add('collapsed');
+                const btn = nav.querySelector('.nav-collapse-btn');
+                btn.textContent = '▶';
+                btn.setAttribute('aria-expanded', 'false');
+                btn.setAttribute('aria-label', 'Expand navigation');
+            }
+            if (localStorage.getItem('context-collapsed') === '1') {
+                document.getElementById('app-context-panel').classList.add('collapsed');
+            }
+        }
+
+        // Breadcrumb update
+        function updateBreadcrumb(label, areaLabel) {
+            const el = document.getElementById('breadcrumb-current');
+            if (!el) return;
+            if (areaLabel) {
+                el.innerHTML = '<a href="#" onclick="showAppView(\'wbs-manager\');filterByArea(null);return false">WBS Manager</a> <span class="breadcrumb-sep">/</span> ' + escapeHtml(areaLabel);
+            } else {
+                el.textContent = label || 'WBS Manager';
+            }
+        }
+
+        // Theme toggle
+        function initTheme() {
+            const saved = localStorage.getItem('substrate-theme');
+            if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.getElementById('theme-icon-sun').style.display = 'none';
+                document.getElementById('theme-icon-moon').style.display = '';
+            }
+        }
+
+        function toggleTheme() {
+            document.documentElement.classList.add('theme-transitioning');
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            if (isDark) {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('substrate-theme', 'light');
+                document.getElementById('theme-icon-sun').style.display = '';
+                document.getElementById('theme-icon-moon').style.display = 'none';
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('substrate-theme', 'dark');
+                document.getElementById('theme-icon-sun').style.display = 'none';
+                document.getElementById('theme-icon-moon').style.display = '';
+            }
+            setTimeout(() => document.documentElement.classList.remove('theme-transitioning'), 350);
+        }
+
         // Init
         (async function initApp() {
+            initTheme();
+            initSidebarState();
             await syncAuthSession();
             renderIdentityView();
             renderAppMenu();
+            updateContextPanel();
             showAppView('home');
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey && e.key === '`') {
+                    e.preventDefault();
+                    toggleTerminal();
+                }
+            });
+            refreshTerminalMetrics();
         })();
     </script>
 </body>

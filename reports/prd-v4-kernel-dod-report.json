@@ -1,0 +1,59 @@
+{
+  "generated_at": "2026-02-25T00:26:51.563537+00:00",
+  "scenario": "PRD v4 kernel DoD E2E (isolated temp state)",
+  "elapsed_seconds": 0.003,
+  "events": [
+    {
+      "step": "claim_B_before_A",
+      "ok": false,
+      "message": "Blocked by A (not done yet)"
+    },
+    {
+      "step": "claim_A",
+      "ok": true,
+      "message": "A claimed by dod-runner"
+    },
+    {
+      "step": "done_A",
+      "ok": true,
+      "message": "A marked done"
+    },
+    {
+      "step": "claim_B_after_A",
+      "ok": true,
+      "message": "B claimed by dod-runner"
+    },
+    {
+      "step": "done_B",
+      "ok": true,
+      "message": "B marked done"
+    }
+  ],
+  "graph": {
+    "upstream_B": [
+      "A"
+    ],
+    "downstream_A": [
+      "B"
+    ],
+    "critical_path": [
+      "A",
+      "B"
+    ],
+    "impact_A": [
+      "B"
+    ],
+    "postgres_query_keys": [
+      "cycle_check",
+      "downstream",
+      "upstream"
+    ]
+  },
+  "provenance_B_event_count": 2,
+  "checks": {
+    "dependency_gate_enforced": true,
+    "transition_sequence_success": true,
+    "provenance_export_present": true,
+    "graph_queries_present": true
+  }
+}

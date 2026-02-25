@@ -1,0 +1,94 @@
+version: "3.9"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["python3", ".governance/wbs_server.py", "8080"]
+    environment:
+      APP_ENV: development
+      DATABASE_URL: postgresql://substrate:substrate@db:5432/substrate
+      SQLITE_FALLBACK_PATH: /data/substrate-dev.db
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+      SUBSTRATE_LOG_FORMAT: json
+      SUBSTRATE_TRACING_ENABLED: "true"
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./:/workspace
+    working_dir: /workspace
+    depends_on:
+      - db
+      - redis
+      - otel-collector
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["python3", "-m", "http.server", "8090"]
+    environment:
+      APP_ENV: development
+      DATABASE_URL: postgresql://substrate:substrate@db:5432/substrate
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+      SUBSTRATE_LOG_FORMAT: json
+      SUBSTRATE_TRACING_ENABLED: "true"
+    ports:
+      - "8090:8090"
+    volumes:
+      - ./:/workspace
+    working_dir: /workspace
+    depends_on:
+      - db
+      - redis
+      - otel-collector
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: substrate
+      POSTGRES_USER: substrate
+      POSTGRES_PASSWORD: substrate
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  otel-collector:
+    image: otel/opentelemetry-collector:0.103.1
+    command: ["--config=/etc/otelcol/config.yaml"]
+    volumes:
+      - ./infra/observability/otel-collector.yaml:/etc/otelcol/config.yaml:ro
+    ports:
+      - "4317:4317"
+      - "8889:8889"
+
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    volumes:
+      - ./infra/observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+    depends_on:
+      - api
+
+  grafana:
+    image: grafana/grafana:11.2.0
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+
+volumes:
+  postgres_data:

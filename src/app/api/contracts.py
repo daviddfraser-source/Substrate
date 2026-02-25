@@ -33,7 +33,13 @@ CORE_ENDPOINTS: List[EndpointContract] = [
     EndpointContract("/agents", "POST", "agent:write", "Register agent"),
     EndpointContract("/metrics", "GET", "metrics:read", "Read metrics"),
     EndpointContract("/metrics", "POST", "metrics:write", "Write metrics"),
+    EndpointContract("/analytics/summary", "GET", "metrics:read", "Read aggregated analytics"),
+    EndpointContract("/analytics/token-usage", "GET", "metrics:read", "Read token usage analytics"),
+    EndpointContract("/analytics/export", "GET", "metrics:read", "Export analytics payload"),
     EndpointContract("/proposals", "GET", "proposal:read", "List proposals"),
     EndpointContract("/proposals", "POST", "proposal:write", "Create proposal"),
     EndpointContract("/health", "GET", "health:read", "Health check"),
+    EndpointContract("/readyz", "GET", "health:read", "Readiness check"),
+    EndpointContract("/livez", "GET", "health:read", "Liveness check"),
+    EndpointContract("/traces", "GET", "metrics:read", "Trace events"),
 ]

@@ -1,0 +1,99 @@
+{
+  "generated_at": "2026-02-24T07:48:55.759033+00:00",
+  "project": {
+    "project_name": "Substrate App Scaffold",
+    "approved_by": "david-fraser",
+    "approved_at": "2026-02-24"
+  },
+  "counts": {
+    "done": 50,
+    "in_progress": 1
+  },
+  "ready_packets": [],
+  "blocked_packets": [],
+  "active_assignments": [
+    {
+      "packet_id": "WBS-14-7",
+      "agent": "codex",
+      "started_at": "2026-02-24T17:48:33.999965"
+    }
+  ],
+  "recent_events": [
+    {
+      "packet_id": "WBS-14-7",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-24T17:48:33.999983",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "WBS-14-6",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-24T17:48:27.960818",
+      "notes": "Validation: bash scripts/session-start.sh codex (generates brief and prints startup snapshot)."
+    },
+    {
+      "packet_id": "WBS-14-6",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-24T17:48:27.368625",
+      "notes": "Standardized optimized startup workflow by adding scripts/session-start.sh (briefing -> ready -> optional claim -> packet bundle -> context) and publishing docs/codex-migration/startup-workflow-optimized.md. Updated scripts/README.md with startup helper reference.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "WBS-14-6",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-24T17:48:01.370097",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "WBS-14-5",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-24T17:47:51.835305",
+      "notes": "Validation: python3 .governance/wbs_cli.py validate-packet templates/wbs-infra-governed.json."
+    },
+    {
+      "packet_id": "WBS-14-5",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-24T17:47:51.236887",
+      "notes": "Formalized infrastructure as governed packet track by adding templates/wbs-infra-governed.json (schema-complete infra packet sequence) and docs/codex-migration/infra-governed-execution.md with evidence and validation conventions for Docker/compose/k8s setup.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "WBS-14-5",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-24T17:47:09.233124",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "WBS-14-4",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-24T17:47:02.157577",
+      "notes": "Validation: bash scripts/governance-integrity-check.sh (passes)."
+    },
+    {
+      "packet_id": "WBS-14-4",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-24T17:47:01.508228",
+      "notes": "Extended governance checkpoints by adding scripts/governance-integrity-check.sh (strict validate, packet schema, dependency graph, log integrity, session brief generation, packet bundle smoke), upgrading pre-commit WBS validation to strict mode, and wiring governance integrity checks into CI workflow test.yml.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "WBS-14-4",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-24T17:46:32.469546",
+      "notes": "Claimed by codex"
+    }
+  ]
+}

@@ -90,7 +90,7 @@ class ServerApiTests(unittest.TestCase):
         post_json(
             cls.base,
             '/api/auth/login',
-            {'name': 'Developer', 'email': 'developer@example.com'},
+            {'name': 'Developer', 'email': 'developer@example.com', 'password': 'developer'},
             opener=cls.opener,
         )
         DEFAULT_OPENER = cls.opener
@@ -135,6 +135,9 @@ class ServerApiTests(unittest.TestCase):
     def test_claim_and_done_endpoints(self):
         r1 = post_json(self.base, '/api/claim', {'packet_id': 'A', 'agent_name': 'op'})
         self.assertTrue(r1['success'])
+        self.assertIn('decision', r1)
+        self.assertEqual(r1['decision']['action'], 'claim')
+        self.assertEqual(r1['decision']['packet_id'], 'A')
 
         r2 = post_json(self.base, '/api/done', {'packet_id': 'A', 'agent_name': 'op', 'notes': 'done via api'})
         self.assertFalse(r2['success'])
@@ -151,10 +154,27 @@ class ServerApiTests(unittest.TestCase):
             },
         )
         self.assertTrue(r2['success'])
+        self.assertIn('decision', r2)
+        self.assertEqual(r2['decision']['action'], 'done')
+        self.assertEqual(r2['decision']['packet_id'], 'A')
 
         status = get_json(self.base, '/api/status')
         pkt = next(p for a in status['areas'] for p in a['packets'] if p['id'] == 'A')
         self.assertEqual(pkt['status'], 'done')
+
+    def test_cli_api_claim_decision_parity(self):
+        cli_claim = json.loads(run_cli(['--json', 'claim', 'A', 'cli-op']).stdout)
+        self.assertTrue(cli_claim['success'])
+        cli_decision = cli_claim['decision']
+
+        # Reinitialize fixture state to execute equivalent API claim.
+        self.setUp()
+        api_claim = post_json(self.base, '/api/claim', {'packet_id': 'A', 'agent_name': 'api-op'})
+        self.assertTrue(api_claim['success'])
+        api_decision = api_claim['decision']
+
+        for key in ('action', 'status', 'policy_result', 'constraint_result'):
+            self.assertEqual(cli_decision.get(key), api_decision.get(key))
 
     def test_note_endpoint_updates_notes(self):
         post_json(self.base, '/api/claim', {'packet_id': 'A', 'agent_name': 'op'})

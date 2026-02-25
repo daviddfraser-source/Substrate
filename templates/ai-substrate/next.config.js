@@ -1,8 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    serverActions: true,
-    typedRouter: true
+  turbopack: {
+    root: __dirname
   },
   output: "standalone",
   typescript: {

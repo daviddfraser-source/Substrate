@@ -1,0 +1,14 @@
+{
+  "generated_at": "2026-02-24T07:48:58Z",
+  "packet_id_sample": "WBS-14-7",
+  "optimized_startup_seconds": 2.515,
+  "optimized_context_bytes": 1835,
+  "session_brief_bytes": 467,
+  "packet_bundle_bytes": 1368,
+  "baseline_repo_context_bytes_estimate": 1596611,
+  "estimated_context_reduction_percent": 99.89,
+  "notes": [
+    "Baseline is estimated from common text artifacts and overstates required context in some cases.",
+    "Optimized path uses briefing + packet bundle only."
+  ]
+}

@@ -6,20 +6,24 @@ import logging
 import mimetypes
 import os
 import re
-import secrets
+import shlex
 import subprocess
 import sys
 import time
+import hashlib
 from datetime import datetime, timezone
 from http.cookies import SimpleCookie
-from http.server import HTTPServer, BaseHTTPRequestHandler
+from http.server import HTTPServer, BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Dict, List, Optional
 from urllib.parse import parse_qs, urlparse
 
-from wbs_common import GOV, WBS_DEF, load_definition, load_state, get_counts
+from wbs_common import GOV, WBS_DEF, WBS_STATE, load_definition, load_state, get_counts
 from governed_platform.governance.file_lock import atomic_write_json
+from governed_platform.governance.residual_risks import add_risks, normalize_risk_input, risk_summary
 from governed_platform.governance.status import normalize_runtime_status
+from identity import IdentityManager
+from substrate_core import ActorContext, FileStorage, PacketEngine
 
 STATIC = GOV / "static"
 CLI = GOV / "wbs_cli.py"
@@ -39,13 +43,11 @@ DOC_ROOT_HINT_FILES = {
 }
 
 SESSION_COOKIE = "wbs_session"
-SESSION_MAX_AGE_SECONDS = int(os.environ.get("WBS_SESSION_MAX_AGE", "28800"))
-DEVELOPER_USERS = {
-    u.strip().lower()
-    for u in os.environ.get("WBS_DEVELOPER_USERS", "developer,developer@example.com").split(",")
-    if u.strip()
-}
-SESSIONS: Dict[str, Dict] = {}
+IDENTITY = IdentityManager.from_env(GOV.parent.resolve())
+TERMINAL_MODE = os.environ.get("WBS_TERMINAL_MODE", "production").strip().lower()
+TERMINAL_TIMEOUT_SECONDS = int(os.environ.get("WBS_TERMINAL_TIMEOUT", "12"))
+TERMINAL_LOG_PATH = GOV / "terminal-log.jsonl"
+TERMINAL_LOG: List[Dict] = []
 
 
 def _build_logger() -> logging.Logger:
@@ -74,11 +76,17 @@ def save_definition(defn: dict):
 
 
 class Handler(BaseHTTPRequestHandler):
+    def _packet_engine(self) -> PacketEngine:
+        return PacketEngine(storage=FileStorage(WBS_STATE), definition=load_definition())
+
     def _write_json(self, data: Dict, status: int = 200, headers: Optional[Dict[str, str]] = None) -> None:
         """Send a JSON HTTP response with consistent headers and status code."""
         self.send_response(status)
         self.send_header("Content-type", "application/json")
-        self.send_header("Access-Control-Allow-Origin", "*")
+        # CORS: Allow specific origin with credentials
+        origin = self.headers.get("Origin", "http://localhost:3000")
+        self.send_header("Access-Control-Allow-Origin", origin)
+        self.send_header("Access-Control-Allow-Credentials", "true")
         if headers:
             for key, value in headers.items():
                 self.send_header(key, value)
@@ -99,21 +107,14 @@ class Handler(BaseHTTPRequestHandler):
 
     def _session_for_request(self) -> Dict:
         token = self._cookie_value(SESSION_COOKIE)
-        if not token:
-            return {}
-        sess = SESSIONS.get(token) or {}
-        expires_at = float(sess.get("expires_at") or 0)
-        if not sess or expires_at <= time.time():
-            if token in SESSIONS:
-                del SESSIONS[token]
-            return {}
-        return sess
+        session = IDENTITY.get_session(token)
+        return session or {}
 
     def _deny_auth(self, status: int = 401, message: str = "Authentication required") -> None:
         self._write_json({"success": False, "message": message}, status=status)
 
     def _is_developer(self, session: Dict) -> bool:
-        return str(session.get("role", "")).lower() == "developer"
+        return IDENTITY.has_any_role(session, ["developer", "admin"])
 
     def _require_developer(self) -> bool:
         session = self._session_for_request()
@@ -126,12 +127,7 @@ class Handler(BaseHTTPRequestHandler):
         return True
 
     def _session_user(self, session: Dict) -> Dict:
-        return {
-            "name": session.get("name", ""),
-            "email": session.get("email", ""),
-            "role": session.get("role", "Viewer"),
-            "logged_in_at": session.get("logged_in_at", ""),
-        }
+        return IDENTITY.user_payload(session)
 
     def api_auth_session(self) -> Dict:
         session = self._session_for_request()
@@ -142,32 +138,39 @@ class Handler(BaseHTTPRequestHandler):
     def api_auth_login(self, body: Dict):
         name = str(body.get("name", "")).strip()
         email = str(body.get("email", "")).strip()
-        if not name or not email:
-            return {"success": False, "message": "name and email are required"}, 400, None
+        password = str(body.get("password", "")).strip()
+        if not name and not email:
+            return {"success": False, "message": "name or email is required"}, 400, None
 
-        role = "Developer" if (name.lower() in DEVELOPER_USERS or email.lower() in DEVELOPER_USERS) else "Viewer"
-        token = secrets.token_urlsafe(32)
-        now = time.time()
-        SESSIONS[token] = {
-            "name": name,
-            "email": email,
-            "role": role,
-            "logged_in_at": datetime.now(timezone.utc).isoformat(),
-            "expires_at": now + SESSION_MAX_AGE_SECONDS,
-        }
-        cookie = f"{SESSION_COOKIE}={token}; Path=/; HttpOnly; SameSite=Lax; Max-Age={SESSION_MAX_AGE_SECONDS}"
+        session = IDENTITY.authenticate(email=email, name=name, password=password)
+        if not session:
+            return {"success": False, "message": "Invalid credentials"}, 401, None
+
+        max_age = int(session.get("expires_at", int(time.time()) + 1) - int(time.time()))
+        max_age = max(1, max_age)
+        cookie = f"{SESSION_COOKIE}={session['token']}; Path=/; HttpOnly; SameSite=Lax; Max-Age={max_age}"
         return (
-            {"success": True, "authenticated": True, "user": self._session_user(SESSIONS[token])},
+            {"success": True, "authenticated": True, "user": self._session_user(session)},
             200,
             {"Set-Cookie": cookie},
         )
 
     def api_auth_logout(self):
         token = self._cookie_value(SESSION_COOKIE)
-        if token and token in SESSIONS:
-            del SESSIONS[token]
+        IDENTITY.revoke(token)
         expired = f"{SESSION_COOKIE}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0"
         return {"success": True, "authenticated": False}, 200, {"Set-Cookie": expired}
+
+    def do_OPTIONS(self):
+        """Handle CORS preflight requests."""
+        self.send_response(200)
+        origin = self.headers.get("Origin", "http://localhost:3000")
+        self.send_header("Access-Control-Allow-Origin", origin)
+        self.send_header("Access-Control-Allow-Credentials", "true")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type, Accept, Cookie")
+        self.send_header("Access-Control-Max-Age", "86400")
+        self.end_headers()
 
     def do_GET(self):
         path = urlparse(self.path).path
@@ -178,6 +181,8 @@ class Handler(BaseHTTPRequestHandler):
 
         routes = {
             "/api/auth/session": self.api_auth_session,
+            "/api/terminal/logs": lambda: self.api_terminal_logs(int(query.get("limit", [100])[0])),
+            "/api/terminal/metrics": self.api_terminal_metrics,
             "/api/status": self.api_status,
             "/api/ready": self.api_ready,
             "/api/progress": self.api_progress,
@@ -217,6 +222,7 @@ class Handler(BaseHTTPRequestHandler):
         routes = {
             "/api/auth/login": lambda: self.api_auth_login(body),
             "/api/auth/logout": self.api_auth_logout,
+            "/api/terminal/execute": lambda: self.api_terminal_execute(body),
             "/api/claim": lambda: self.run_cmd("claim", body),
             "/api/done": lambda: self.run_cmd("done", body),
             "/api/note": lambda: self.run_cmd("note", body),
@@ -288,7 +294,9 @@ class Handler(BaseHTTPRequestHandler):
                         "scope": p.get("scope", ""),
                         "status": normalize_runtime_status(ps.get("status", "pending")),
                         "assigned_to": ps.get("assigned_to"),
-                        "notes": ps.get("notes")
+                        "notes": ps.get("notes"),
+                        "started_at": ps.get("started_at"),
+                        "completed_at": ps.get("completed_at"),
                     })
             areas.append({
                 "id": area["id"],
@@ -305,6 +313,161 @@ class Handler(BaseHTTPRequestHandler):
             "dependencies": defn.get("dependencies", {}),
             "counts": get_counts(state),
             "timestamp": datetime.now().isoformat()
+        }
+
+    def _record_terminal_log(self, entry: Dict) -> None:
+        TERMINAL_LOG.append(entry)
+        if len(TERMINAL_LOG) > 1000:
+            del TERMINAL_LOG[:-1000]
+        try:
+            TERMINAL_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+            with TERMINAL_LOG_PATH.open("a", encoding="utf-8") as fh:
+                fh.write(json.dumps(entry) + "\n")
+        except Exception:
+            LOGGER.exception("Failed to write terminal log")
+
+    def api_terminal_logs(self, limit: int = 100) -> Dict:
+        limit = max(1, min(limit, 1000))
+        return {"success": True, "items": TERMINAL_LOG[-limit:]}
+
+    def api_terminal_metrics(self) -> Dict:
+        items = TERMINAL_LOG[-500:]
+        total = len(items)
+        failures = len([i for i in items if int(i.get("exit_code", 1)) != 0])
+        avg_ms = int(sum(int(i.get("duration_ms", 0)) for i in items) / total) if total else 0
+        p95 = 0
+        if total:
+            sorted_ms = sorted(int(i.get("duration_ms", 0)) for i in items)
+            p95 = sorted_ms[min(total - 1, int(total * 0.95))]
+        return {
+            "success": True,
+            "metrics": {
+                "terminal_commands_total": total,
+                "terminal_failures_total": failures,
+                "terminal_latency_avg_ms": avg_ms,
+                "terminal_latency_p95_ms": p95,
+                "terminal_sandbox_mode": TERMINAL_MODE,
+            },
+        }
+
+    def api_terminal_execute(self, body: Dict) -> Dict:
+        session = self._session_for_request()
+        if not session:
+            return {"success": False, "message": "Authentication required"}
+        command = str(body.get("command", "")).strip()
+        if not command:
+            return {"success": False, "message": "Missing command"}
+        started = time.time()
+        code = 1
+        output = ""
+
+        try:
+            tokens = shlex.split(command)
+        except ValueError as exc:
+            return {"success": False, "message": f"Invalid command syntax: {exc}"}
+        if not tokens:
+            return {"success": False, "message": "Missing command"}
+
+        allowed_subcommands = {"claim", "close", "block", "validate", "graph", "audit", "drift-check", "export"}
+        try:
+            if tokens[0] == "substrate":
+                if len(tokens) < 2 or tokens[1] not in allowed_subcommands:
+                    return {"success": False, "message": "Command not allowed"}
+                sub = tokens[1]
+                actor = str(session.get("name") or "developer")
+                actor_ctx = ActorContext(
+                    user_id=actor,
+                    role=str(session.get("role", "developer")),
+                    source="terminal",
+                )
+                engine = self._packet_engine()
+                if sub == "claim":
+                    if len(tokens) < 3:
+                        return {"success": False, "message": "Usage: substrate claim <id>"}
+                    result = engine.claim(tokens[2], actor_ctx)
+                    code = 0 if result.ok else 1
+                    output = result.message
+                elif sub == "close":
+                    if len(tokens) < 3:
+                        return {"success": False, "message": "Usage: substrate close <id>"}
+                    result = engine.done(tokens[2], actor_ctx, "Closed from embedded terminal")
+                    code = 0 if result.ok else 1
+                    output = result.message
+                elif sub == "block":
+                    if len(tokens) < 3:
+                        return {"success": False, "message": "Usage: substrate block <id>"}
+                    result = engine.block(tokens[2], actor_ctx, "Blocked from embedded terminal")
+                    code = 0 if result.ok else 1
+                    output = result.message
+                elif sub == "validate":
+                    result = engine.validate()
+                    code = 0 if result.ok else 1
+                    output = result.message
+                elif sub == "graph":
+                    output = json.dumps(self.api_deps_graph(), indent=2)
+                    code = 0
+                elif sub == "audit":
+                    if len(tokens) < 3:
+                        return {"success": False, "message": "Usage: substrate audit <id>"}
+                    packet = tokens[2]
+                    state = load_state()
+                    entries = [entry for entry in state.get("log", []) if entry.get("packet_id") == packet]
+                    output = json.dumps({"packet_id": packet, "audit": entries}, indent=2)
+                    code = 0
+                elif sub == "drift-check":
+                    output = json.dumps(risk_summary(GOV / "residual-risk-register.json"), indent=2)
+                    code = 0
+                elif sub == "export":
+                    if len(tokens) < 3:
+                        return {"success": False, "message": "Usage: substrate export <id>"}
+                    packet = tokens[2]
+                    output = json.dumps(self.api_packet(packet), indent=2)
+                    code = 0
+            elif TERMINAL_MODE == "dev" and tokens[0] in {"shell", "codex"}:
+                shell_cmd = command.split(" ", 1)[1] if tokens[0] == "shell" and " " in command else command
+                if tokens[0] == "shell" and not shell_cmd:
+                    return {"success": False, "message": "Usage: shell <command>"}
+                r = subprocess.run(
+                    shell_cmd,
+                    shell=True,
+                    capture_output=True,
+                    text=True,
+                    timeout=TERMINAL_TIMEOUT_SECONDS,
+                )
+                code = r.returncode
+                output = (r.stdout + r.stderr).strip()
+                if (
+                    tokens[0] == "codex"
+                    and code != 0
+                    and "stdin is not a terminal" in output.lower()
+                ):
+                    output = "Interactive codex modes require a TTY. Use `codex exec \"<prompt>\"` in embedded CLI."
+            else:
+                return {"success": False, "message": "Command blocked by sandbox policy"}
+        except subprocess.TimeoutExpired:
+            code = 124
+            output = f"Command timed out after {TERMINAL_TIMEOUT_SECONDS}s"
+        except Exception as exc:
+            code = 1
+            output = str(exc)
+
+        output_hash = hashlib.sha256((output or "").encode("utf-8")).hexdigest()
+        entry = {
+            "user": session.get("name", ""),
+            "role": session.get("role", ""),
+            "command": command,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "output_hash": output_hash,
+            "exit_code": code,
+            "duration_ms": int((time.time() - started) * 1000),
+        }
+        self._record_terminal_log(entry)
+        return {
+            "success": code == 0,
+            "output": output,
+            "exit_code": code,
+            "entry": entry,
+            "sandbox_mode": TERMINAL_MODE,
         }
 
     def api_closeout_l2(self, body):
@@ -913,13 +1076,15 @@ class Handler(BaseHTTPRequestHandler):
         return {"success": True, "message": f"Saved {len(body.get('work_areas', []))} areas, {len(body.get('packets', []))} packets"}
 
     def run_cmd(self, cmd: str, body: Dict) -> Dict:
-        """Run lifecycle commands through CLI to keep transition behavior centralized."""
+        """Run lifecycle commands through PacketEngine (no CLI subprocess)."""
         pid = body.get("packet_id", "").strip()
         agent = body.get("agent_name", "").strip()
         notes = body.get("notes", body.get("reason", ""))
         risk_ack = str(body.get("residual_risk_ack", "")).strip()
-        risk_file = str(body.get("residual_risk_file", "")).strip()
-        risk_json = body.get("residual_risk_json", "")
+        risk_json = body.get("residual_risk_json")
+        session = self._session_for_request()
+        role = str(session.get("role", "developer"))
+        source = "api"
 
         if cmd != "reset" and (not pid or not agent):
             return {"success": False, "message": "Missing packet_id or agent_name"}
@@ -930,23 +1095,82 @@ class Handler(BaseHTTPRequestHandler):
                 "success": False,
                 "message": "Missing residual_risk_ack (use 'none' or 'declared')",
             }
-        if cmd == "done" and risk_file and risk_json:
-            return {"success": False, "message": "Use either residual_risk_file or residual_risk_json"}
+        actor = ActorContext(user_id=agent or "system", role=role, source=source)
+        engine = self._packet_engine()
 
-        args = ["python3", str(CLI), cmd, pid]
-        if cmd != "reset":
-            args += [agent]
-            if notes:
-                args.append(notes)
-            if cmd == "done":
-                args += ["--risk", risk_ack]
-                if risk_file:
-                    args += ["--risk-file", risk_file]
-                elif risk_json:
-                    args += ["--risk-json", json.dumps(risk_json)]
-
-        r = subprocess.run(args, capture_output=True, text=True)
-        return {"success": r.returncode == 0, "message": (r.stdout + r.stderr).strip()}
+        if cmd == "claim":
+            result = engine.claim(pid, actor)
+            return {
+                "success": result.ok,
+                "message": result.message,
+                "decision": result.payload.get("decision", {}),
+                "payload": result.payload,
+            }
+        if cmd == "done":
+            ack = risk_ack.lower()
+            risk_entries = []
+            if ack not in {"none", "declared"}:
+                return {
+                    "success": False,
+                    "message": "Residual risk acknowledgement is required: use --risk none or provide residual_risk_json",
+                }
+            if risk_json:
+                if isinstance(risk_json, list):
+                    risk_entries = list(risk_json)
+                elif isinstance(risk_json, dict):
+                    risk_entries = list(risk_json.get("risks", [risk_json]))
+                else:
+                    return {"success": False, "message": "residual_risk_json must be object or array"}
+            if ack == "none" and risk_entries:
+                return {"success": False, "message": "Invalid risk input: --risk none cannot be combined with risk entries"}
+            if ack == "declared" and not risk_entries:
+                return {"success": False, "message": "Invalid risk input: --risk declared requires at least one risk entry"}
+            for raw in risk_entries:
+                try:
+                    normalize_risk_input(raw, packet_id=pid, actor=agent)
+                except ValueError as exc:
+                    return {"success": False, "message": str(exc)}
+            result = engine.done(pid, actor, notes)
+            message = result.message
+            if result.ok and risk_entries:
+                try:
+                    ids = add_risks(GOV / "residual-risk-register.json", packet_id=pid, actor=agent, entries=risk_entries)
+                    message = f"{message} (residual risks declared: {', '.join(ids)})"
+                except Exception as exc:
+                    message = f"{message} (risk register warning: {exc})"
+            if result.ok and not risk_entries:
+                message = f"{message} (residual risk ack: none)"
+            return {
+                "success": result.ok,
+                "message": message,
+                "decision": result.payload.get("decision", {}),
+                "payload": result.payload,
+            }
+        if cmd == "note":
+            result = engine.note(pid, notes, actor)
+            return {
+                "success": result.ok,
+                "message": result.message,
+                "decision": result.payload.get("decision", {}),
+                "payload": result.payload,
+            }
+        if cmd == "fail":
+            result = engine.fail(pid, actor, notes)
+            return {
+                "success": result.ok,
+                "message": result.message,
+                "decision": result.payload.get("decision", {}),
+                "payload": result.payload,
+            }
+        if cmd == "reset":
+            result = engine.reset(pid, ActorContext(user_id="system", role="system", source=source))
+            return {
+                "success": result.ok,
+                "message": result.message,
+                "decision": result.payload.get("decision", {}),
+                "payload": result.payload,
+            }
+        return {"success": False, "message": f"Unsupported command: {cmd}"}
 
     def log_message(self, format, *args):
         LOGGER.info("%s %s", self.log_date_time_string(), format % args)
@@ -956,7 +1180,8 @@ def main():
     port = int(sys.argv[1]) if len(sys.argv) > 1 else 8080
     print(f"WBS Dashboard: http://127.0.0.1:{port}")
     try:
-        HTTPServer(("127.0.0.1", port), Handler).serve_forever()
+        # Avoid single-connection head-of-line blocking by handling requests concurrently.
+        ThreadingHTTPServer(("127.0.0.1", port), Handler).serve_forever()
     except KeyboardInterrupt:
         print("\nStopped")
 

@@ -1,0 +1,239 @@
+{
+  "project_name": "Substrate Phase 5 Delivery Plan Draft",
+  "approved_by": "david-fraser",
+  "approved_at": "2026-02-25",
+  "planning_source": "from_json",
+  "authority": "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md",
+  "work_areas": [
+    {
+      "id": "0.0",
+      "title": "Phase 5 Contract Baseline",
+      "description": "Cross-cutting contracts required before implementation.",
+      "packets": [
+        {
+          "id": "P5-00-CONTRACT-BASELINE",
+          "wbs_ref": "0.1",
+          "title": "Publish authoritative contracts for API, events, policy, and determinism",
+          "scope": "Convert Phase 5 PRD requirements into explicit implementation contracts. Output: versioned API schema, event schema, policy schema, and determinism/concurrency rules."
+        }
+      ]
+    },
+    {
+      "id": "1.0",
+      "title": "AI Backend Architecture",
+      "description": "Governance, policy, runtime, LLM, budget, RAG, and audit core.",
+      "packets": [
+        {
+          "id": "P5-01-GOVERNANCE-POLICY-CORE",
+          "wbs_ref": "1.1",
+          "title": "Implement shared governance and policy decision core",
+          "scope": "Route CLI/API/UI/agent actions through one deterministic transition and policy pipeline. Output: shared decision envelope and parity tests."
+        },
+        {
+          "id": "P5-02-AGENT-LLM-PROMPT-RUNTIME",
+          "wbs_ref": "1.2",
+          "title": "Implement agent runtime, model adapter layer, and prompt governance",
+          "scope": "Deliver governed execution flow with model abstraction and versioned prompts. Output: runtime pipeline, adapter interface, prompt registry and approval workflow."
+        },
+        {
+          "id": "P5-03-BUDGET-RAG-STRUCTURED-OUTPUT",
+          "wbs_ref": "1.3",
+          "title": "Implement budget enforcement, scoped RAG, and structured output validation",
+          "scope": "Enforce token budgets pre/post execution, scoped retrieval limits, and schema-validated outputs. Output: budget ledger integration, RAG scope guards, schema validation gate."
+        },
+        {
+          "id": "P5-04-AI-AUDIT-OBSERVABILITY",
+          "wbs_ref": "1.4",
+          "title": "Implement AI execution observability and immutable audit events",
+          "scope": "Capture execution, policy, token, and constraint telemetry with immutable logging. Output: event schema and metrics instrumentation."
+        },
+        {
+          "id": "P5-05-AI-SECURITY-GUARDS",
+          "wbs_ref": "1.5",
+          "title": "Implement backend security guardrails for governed execution",
+          "scope": "Enforce actor identity, capability checks, and no bypass mutation paths in AI execution surfaces. Output: security middleware and guard tests."
+        },
+        {
+          "id": "P5-06-AI-BACKEND-DOD",
+          "wbs_ref": "1.6",
+          "title": "Demonstrate AI backend Definition of Done",
+          "scope": "Run end-to-end governed AI execution scenario covering policy, budgets, RAG, structured outputs, and audit. Output: reproducible evidence report."
+        }
+      ]
+    },
+    {
+      "id": "2.0",
+      "title": "Backend Infrastructure and Data Model",
+      "description": "Multi-user schema, execution persistence, search, jobs, observability, deployment.",
+      "packets": [
+        {
+          "id": "P5-07-MULTIUSER-GOVERNANCE-SCHEMA",
+          "wbs_ref": "2.1",
+          "title": "Implement multi-user identity/project and governance core schema",
+          "scope": "Create users, projects, memberships, roles, entities, and relationships schema with isolation constraints. Output: migrations and schema tests."
+        },
+        {
+          "id": "P5-08-EXECUTION-DATA-SEARCH-JOBS",
+          "wbs_ref": "2.2",
+          "title": "Implement execution, prompt, budget, RAG, search, and background job infrastructure",
+          "scope": "Deliver execution/token tables, document/embedding storage, indexed search, and async processing. Output: migrations, workers, and integration tests."
+        },
+        {
+          "id": "P5-09-INFRA-OBSERVABILITY-DEPLOY",
+          "wbs_ref": "2.3",
+          "title": "Implement infrastructure observability and Docker deployment profile",
+          "scope": "Wire structured logging, metrics/tracing, health endpoints, and reproducible Docker-first runtime. Output: compose profile and runbook."
+        },
+        {
+          "id": "P5-10-BACKEND-INFRA-DOD",
+          "wbs_ref": "2.4",
+          "title": "Demonstrate backend infrastructure Definition of Done",
+          "scope": "Validate schema, execution persistence, reporting endpoints, search, observability, and reproducible deployment. Output: backend infra validation report."
+        }
+      ]
+    },
+    {
+      "id": "3.0",
+      "title": "Frontend Architecture and UX Surfaces",
+      "description": "Governed workspaces and operational interfaces.",
+      "packets": [
+        {
+          "id": "P5-11-FRONTEND-FOUNDATION",
+          "wbs_ref": "3.1",
+          "title": "Implement frontend foundation shell and governed data flow",
+          "scope": "Build Next.js layout, navigation, project context, and API-only mutation architecture. Output: app shell and core state wiring."
+        },
+        {
+          "id": "P5-12-CORE-AI-WORKSPACES",
+          "wbs_ref": "3.2",
+          "title": "Implement governed chat, RAG assistant, prompt lab, and agent console",
+          "scope": "Deliver primary AI workspaces with visible budget/governance indicators and execution traceability. Output: core workspace pages and integration tests."
+        },
+        {
+          "id": "P5-13-OPS-WORKSPACES",
+          "wbs_ref": "3.3",
+          "title": "Implement operational workspaces and visibility surfaces",
+          "scope": "Deliver document management, kanban/gantt, risk register, knowledge base, approvals, and timeline viewer with governance visibility. Output: operational workspace suite."
+        },
+        {
+          "id": "P5-14-FRONTEND-DOD",
+          "wbs_ref": "3.4",
+          "title": "Demonstrate frontend Definition of Done",
+          "scope": "Validate all major workspaces, charts, search, template installer UX, and policy-violation visibility. Output: frontend validation report and walkthrough."
+        }
+      ]
+    },
+    {
+      "id": "4.0",
+      "title": "Template System and Packaging",
+      "description": "Template contracts, installation, versioning, and safety.",
+      "packets": [
+        {
+          "id": "P5-15-TEMPLATE-CONTRACT-INSTALLER",
+          "wbs_ref": "4.1",
+          "title": "Implement template package contract and installation engine",
+          "scope": "Define template manifest/component schemas and transactional install flow with governance checks. Output: template validator and installer service."
+        },
+        {
+          "id": "P5-16-TEMPLATE-LIBRARY-VERSIONING",
+          "wbs_ref": "4.2",
+          "title": "Implement built-in template library, versioning, migrations, and rollback",
+          "scope": "Ship baseline template catalog with upgrade/downgrade mechanics and audit logging. Output: template library and migration framework."
+        },
+        {
+          "id": "P5-17-TEMPLATE-DOD",
+          "wbs_ref": "4.3",
+          "title": "Demonstrate template system Definition of Done",
+          "scope": "Validate install, seed, governance enforcement, version tracking, rollback, and safe uninstall behavior. Output: template system validation report."
+        }
+      ]
+    },
+    {
+      "id": "5.0",
+      "title": "Reporting and Analytics",
+      "description": "Metrics pipeline, APIs, exports, and performance gates.",
+      "packets": [
+        {
+          "id": "P5-18-ANALYTICS-PIPELINE-APIS",
+          "wbs_ref": "5.1",
+          "title": "Implement analytics aggregation model and API endpoints",
+          "scope": "Build aggregate tables/views, scheduled jobs, and project-scoped analytics endpoints with filters. Output: analytics service and API contracts."
+        },
+        {
+          "id": "P5-19-ANALYTICS-EXPORT-PERF",
+          "wbs_ref": "5.2",
+          "title": "Implement analytics exports and performance hardening",
+          "scope": "Deliver compliance reports, export reproducibility, caching/index strategy, and latency targets. Output: export pipeline and performance evidence."
+        },
+        {
+          "id": "P5-20-ANALYTICS-DOD",
+          "wbs_ref": "5.3",
+          "title": "Demonstrate reporting and analytics Definition of Done",
+          "scope": "Validate dashboards, exports, aggregation jobs, and performance targets across representative data volumes. Output: analytics validation report."
+        }
+      ]
+    },
+    {
+      "id": "6.0",
+      "title": "Security, RBAC, and Enterprise Readiness",
+      "description": "Authn/authz, protections, sandboxing, audit, recovery.",
+      "packets": [
+        {
+          "id": "P5-21-AUTH-RBAC",
+          "wbs_ref": "6.1",
+          "title": "Implement authentication and RBAC middleware enforcement",
+          "scope": "Deliver local auth, OAuth, JWT lifecycle, project-scoped roles, and permission middleware. Output: auth/RBAC modules with tests."
+        },
+        {
+          "id": "P5-22-PROTECTION-SANDBOX-RATELIMIT",
+          "wbs_ref": "6.2",
+          "title": "Implement policy and budget protections, sandboxing, and rate limits",
+          "scope": "Enforce mutation protections, hard budget stops, execution sandbox controls, and abuse-resistant API limits. Output: security control suite."
+        },
+        {
+          "id": "P5-23-AUDIT-COMPLIANCE-RECOVERY",
+          "wbs_ref": "6.3",
+          "title": "Implement immutable audit/compliance reporting and backup-recovery paths",
+          "scope": "Deliver append-only audit guarantees, export tooling, backup workflows, and restore documentation. Output: compliance and recovery package."
+        },
+        {
+          "id": "P5-24-SECURITY-DOD",
+          "wbs_ref": "6.4",
+          "title": "Demonstrate security and enterprise-readiness Definition of Done",
+          "scope": "Validate auth, RBAC, protections, sandboxing, audit, isolation, rate limits, and compliance outputs. Output: security validation dossier."
+        }
+      ]
+    }
+  ],
+  "dependencies": {
+    "P5-01-GOVERNANCE-POLICY-CORE": ["P5-00-CONTRACT-BASELINE"],
+    "P5-02-AGENT-LLM-PROMPT-RUNTIME": ["P5-01-GOVERNANCE-POLICY-CORE"],
+    "P5-03-BUDGET-RAG-STRUCTURED-OUTPUT": ["P5-02-AGENT-LLM-PROMPT-RUNTIME"],
+    "P5-04-AI-AUDIT-OBSERVABILITY": ["P5-03-BUDGET-RAG-STRUCTURED-OUTPUT"],
+    "P5-05-AI-SECURITY-GUARDS": ["P5-01-GOVERNANCE-POLICY-CORE", "P5-03-BUDGET-RAG-STRUCTURED-OUTPUT"],
+    "P5-06-AI-BACKEND-DOD": ["P5-04-AI-AUDIT-OBSERVABILITY", "P5-05-AI-SECURITY-GUARDS"],
+
+    "P5-07-MULTIUSER-GOVERNANCE-SCHEMA": ["P5-00-CONTRACT-BASELINE"],
+    "P5-08-EXECUTION-DATA-SEARCH-JOBS": ["P5-07-MULTIUSER-GOVERNANCE-SCHEMA"],
+    "P5-09-INFRA-OBSERVABILITY-DEPLOY": ["P5-08-EXECUTION-DATA-SEARCH-JOBS"],
+    "P5-10-BACKEND-INFRA-DOD": ["P5-09-INFRA-OBSERVABILITY-DEPLOY"],
+
+    "P5-11-FRONTEND-FOUNDATION": ["P5-00-CONTRACT-BASELINE", "P5-09-INFRA-OBSERVABILITY-DEPLOY"],
+    "P5-12-CORE-AI-WORKSPACES": ["P5-11-FRONTEND-FOUNDATION", "P5-06-AI-BACKEND-DOD"],
+    "P5-13-OPS-WORKSPACES": ["P5-11-FRONTEND-FOUNDATION", "P5-08-EXECUTION-DATA-SEARCH-JOBS"],
+    "P5-14-FRONTEND-DOD": ["P5-12-CORE-AI-WORKSPACES", "P5-13-OPS-WORKSPACES"],
+
+    "P5-15-TEMPLATE-CONTRACT-INSTALLER": ["P5-00-CONTRACT-BASELINE", "P5-07-MULTIUSER-GOVERNANCE-SCHEMA", "P5-11-FRONTEND-FOUNDATION"],
+    "P5-16-TEMPLATE-LIBRARY-VERSIONING": ["P5-15-TEMPLATE-CONTRACT-INSTALLER"],
+    "P5-17-TEMPLATE-DOD": ["P5-16-TEMPLATE-LIBRARY-VERSIONING"],
+
+    "P5-18-ANALYTICS-PIPELINE-APIS": ["P5-08-EXECUTION-DATA-SEARCH-JOBS", "P5-04-AI-AUDIT-OBSERVABILITY"],
+    "P5-19-ANALYTICS-EXPORT-PERF": ["P5-18-ANALYTICS-PIPELINE-APIS"],
+    "P5-20-ANALYTICS-DOD": ["P5-19-ANALYTICS-EXPORT-PERF"],
+
+    "P5-21-AUTH-RBAC": ["P5-07-MULTIUSER-GOVERNANCE-SCHEMA"],
+    "P5-22-PROTECTION-SANDBOX-RATELIMIT": ["P5-21-AUTH-RBAC", "P5-03-BUDGET-RAG-STRUCTURED-OUTPUT", "P5-01-GOVERNANCE-POLICY-CORE"],
+    "P5-23-AUDIT-COMPLIANCE-RECOVERY": ["P5-22-PROTECTION-SANDBOX-RATELIMIT", "P5-04-AI-AUDIT-OBSERVABILITY"],
+    "P5-24-SECURITY-DOD": ["P5-21-AUTH-RBAC", "P5-22-PROTECTION-SANDBOX-RATELIMIT", "P5-23-AUDIT-COMPLIANCE-RECOVERY", "P5-06-AI-BACKEND-DOD"]
+  }
+}

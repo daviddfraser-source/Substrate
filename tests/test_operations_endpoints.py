@@ -9,10 +9,14 @@ sys.path.insert(0, str(SRC))
 
 from app.api.operations import (  # noqa: E402
     MetricsStore,
+    TraceStore,
     WebhookDispatcher,
     health_endpoint,
+    liveness_endpoint,
     log_json,
     metrics_endpoint,
+    readiness_endpoint,
+    traces_endpoint,
 )
 
 
@@ -21,6 +25,15 @@ class OperationsEndpointTests(unittest.TestCase):
         payload = health_endpoint()
         self.assertEqual(payload["status"], "ok")
         self.assertIn("timestamp", payload)
+        self.assertTrue(payload["checks"]["runtime"])
+
+    def test_readiness_and_liveness(self):
+        ready = readiness_endpoint({"db": True, "redis": True})
+        self.assertEqual(ready["status"], "ok")
+        degraded = readiness_endpoint({"db": True, "redis": False})
+        self.assertEqual(degraded["status"], "degraded")
+        live = liveness_endpoint()
+        self.assertEqual(live["status"], "alive")
 
     def test_metrics_endpoint_round_trip(self):
         store = MetricsStore()
@@ -41,7 +54,18 @@ class OperationsEndpointTests(unittest.TestCase):
         self.assertEqual(payload["event_type"], "risk.created")
         self.assertEqual(payload["correlation_id"], "corr-1")
         self.assertEqual(payload["actor"], "codex")
+        self.assertEqual(payload["severity"], "INFO")
         self.assertIn("timestamp", payload)
+
+    def test_trace_store_and_endpoint(self):
+        traces = TraceStore()
+        traces.start_span("trace-1", "span-1", "db.query", {"table": "packets"})
+        traces.finish_span("span-1", status="ok", attributes={"rows": 3})
+
+        payload = traces_endpoint(traces)
+        self.assertEqual(payload["count"], 1)
+        self.assertEqual(payload["events"][0]["trace_id"], "trace-1")
+        self.assertEqual(payload["events"][0]["status"], "ok")
 
 
 if __name__ == "__main__":

@@ -1,194 +1,1846 @@
 {
   "metadata": {
-    "project_name": "Substrate PRD v4.1 Delivery Plan Draft",
+    "project_name": "Substrate Phase 5 Delivery Plan Draft",
     "approved_by": "david-fraser",
     "approved_at": "2026-02-25",
     "planning_source": "from_json",
-    "planning_generated_at": "2026-02-25T10:10:15.218698"
+    "planning_generated_at": "2026-02-25T11:16:42.266790"
   },
   "work_areas": [
     {
+      "id": "0-0",
+      "title": "Phase 5 Contract Baseline",
+      "description": "Cross-cutting contracts required before implementation."
+    },
+    {
+      "id": "1-0",
+      "title": "AI Backend Architecture",
+      "description": "Governance, policy, runtime, LLM, budget, RAG, and audit core."
+    },
+    {
+      "id": "2-0",
+      "title": "Backend Infrastructure and Data Model",
+      "description": "Multi-user schema, execution persistence, search, jobs, observability, deployment."
+    },
+    {
+      "id": "3-0",
+      "title": "Frontend Architecture and UX Surfaces",
+      "description": "Governed workspaces and operational interfaces."
+    },
+    {
       "id": "4-0",
-      "title": "Scope Discipline and Roadmap Alignment",
-      "description": "Packets mapped to PRD v4.1 section family 4.0."
+      "title": "Template System and Packaging",
+      "description": "Template contracts, installation, versioning, and safety."
+    },
+    {
+      "id": "5-0",
+      "title": "Reporting and Analytics",
+      "description": "Metrics pipeline, APIs, exports, and performance gates."
     },
     {
       "id": "6-0",
-      "title": "Shared Core Contract",
-      "description": "Packets mapped to PRD v4.1 section family 6.0."
+      "title": "Security, RBAC, and Enterprise Readiness",
+      "description": "Authn/authz, protections, sandboxing, audit, recovery."
     },
     {
       "id": "7-0",
-      "title": "Ontology Layer",
-      "description": "Packets mapped to PRD v4.1 section family 7.0."
+      "title": "Template Pages Functionalization",
+      "description": "Upgrade all template routes from placeholders to production-grade starter templates with reusable patterns and OSS-backed interactions."
     },
     {
       "id": "8-0",
-      "title": "Constraint Engine",
-      "description": "Packets mapped to PRD v4.1 section family 8.0."
-    },
-    {
-      "id": "9-0",
-      "title": "Policy Engine",
-      "description": "Packets mapped to PRD v4.1 section family 9.0."
-    },
-    {
-      "id": "10-0",
-      "title": "Trust Scoring",
-      "description": "Packets mapped to PRD v4.1 section family 10.0."
-    },
-    {
-      "id": "11-0",
-      "title": "Graph Core",
-      "description": "Packets mapped to PRD v4.1 section family 11.0."
-    },
-    {
-      "id": "12-0",
-      "title": "Versioning and Audit Semantics",
-      "description": "Packets mapped to PRD v4.1 section family 12.0."
-    },
-    {
-      "id": "19-0",
-      "title": "Definition of Done",
-      "description": "Packets mapped to PRD v4.1 section family 19.0."
+      "title": "Template UX Consistency Remediation",
+      "description": "Replace Ant Design implementations with custom component library for visual and architectural consistency"
     }
   ],
   "packets": [
     {
-      "id": "PRD4-00-SCOPE-MATRIX",
+      "id": "P5-00-CONTRACT-BASELINE",
+      "wbs_ref": "0.1",
+      "area_id": "0-0",
+      "title": "Publish authoritative contracts for API, events, policy, and determinism",
+      "scope": "Convert Phase 5 PRD requirements into explicit implementation contracts. Output: versioned API schema, event schema, policy schema, and determinism/concurrency rules.",
+      "packet_id": "P5-00-CONTRACT-BASELINE",
+      "wbs_refs": [
+        "0.1"
+      ],
+      "purpose": "Convert Phase 5 PRD requirements into explicit implementation contracts.",
+      "status": "PENDING",
+      "owner": "codex",
+      "priority": "CRITICAL",
+      "preconditions": [],
+      "required_inputs": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md"
+      ],
+      "required_actions": [
+        "Convert Phase 5 PRD requirements into explicit implementation contracts. Output: versioned API schema, event schema, policy schema, and determinism/concurrency rules."
+      ],
+      "required_outputs": [
+        "Evidence artifacts for P5-00-CONTRACT-BASELINE"
+      ],
+      "validation_checks": [
+        "Run packet-scoped tests/commands for P5-00-CONTRACT-BASELINE",
+        "Record evidence paths and validation output for P5-00-CONTRACT-BASELINE"
+      ],
+      "exit_criteria": [
+        "Packet P5-00-CONTRACT-BASELINE meets scope, validation, and evidence requirements"
+      ],
+      "halt_conditions": [
+        "Dependency or contract prerequisites unresolved",
+        "Deterministic governance invariants violated"
+      ],
+      "references": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md",
+        "docs/codex-migration/prd-v5.0-wbs-packet-plan.json"
+      ]
+    },
+    {
+      "id": "P5-01-GOVERNANCE-POLICY-CORE",
+      "wbs_ref": "1.1",
+      "area_id": "1-0",
+      "title": "Implement shared governance and policy decision core",
+      "scope": "Route CLI/API/UI/agent actions through one deterministic transition and policy pipeline. Output: shared decision envelope and parity tests.",
+      "packet_id": "P5-01-GOVERNANCE-POLICY-CORE",
+      "wbs_refs": [
+        "1.1"
+      ],
+      "purpose": "Route CLI/API/UI/agent actions through one deterministic transition and policy pipeline.",
+      "status": "PENDING",
+      "owner": "codex",
+      "priority": "CRITICAL",
+      "preconditions": [
+        "P5-00-CONTRACT-BASELINE complete"
+      ],
+      "required_inputs": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md"
+      ],
+      "required_actions": [
+        "Route CLI/API/UI/agent actions through one deterministic transition and policy pipeline. Output: shared decision envelope and parity tests."
+      ],
+      "required_outputs": [
+        "Evidence artifacts for P5-01-GOVERNANCE-POLICY-CORE"
+      ],
+      "validation_checks": [
+        "Run packet-scoped tests/commands for P5-01-GOVERNANCE-POLICY-CORE",
+        "Record evidence paths and validation output for P5-01-GOVERNANCE-POLICY-CORE"
+      ],
+      "exit_criteria": [
+        "Packet P5-01-GOVERNANCE-POLICY-CORE meets scope, validation, and evidence requirements"
+      ],
+      "halt_conditions": [
+        "Dependency or contract prerequisites unresolved",
+        "Deterministic governance invariants violated"
+      ],
+      "references": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md",
+        "docs/codex-migration/prd-v5.0-wbs-packet-plan.json"
+      ]
+    },
+    {
+      "id": "P5-02-AGENT-LLM-PROMPT-RUNTIME",
+      "wbs_ref": "1.2",
+      "area_id": "1-0",
+      "title": "Implement agent runtime, model adapter layer, and prompt governance",
+      "scope": "Deliver governed execution flow with model abstraction and versioned prompts. Output: runtime pipeline, adapter interface, prompt registry and approval workflow.",
+      "packet_id": "P5-02-AGENT-LLM-PROMPT-RUNTIME",
+      "wbs_refs": [
+        "1.2"
+      ],
+      "purpose": "Deliver governed execution flow with model abstraction and versioned prompts.",
+      "status": "PENDING",
+      "owner": "codex",
+      "priority": "MEDIUM",
+      "preconditions": [
+        "P5-01-GOVERNANCE-POLICY-CORE complete"
+      ],
+      "required_inputs": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md"
+      ],
+      "required_actions": [
+        "Deliver governed execution flow with model abstraction and versioned prompts. Output: runtime pipeline, adapter interface, prompt registry and approval workflow."
+      ],
+      "required_outputs": [
+        "Evidence artifacts for P5-02-AGENT-LLM-PROMPT-RUNTIME"
+      ],
+      "validation_checks": [
+        "Run packet-scoped tests/commands for P5-02-AGENT-LLM-PROMPT-RUNTIME",
+        "Record evidence paths and validation output for P5-02-AGENT-LLM-PROMPT-RUNTIME"
+      ],
+      "exit_criteria": [
+        "Packet P5-02-AGENT-LLM-PROMPT-RUNTIME meets scope, validation, and evidence requirements"
+      ],
+      "halt_conditions": [
+        "Dependency or contract prerequisites unresolved",
+        "Deterministic governance invariants violated"
+      ],
+      "references": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md",
+        "docs/codex-migration/prd-v5.0-wbs-packet-plan.json"
+      ]
+    },
+    {
+      "id": "P5-03-BUDGET-RAG-STRUCTURED-OUTPUT",
+      "wbs_ref": "1.3",
+      "area_id": "1-0",
+      "title": "Implement budget enforcement, scoped RAG, and structured output validation",
+      "scope": "Enforce token budgets pre/post execution, scoped retrieval limits, and schema-validated outputs. Output: budget ledger integration, RAG scope guards, schema validation gate.",
+      "packet_id": "P5-03-BUDGET-RAG-STRUCTURED-OUTPUT",
+      "wbs_refs": [
+        "1.3"
+      ],
+      "purpose": "Enforce token budgets pre/post execution, scoped retrieval limits, and schema-validated outputs.",
+      "status": "PENDING",
+      "owner": "codex",
+      "priority": "CRITICAL",
+      "preconditions": [
+        "P5-02-AGENT-LLM-PROMPT-RUNTIME complete"
+      ],
+      "required_inputs": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md"
+      ],
+      "required_actions": [
+        "Enforce token budgets pre/post execution, scoped retrieval limits, and schema-validated outputs. Output: budget ledger integration, RAG scope guards, schema validation gate."
+      ],
+      "required_outputs": [
+        "Evidence artifacts for P5-03-BUDGET-RAG-STRUCTURED-OUTPUT"
+      ],
+      "validation_checks": [
+        "Run packet-scoped tests/commands for P5-03-BUDGET-RAG-STRUCTURED-OUTPUT",
+        "Record evidence paths and validation output for P5-03-BUDGET-RAG-STRUCTURED-OUTPUT"
+      ],
+      "exit_criteria": [
+        "Packet P5-03-BUDGET-RAG-STRUCTURED-OUTPUT meets scope, validation, and evidence requirements"
+      ],
+      "halt_conditions": [
+        "Dependency or contract prerequisites unresolved",
+        "Deterministic governance invariants violated"
+      ],
+      "references": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md",
+        "docs/codex-migration/prd-v5.0-wbs-packet-plan.json"
+      ]
+    },
+    {
+      "id": "P5-04-AI-AUDIT-OBSERVABILITY",
+      "wbs_ref": "1.4",
+      "area_id": "1-0",
+      "title": "Implement AI execution observability and immutable audit events",
+      "scope": "Capture execution, policy, token, and constraint telemetry with immutable logging. Output: event schema and metrics instrumentation.",
+      "packet_id": "P5-04-AI-AUDIT-OBSERVABILITY",
+      "wbs_refs": [
+        "1.4"
+      ],
+      "purpose": "Capture execution, policy, token, and constraint telemetry with immutable logging.",
+      "status": "PENDING",
+      "owner": "codex",
+      "priority": "MEDIUM",
+      "preconditions": [
+        "P5-03-BUDGET-RAG-STRUCTURED-OUTPUT complete"
+      ],
+      "required_inputs": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md"
+      ],
+      "required_actions": [
+        "Capture execution, policy, token, and constraint telemetry with immutable logging. Output: event schema and metrics instrumentation."
+      ],
+      "required_outputs": [
+        "Evidence artifacts for P5-04-AI-AUDIT-OBSERVABILITY"
+      ],
+      "validation_checks": [
+        "Run packet-scoped tests/commands for P5-04-AI-AUDIT-OBSERVABILITY",
+        "Record evidence paths and validation output for P5-04-AI-AUDIT-OBSERVABILITY"
+      ],
+      "exit_criteria": [
+        "Packet P5-04-AI-AUDIT-OBSERVABILITY meets scope, validation, and evidence requirements"
+      ],
+      "halt_conditions": [
+        "Dependency or contract prerequisites unresolved",
+        "Deterministic governance invariants violated"
+      ],
+      "references": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md",
+        "docs/codex-migration/prd-v5.0-wbs-packet-plan.json"
+      ]
+    },
+    {
+      "id": "P5-05-AI-SECURITY-GUARDS",
+      "wbs_ref": "1.5",
+      "area_id": "1-0",
+      "title": "Implement backend security guardrails for governed execution",
+      "scope": "Enforce actor identity, capability checks, and no bypass mutation paths in AI execution surfaces. Output: security middleware and guard tests.",
+      "packet_id": "P5-05-AI-SECURITY-GUARDS",
+      "wbs_refs": [
+        "1.5"
+      ],
+      "purpose": "Enforce actor identity, capability checks, and no bypass mutation paths in AI execution surfaces.",
+      "status": "PENDING",
+      "owner": "codex",
+      "priority": "CRITICAL",
+      "preconditions": [
+        "P5-01-GOVERNANCE-POLICY-CORE complete",
+        "P5-03-BUDGET-RAG-STRUCTURED-OUTPUT complete"
+      ],
+      "required_inputs": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md"
+      ],
+      "required_actions": [
+        "Enforce actor identity, capability checks, and no bypass mutation paths in AI execution surfaces. Output: security middleware and guard tests."
+      ],
+      "required_outputs": [
+        "Evidence artifacts for P5-05-AI-SECURITY-GUARDS"
+      ],
+      "validation_checks": [
+        "Run packet-scoped tests/commands for P5-05-AI-SECURITY-GUARDS",
+        "Record evidence paths and validation output for P5-05-AI-SECURITY-GUARDS"
+      ],
+      "exit_criteria": [
+        "Packet P5-05-AI-SECURITY-GUARDS meets scope, validation, and evidence requirements"
+      ],
+      "halt_conditions": [
+        "Dependency or contract prerequisites unresolved",
+        "Deterministic governance invariants violated"
+      ],
+      "references": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md",
+        "docs/codex-migration/prd-v5.0-wbs-packet-plan.json"
+      ]
+    },
+    {
+      "id": "P5-06-AI-BACKEND-DOD",
+      "wbs_ref": "1.6",
+      "area_id": "1-0",
+      "title": "Demonstrate AI backend Definition of Done",
+      "scope": "Run end-to-end governed AI execution scenario covering policy, budgets, RAG, structured outputs, and audit. Output: reproducible evidence report.",
+      "packet_id": "P5-06-AI-BACKEND-DOD",
+      "wbs_refs": [
+        "1.6"
+      ],
+      "purpose": "Run end-to-end governed AI execution scenario covering policy, budgets, RAG, structured outputs, and audit.",
+      "status": "PENDING",
+      "owner": "codex",
+      "priority": "CRITICAL",
+      "preconditions": [
+        "P5-04-AI-AUDIT-OBSERVABILITY complete",
+        "P5-05-AI-SECURITY-GUARDS complete"
+      ],
+      "required_inputs": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md"
+      ],
+      "required_actions": [
+        "Run end-to-end governed AI execution scenario covering policy, budgets, RAG, structured outputs, and audit. Output: reproducible evidence report."
+      ],
+      "required_outputs": [
+        "Evidence artifacts for P5-06-AI-BACKEND-DOD"
+      ],
+      "validation_checks": [
+        "Run packet-scoped tests/commands for P5-06-AI-BACKEND-DOD",
+        "Record evidence paths and validation output for P5-06-AI-BACKEND-DOD"
+      ],
+      "exit_criteria": [
+        "Packet P5-06-AI-BACKEND-DOD meets scope, validation, and evidence requirements"
+      ],
+      "halt_conditions": [
+        "Dependency or contract prerequisites unresolved",
+        "Deterministic governance invariants violated"
+      ],
+      "references": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md",
+        "docs/codex-migration/prd-v5.0-wbs-packet-plan.json"
+      ]
+    },
+    {
+      "id": "P5-07-MULTIUSER-GOVERNANCE-SCHEMA",
+      "wbs_ref": "2.1",
+      "area_id": "2-0",
+      "title": "Implement multi-user identity/project and governance core schema",
+      "scope": "Create users, projects, memberships, roles, entities, and relationships schema with isolation constraints. Output: migrations and schema tests.",
+      "packet_id": "P5-07-MULTIUSER-GOVERNANCE-SCHEMA",
+      "wbs_refs": [
+        "2.1"
+      ],
+      "purpose": "Create users, projects, memberships, roles, entities, and relationships schema with isolation constraints.",
+      "status": "PENDING",
+      "owner": "codex",
+      "priority": "CRITICAL",
+      "preconditions": [
+        "P5-00-CONTRACT-BASELINE complete"
+      ],
+      "required_inputs": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md"
+      ],
+      "required_actions": [
+        "Create users, projects, memberships, roles, entities, and relationships schema with isolation constraints. Output: migrations and schema tests."
+      ],
+      "required_outputs": [
+        "Evidence artifacts for P5-07-MULTIUSER-GOVERNANCE-SCHEMA"
+      ],
+      "validation_checks": [
+        "Run packet-scoped tests/commands for P5-07-MULTIUSER-GOVERNANCE-SCHEMA",
+        "Record evidence paths and validation output for P5-07-MULTIUSER-GOVERNANCE-SCHEMA"
+      ],
+      "exit_criteria": [
+        "Packet P5-07-MULTIUSER-GOVERNANCE-SCHEMA meets scope, validation, and evidence requirements"
+      ],
+      "halt_conditions": [
+        "Dependency or contract prerequisites unresolved",
+        "Deterministic governance invariants violated"
+      ],
+      "references": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md",
+        "docs/codex-migration/prd-v5.0-wbs-packet-plan.json"
+      ]
+    },
+    {
+      "id": "P5-08-EXECUTION-DATA-SEARCH-JOBS",
+      "wbs_ref": "2.2",
+      "area_id": "2-0",
+      "title": "Implement execution, prompt, budget, RAG, search, and background job infrastructure",
+      "scope": "Deliver execution/token tables, document/embedding storage, indexed search, and async processing. Output: migrations, workers, and integration tests.",
+      "packet_id": "P5-08-EXECUTION-DATA-SEARCH-JOBS",
+      "wbs_refs": [
+        "2.2"
+      ],
+      "purpose": "Deliver execution/token tables, document/embedding storage, indexed search, and async processing.",
+      "status": "PENDING",
+      "owner": "codex",
+      "priority": "MEDIUM",
+      "preconditions": [
+        "P5-07-MULTIUSER-GOVERNANCE-SCHEMA complete"
+      ],
+      "required_inputs": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md"
+      ],
+      "required_actions": [
+        "Deliver execution/token tables, document/embedding storage, indexed search, and async processing. Output: migrations, workers, and integration tests."
+      ],
+      "required_outputs": [
+        "Evidence artifacts for P5-08-EXECUTION-DATA-SEARCH-JOBS"
+      ],
+      "validation_checks": [
+        "Run packet-scoped tests/commands for P5-08-EXECUTION-DATA-SEARCH-JOBS",
+        "Record evidence paths and validation output for P5-08-EXECUTION-DATA-SEARCH-JOBS"
+      ],
+      "exit_criteria": [
+        "Packet P5-08-EXECUTION-DATA-SEARCH-JOBS meets scope, validation, and evidence requirements"
+      ],
+      "halt_conditions": [
+        "Dependency or contract prerequisites unresolved",
+        "Deterministic governance invariants violated"
+      ],
+      "references": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md",
+        "docs/codex-migration/prd-v5.0-wbs-packet-plan.json"
+      ]
+    },
+    {
+      "id": "P5-09-INFRA-OBSERVABILITY-DEPLOY",
+      "wbs_ref": "2.3",
+      "area_id": "2-0",
+      "title": "Implement infrastructure observability and Docker deployment profile",
+      "scope": "Wire structured logging, metrics/tracing, health endpoints, and reproducible Docker-first runtime. Output: compose profile and runbook.",
+      "packet_id": "P5-09-INFRA-OBSERVABILITY-DEPLOY",
+      "wbs_refs": [
+        "2.3"
+      ],
+      "purpose": "Wire structured logging, metrics/tracing, health endpoints, and reproducible Docker-first runtime.",
+      "status": "PENDING",
+      "owner": "codex",
+      "priority": "HIGH",
+      "preconditions": [
+        "P5-08-EXECUTION-DATA-SEARCH-JOBS complete"
+      ],
+      "required_inputs": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md"
+      ],
+      "required_actions": [
+        "Wire structured logging, metrics/tracing, health endpoints, and reproducible Docker-first runtime. Output: compose profile and runbook."
+      ],
+      "required_outputs": [
+        "Evidence artifacts for P5-09-INFRA-OBSERVABILITY-DEPLOY"
+      ],
+      "validation_checks": [
+        "Run packet-scoped tests/commands for P5-09-INFRA-OBSERVABILITY-DEPLOY",
+        "Record evidence paths and validation output for P5-09-INFRA-OBSERVABILITY-DEPLOY"
+      ],
+      "exit_criteria": [
+        "Packet P5-09-INFRA-OBSERVABILITY-DEPLOY meets scope, validation, and evidence requirements"
+      ],
+      "halt_conditions": [
+        "Dependency or contract prerequisites unresolved",
+        "Deterministic governance invariants violated"
+      ],
+      "references": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md",
+        "docs/codex-migration/prd-v5.0-wbs-packet-plan.json"
+      ]
+    },
+    {
+      "id": "P5-10-BACKEND-INFRA-DOD",
+      "wbs_ref": "2.4",
+      "area_id": "2-0",
+      "title": "Demonstrate backend infrastructure Definition of Done",
+      "scope": "Validate schema, execution persistence, reporting endpoints, search, observability, and reproducible deployment. Output: backend infra validation report.",
+      "packet_id": "P5-10-BACKEND-INFRA-DOD",
+      "wbs_refs": [
+        "2.4"
+      ],
+      "purpose": "Validate schema, execution persistence, reporting endpoints, search, observability, and reproducible deployment.",
+      "status": "PENDING",
+      "owner": "codex",
+      "priority": "CRITICAL",
+      "preconditions": [
+        "P5-09-INFRA-OBSERVABILITY-DEPLOY complete"
+      ],
+      "required_inputs": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md"
+      ],
+      "required_actions": [
+        "Validate schema, execution persistence, reporting endpoints, search, observability, and reproducible deployment. Output: backend infra validation report."
+      ],
+      "required_outputs": [
+        "Evidence artifacts for P5-10-BACKEND-INFRA-DOD"
+      ],
+      "validation_checks": [
+        "Run packet-scoped tests/commands for P5-10-BACKEND-INFRA-DOD",
+        "Record evidence paths and validation output for P5-10-BACKEND-INFRA-DOD"
+      ],
+      "exit_criteria": [
+        "Packet P5-10-BACKEND-INFRA-DOD meets scope, validation, and evidence requirements"
+      ],
+      "halt_conditions": [
+        "Dependency or contract prerequisites unresolved",
+        "Deterministic governance invariants violated"
+      ],
+      "references": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md",
+        "docs/codex-migration/prd-v5.0-wbs-packet-plan.json"
+      ]
+    },
+    {
+      "id": "P5-11-FRONTEND-FOUNDATION",
+      "wbs_ref": "3.1",
+      "area_id": "3-0",
+      "title": "Implement frontend foundation shell and governed data flow",
+      "scope": "Build Next.js layout, navigation, project context, and API-only mutation architecture. Output: app shell and core state wiring.",
+      "packet_id": "P5-11-FRONTEND-FOUNDATION",
+      "wbs_refs": [
+        "3.1"
+      ],
+      "purpose": "Build Next.js layout, navigation, project context, and API-only mutation architecture.",
+      "status": "PENDING",
+      "owner": "codex",
+      "priority": "MEDIUM",
+      "preconditions": [
+        "P5-00-CONTRACT-BASELINE complete",
+        "P5-09-INFRA-OBSERVABILITY-DEPLOY complete"
+      ],
+      "required_inputs": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md"
+      ],
+      "required_actions": [
+        "Build Next.js layout, navigation, project context, and API-only mutation architecture. Output: app shell and core state wiring."
+      ],
+      "required_outputs": [
+        "Evidence artifacts for P5-11-FRONTEND-FOUNDATION"
+      ],
+      "validation_checks": [
+        "Run packet-scoped tests/commands for P5-11-FRONTEND-FOUNDATION",
+        "Record evidence paths and validation output for P5-11-FRONTEND-FOUNDATION"
+      ],
+      "exit_criteria": [
+        "Packet P5-11-FRONTEND-FOUNDATION meets scope, validation, and evidence requirements"
+      ],
+      "halt_conditions": [
+        "Dependency or contract prerequisites unresolved",
+        "Deterministic governance invariants violated"
+      ],
+      "references": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md",
+        "docs/codex-migration/prd-v5.0-wbs-packet-plan.json"
+      ]
+    },
+    {
+      "id": "P5-12-CORE-AI-WORKSPACES",
+      "wbs_ref": "3.2",
+      "area_id": "3-0",
+      "title": "Implement governed chat, RAG assistant, prompt lab, and agent console",
+      "scope": "Deliver primary AI workspaces with visible budget/governance indicators and execution traceability. Output: core workspace pages and integration tests.",
+      "packet_id": "P5-12-CORE-AI-WORKSPACES",
+      "wbs_refs": [
+        "3.2"
+      ],
+      "purpose": "Deliver primary AI workspaces with visible budget/governance indicators and execution traceability.",
+      "status": "PENDING",
+      "owner": "codex",
+      "priority": "MEDIUM",
+      "preconditions": [
+        "P5-11-FRONTEND-FOUNDATION complete",
+        "P5-06-AI-BACKEND-DOD complete"
+      ],
+      "required_inputs": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md"
+      ],
+      "required_actions": [
+        "Deliver primary AI workspaces with visible budget/governance indicators and execution traceability. Output: core workspace pages and integration tests."
+      ],
+      "required_outputs": [
+        "Evidence artifacts for P5-12-CORE-AI-WORKSPACES"
+      ],
+      "validation_checks": [
+        "Run packet-scoped tests/commands for P5-12-CORE-AI-WORKSPACES",
+        "Record evidence paths and validation output for P5-12-CORE-AI-WORKSPACES"
+      ],
+      "exit_criteria": [
+        "Packet P5-12-CORE-AI-WORKSPACES meets scope, validation, and evidence requirements"
+      ],
+      "halt_conditions": [
+        "Dependency or contract prerequisites unresolved",
+        "Deterministic governance invariants violated"
+      ],
+      "references": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md",
+        "docs/codex-migration/prd-v5.0-wbs-packet-plan.json"
+      ]
+    },
+    {
+      "id": "P5-13-OPS-WORKSPACES",
+      "wbs_ref": "3.3",
+      "area_id": "3-0",
+      "title": "Implement operational workspaces and visibility surfaces",
+      "scope": "Deliver document management, kanban/gantt, risk register, knowledge base, approvals, and timeline viewer with governance visibility. Output: operational workspace suite.",
+      "packet_id": "P5-13-OPS-WORKSPACES",
+      "wbs_refs": [
+        "3.3"
+      ],
+      "purpose": "Deliver document management, kanban/gantt, risk register, knowledge base, approvals, and timeline viewer with governance visibility.",
+      "status": "PENDING",
+      "owner": "codex",
+      "priority": "MEDIUM",
+      "preconditions": [
+        "P5-11-FRONTEND-FOUNDATION complete",
+        "P5-08-EXECUTION-DATA-SEARCH-JOBS complete"
+      ],
+      "required_inputs": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md"
+      ],
+      "required_actions": [
+        "Deliver document management, kanban/gantt, risk register, knowledge base, approvals, and timeline viewer with governance visibility. Output: operational workspace suite."
+      ],
+      "required_outputs": [
+        "Evidence artifacts for P5-13-OPS-WORKSPACES"
+      ],
+      "validation_checks": [
+        "Run packet-scoped tests/commands for P5-13-OPS-WORKSPACES",
+        "Record evidence paths and validation output for P5-13-OPS-WORKSPACES"
+      ],
+      "exit_criteria": [
+        "Packet P5-13-OPS-WORKSPACES meets scope, validation, and evidence requirements"
+      ],
+      "halt_conditions": [
+        "Dependency or contract prerequisites unresolved",
+        "Deterministic governance invariants violated"
+      ],
+      "references": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md",
+        "docs/codex-migration/prd-v5.0-wbs-packet-plan.json"
+      ]
+    },
+    {
+      "id": "P5-14-FRONTEND-DOD",
+      "wbs_ref": "3.4",
+      "area_id": "3-0",
+      "title": "Demonstrate frontend Definition of Done",
+      "scope": "Validate all major workspaces, charts, search, template installer UX, and policy-violation visibility. Output: frontend validation report and walkthrough.",
+      "packet_id": "P5-14-FRONTEND-DOD",
+      "wbs_refs": [
+        "3.4"
+      ],
+      "purpose": "Validate all major workspaces, charts, search, template installer UX, and policy-violation visibility.",
+      "status": "PENDING",
+      "owner": "codex",
+      "priority": "CRITICAL",
+      "preconditions": [
+        "P5-12-CORE-AI-WORKSPACES complete",
+        "P5-13-OPS-WORKSPACES complete"
+      ],
+      "required_inputs": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md"
+      ],
+      "required_actions": [
+        "Validate all major workspaces, charts, search, template installer UX, and policy-violation visibility. Output: frontend validation report and walkthrough."
+      ],
+      "required_outputs": [
+        "Evidence artifacts for P5-14-FRONTEND-DOD"
+      ],
+      "validation_checks": [
+        "Run packet-scoped tests/commands for P5-14-FRONTEND-DOD",
+        "Record evidence paths and validation output for P5-14-FRONTEND-DOD"
+      ],
+      "exit_criteria": [
+        "Packet P5-14-FRONTEND-DOD meets scope, validation, and evidence requirements"
+      ],
+      "halt_conditions": [
+        "Dependency or contract prerequisites unresolved",
+        "Deterministic governance invariants violated"
+      ],
+      "references": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md",
+        "docs/codex-migration/prd-v5.0-wbs-packet-plan.json"
+      ]
+    },
+    {
+      "id": "P5-15-TEMPLATE-CONTRACT-INSTALLER",
       "wbs_ref": "4.1",
       "area_id": "4-0",
-      "title": "Publish normative phase scope matrix",
-      "scope": "Eliminate roadmap ambiguity by defining MUST/MUST NOT capability boundaries for v4.0-v4.3. Actions: Add Section 4.1 scope matrix to PRD v4.1; Align roadmap text with matrix constraints; Add release-gate rule that MUST NOT scope cannot block phase closeout. Outputs: PRD v4.1 updated scope matrix section; Roadmap section aligned with phase matrix."
+      "title": "Implement template package contract and installation engine",
+      "scope": "Define template manifest/component schemas and transactional install flow with governance checks. Output: template validator and installer service.",
+      "packet_id": "P5-15-TEMPLATE-CONTRACT-INSTALLER",
+      "wbs_refs": [
+        "4.1"
+      ],
+      "purpose": "Define template manifest/component schemas and transactional install flow with governance checks.",
+      "status": "PENDING",
+      "owner": "codex",
+      "priority": "HIGH",
+      "preconditions": [
+        "P5-00-CONTRACT-BASELINE complete",
+        "P5-07-MULTIUSER-GOVERNANCE-SCHEMA complete",
+        "P5-11-FRONTEND-FOUNDATION complete"
+      ],
+      "required_inputs": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md"
+      ],
+      "required_actions": [
+        "Define template manifest/component schemas and transactional install flow with governance checks. Output: template validator and installer service."
+      ],
+      "required_outputs": [
+        "Evidence artifacts for P5-15-TEMPLATE-CONTRACT-INSTALLER"
+      ],
+      "validation_checks": [
+        "Run packet-scoped tests/commands for P5-15-TEMPLATE-CONTRACT-INSTALLER",
+        "Record evidence paths and validation output for P5-15-TEMPLATE-CONTRACT-INSTALLER"
+      ],
+      "exit_criteria": [
+        "Packet P5-15-TEMPLATE-CONTRACT-INSTALLER meets scope, validation, and evidence requirements"
+      ],
+      "halt_conditions": [
+        "Dependency or contract prerequisites unresolved",
+        "Deterministic governance invariants violated"
+      ],
+      "references": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md",
+        "docs/codex-migration/prd-v5.0-wbs-packet-plan.json"
+      ]
     },
     {
-      "id": "PRD4-01-SHARED-CORE-CONTRACT",
-      "wbs_ref": "6.0",
+      "id": "P5-16-TEMPLATE-LIBRARY-VERSIONING",
+      "wbs_ref": "4.2",
+      "area_id": "4-0",
+      "title": "Implement built-in template library, versioning, migrations, and rollback",
+      "scope": "Ship baseline template catalog with upgrade/downgrade mechanics and audit logging. Output: template library and migration framework.",
+      "packet_id": "P5-16-TEMPLATE-LIBRARY-VERSIONING",
+      "wbs_refs": [
+        "4.2"
+      ],
+      "purpose": "Ship baseline template catalog with upgrade/downgrade mechanics and audit logging.",
+      "status": "PENDING",
+      "owner": "codex",
+      "priority": "HIGH",
+      "preconditions": [
+        "P5-15-TEMPLATE-CONTRACT-INSTALLER complete"
+      ],
+      "required_inputs": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md"
+      ],
+      "required_actions": [
+        "Ship baseline template catalog with upgrade/downgrade mechanics and audit logging. Output: template library and migration framework."
+      ],
+      "required_outputs": [
+        "Evidence artifacts for P5-16-TEMPLATE-LIBRARY-VERSIONING"
+      ],
+      "validation_checks": [
+        "Run packet-scoped tests/commands for P5-16-TEMPLATE-LIBRARY-VERSIONING",
+        "Record evidence paths and validation output for P5-16-TEMPLATE-LIBRARY-VERSIONING"
+      ],
+      "exit_criteria": [
+        "Packet P5-16-TEMPLATE-LIBRARY-VERSIONING meets scope, validation, and evidence requirements"
+      ],
+      "halt_conditions": [
+        "Dependency or contract prerequisites unresolved",
+        "Deterministic governance invariants violated"
+      ],
+      "references": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md",
+        "docs/codex-migration/prd-v5.0-wbs-packet-plan.json"
+      ]
+    },
+    {
+      "id": "P5-17-TEMPLATE-DOD",
+      "wbs_ref": "4.3",
+      "area_id": "4-0",
+      "title": "Demonstrate template system Definition of Done",
+      "scope": "Validate install, seed, governance enforcement, version tracking, rollback, and safe uninstall behavior. Output: template system validation report.",
+      "packet_id": "P5-17-TEMPLATE-DOD",
+      "wbs_refs": [
+        "4.3"
+      ],
+      "purpose": "Validate install, seed, governance enforcement, version tracking, rollback, and safe uninstall behavior.",
+      "status": "PENDING",
+      "owner": "codex",
+      "priority": "CRITICAL",
+      "preconditions": [
+        "P5-16-TEMPLATE-LIBRARY-VERSIONING complete"
+      ],
+      "required_inputs": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md"
+      ],
+      "required_actions": [
+        "Validate install, seed, governance enforcement, version tracking, rollback, and safe uninstall behavior. Output: template system validation report."
+      ],
+      "required_outputs": [
+        "Evidence artifacts for P5-17-TEMPLATE-DOD"
+      ],
+      "validation_checks": [
+        "Run packet-scoped tests/commands for P5-17-TEMPLATE-DOD",
+        "Record evidence paths and validation output for P5-17-TEMPLATE-DOD"
+      ],
+      "exit_criteria": [
+        "Packet P5-17-TEMPLATE-DOD meets scope, validation, and evidence requirements"
+      ],
+      "halt_conditions": [
+        "Dependency or contract prerequisites unresolved",
+        "Deterministic governance invariants violated"
+      ],
+      "references": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md",
+        "docs/codex-migration/prd-v5.0-wbs-packet-plan.json"
+      ]
+    },
+    {
+      "id": "P5-18-ANALYTICS-PIPELINE-APIS",
+      "wbs_ref": "5.1",
+      "area_id": "5-0",
+      "title": "Implement analytics aggregation model and API endpoints",
+      "scope": "Build aggregate tables/views, scheduled jobs, and project-scoped analytics endpoints with filters. Output: analytics service and API contracts.",
+      "packet_id": "P5-18-ANALYTICS-PIPELINE-APIS",
+      "wbs_refs": [
+        "5.1"
+      ],
+      "purpose": "Build aggregate tables/views, scheduled jobs, and project-scoped analytics endpoints with filters.",
+      "status": "PENDING",
+      "owner": "codex",
+      "priority": "HIGH",
+      "preconditions": [
+        "P5-08-EXECUTION-DATA-SEARCH-JOBS complete",
+        "P5-04-AI-AUDIT-OBSERVABILITY complete"
+      ],
+      "required_inputs": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md"
+      ],
+      "required_actions": [
+        "Build aggregate tables/views, scheduled jobs, and project-scoped analytics endpoints with filters. Output: analytics service and API contracts."
+      ],
+      "required_outputs": [
+        "Evidence artifacts for P5-18-ANALYTICS-PIPELINE-APIS"
+      ],
+      "validation_checks": [
+        "Run packet-scoped tests/commands for P5-18-ANALYTICS-PIPELINE-APIS",
+        "Record evidence paths and validation output for P5-18-ANALYTICS-PIPELINE-APIS"
+      ],
+      "exit_criteria": [
+        "Packet P5-18-ANALYTICS-PIPELINE-APIS meets scope, validation, and evidence requirements"
+      ],
+      "halt_conditions": [
+        "Dependency or contract prerequisites unresolved",
+        "Deterministic governance invariants violated"
+      ],
+      "references": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md",
+        "docs/codex-migration/prd-v5.0-wbs-packet-plan.json"
+      ]
+    },
+    {
+      "id": "P5-19-ANALYTICS-EXPORT-PERF",
+      "wbs_ref": "5.2",
+      "area_id": "5-0",
+      "title": "Implement analytics exports and performance hardening",
+      "scope": "Deliver compliance reports, export reproducibility, caching/index strategy, and latency targets. Output: export pipeline and performance evidence.",
+      "packet_id": "P5-19-ANALYTICS-EXPORT-PERF",
+      "wbs_refs": [
+        "5.2"
+      ],
+      "purpose": "Deliver compliance reports, export reproducibility, caching/index strategy, and latency targets.",
+      "status": "PENDING",
+      "owner": "codex",
+      "priority": "HIGH",
+      "preconditions": [
+        "P5-18-ANALYTICS-PIPELINE-APIS complete"
+      ],
+      "required_inputs": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md"
+      ],
+      "required_actions": [
+        "Deliver compliance reports, export reproducibility, caching/index strategy, and latency targets. Output: export pipeline and performance evidence."
+      ],
+      "required_outputs": [
+        "Evidence artifacts for P5-19-ANALYTICS-EXPORT-PERF"
+      ],
+      "validation_checks": [
+        "Run packet-scoped tests/commands for P5-19-ANALYTICS-EXPORT-PERF",
+        "Record evidence paths and validation output for P5-19-ANALYTICS-EXPORT-PERF"
+      ],
+      "exit_criteria": [
+        "Packet P5-19-ANALYTICS-EXPORT-PERF meets scope, validation, and evidence requirements"
+      ],
+      "halt_conditions": [
+        "Dependency or contract prerequisites unresolved",
+        "Deterministic governance invariants violated"
+      ],
+      "references": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md",
+        "docs/codex-migration/prd-v5.0-wbs-packet-plan.json"
+      ]
+    },
+    {
+      "id": "P5-20-ANALYTICS-DOD",
+      "wbs_ref": "5.3",
+      "area_id": "5-0",
+      "title": "Demonstrate reporting and analytics Definition of Done",
+      "scope": "Validate dashboards, exports, aggregation jobs, and performance targets across representative data volumes. Output: analytics validation report.",
+      "packet_id": "P5-20-ANALYTICS-DOD",
+      "wbs_refs": [
+        "5.3"
+      ],
+      "purpose": "Validate dashboards, exports, aggregation jobs, and performance targets across representative data volumes.",
+      "status": "PENDING",
+      "owner": "codex",
+      "priority": "CRITICAL",
+      "preconditions": [
+        "P5-19-ANALYTICS-EXPORT-PERF complete"
+      ],
+      "required_inputs": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md"
+      ],
+      "required_actions": [
+        "Validate dashboards, exports, aggregation jobs, and performance targets across representative data volumes. Output: analytics validation report."
+      ],
+      "required_outputs": [
+        "Evidence artifacts for P5-20-ANALYTICS-DOD"
+      ],
+      "validation_checks": [
+        "Run packet-scoped tests/commands for P5-20-ANALYTICS-DOD",
+        "Record evidence paths and validation output for P5-20-ANALYTICS-DOD"
+      ],
+      "exit_criteria": [
+        "Packet P5-20-ANALYTICS-DOD meets scope, validation, and evidence requirements"
+      ],
+      "halt_conditions": [
+        "Dependency or contract prerequisites unresolved",
+        "Deterministic governance invariants violated"
+      ],
+      "references": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md",
+        "docs/codex-migration/prd-v5.0-wbs-packet-plan.json"
+      ]
+    },
+    {
+      "id": "P5-21-AUTH-RBAC",
+      "wbs_ref": "6.1",
       "area_id": "6-0",
-      "title": "Enforce shared-core decision contract across surfaces",
-      "scope": "Prevent CLI/API/terminal divergence by formalizing and testing one transition authority envelope. Actions: Define transition result envelope; Route CLI/API/terminal through same core decision path; Add parity tests for identical inputs across surfaces. Outputs: Shared decision envelope contract doc; Parity test suite and baseline report."
+      "title": "Implement authentication and RBAC middleware enforcement",
+      "scope": "Deliver local auth, OAuth, JWT lifecycle, project-scoped roles, and permission middleware. Output: auth/RBAC modules with tests.",
+      "packet_id": "P5-21-AUTH-RBAC",
+      "wbs_refs": [
+        "6.1"
+      ],
+      "purpose": "Deliver local auth, OAuth, JWT lifecycle, project-scoped roles, and permission middleware.",
+      "status": "PENDING",
+      "owner": "codex",
+      "priority": "CRITICAL",
+      "preconditions": [
+        "P5-07-MULTIUSER-GOVERNANCE-SCHEMA complete"
+      ],
+      "required_inputs": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md"
+      ],
+      "required_actions": [
+        "Deliver local auth, OAuth, JWT lifecycle, project-scoped roles, and permission middleware. Output: auth/RBAC modules with tests."
+      ],
+      "required_outputs": [
+        "Evidence artifacts for P5-21-AUTH-RBAC"
+      ],
+      "validation_checks": [
+        "Run packet-scoped tests/commands for P5-21-AUTH-RBAC",
+        "Record evidence paths and validation output for P5-21-AUTH-RBAC"
+      ],
+      "exit_criteria": [
+        "Packet P5-21-AUTH-RBAC meets scope, validation, and evidence requirements"
+      ],
+      "halt_conditions": [
+        "Dependency or contract prerequisites unresolved",
+        "Deterministic governance invariants violated"
+      ],
+      "references": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md",
+        "docs/codex-migration/prd-v5.0-wbs-packet-plan.json"
+      ]
     },
     {
-      "id": "PRD4-11-SNAPSHOT-DIFF",
-      "wbs_ref": "6.0",
+      "id": "P5-22-PROTECTION-SANDBOX-RATELIMIT",
+      "wbs_ref": "6.2",
       "area_id": "6-0",
-      "title": "Implement state snapshot and diff (v4.1)",
-      "scope": "Enable governed state comparison for audit and operations without mutating history. Actions: Implement snapshot capture API; Implement deterministic diff output; Link snapshot/diff events into audit log. Outputs: Snapshot/diff API and usage guide; Deterministic snapshot replay fixtures."
+      "title": "Implement policy and budget protections, sandboxing, and rate limits",
+      "scope": "Enforce mutation protections, hard budget stops, execution sandbox controls, and abuse-resistant API limits. Output: security control suite.",
+      "packet_id": "P5-22-PROTECTION-SANDBOX-RATELIMIT",
+      "wbs_refs": [
+        "6.2"
+      ],
+      "purpose": "Enforce mutation protections, hard budget stops, execution sandbox controls, and abuse-resistant API limits.",
+      "status": "PENDING",
+      "owner": "codex",
+      "priority": "MEDIUM",
+      "preconditions": [
+        "P5-21-AUTH-RBAC complete",
+        "P5-03-BUDGET-RAG-STRUCTURED-OUTPUT complete",
+        "P5-01-GOVERNANCE-POLICY-CORE complete"
+      ],
+      "required_inputs": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md"
+      ],
+      "required_actions": [
+        "Enforce mutation protections, hard budget stops, execution sandbox controls, and abuse-resistant API limits. Output: security control suite."
+      ],
+      "required_outputs": [
+        "Evidence artifacts for P5-22-PROTECTION-SANDBOX-RATELIMIT"
+      ],
+      "validation_checks": [
+        "Run packet-scoped tests/commands for P5-22-PROTECTION-SANDBOX-RATELIMIT",
+        "Record evidence paths and validation output for P5-22-PROTECTION-SANDBOX-RATELIMIT"
+      ],
+      "exit_criteria": [
+        "Packet P5-22-PROTECTION-SANDBOX-RATELIMIT meets scope, validation, and evidence requirements"
+      ],
+      "halt_conditions": [
+        "Dependency or contract prerequisites unresolved",
+        "Deterministic governance invariants violated"
+      ],
+      "references": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md",
+        "docs/codex-migration/prd-v5.0-wbs-packet-plan.json"
+      ]
     },
     {
-      "id": "PRD4-02-ONTOLOGY-MINIMUM",
-      "wbs_ref": "7.0",
+      "id": "P5-23-AUDIT-COMPLIANCE-RECOVERY",
+      "wbs_ref": "6.3",
+      "area_id": "6-0",
+      "title": "Implement immutable audit/compliance reporting and backup-recovery paths",
+      "scope": "Deliver append-only audit guarantees, export tooling, backup workflows, and restore documentation. Output: compliance and recovery package.",
+      "packet_id": "P5-23-AUDIT-COMPLIANCE-RECOVERY",
+      "wbs_refs": [
+        "6.3"
+      ],
+      "purpose": "Deliver append-only audit guarantees, export tooling, backup workflows, and restore documentation.",
+      "status": "PENDING",
+      "owner": "codex",
+      "priority": "MEDIUM",
+      "preconditions": [
+        "P5-22-PROTECTION-SANDBOX-RATELIMIT complete",
+        "P5-04-AI-AUDIT-OBSERVABILITY complete"
+      ],
+      "required_inputs": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md"
+      ],
+      "required_actions": [
+        "Deliver append-only audit guarantees, export tooling, backup workflows, and restore documentation. Output: compliance and recovery package."
+      ],
+      "required_outputs": [
+        "Evidence artifacts for P5-23-AUDIT-COMPLIANCE-RECOVERY"
+      ],
+      "validation_checks": [
+        "Run packet-scoped tests/commands for P5-23-AUDIT-COMPLIANCE-RECOVERY",
+        "Record evidence paths and validation output for P5-23-AUDIT-COMPLIANCE-RECOVERY"
+      ],
+      "exit_criteria": [
+        "Packet P5-23-AUDIT-COMPLIANCE-RECOVERY meets scope, validation, and evidence requirements"
+      ],
+      "halt_conditions": [
+        "Dependency or contract prerequisites unresolved",
+        "Deterministic governance invariants violated"
+      ],
+      "references": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md",
+        "docs/codex-migration/prd-v5.0-wbs-packet-plan.json"
+      ]
+    },
+    {
+      "id": "P5-24-SECURITY-DOD",
+      "wbs_ref": "6.4",
+      "area_id": "6-0",
+      "title": "Demonstrate security and enterprise-readiness Definition of Done",
+      "scope": "Validate auth, RBAC, protections, sandboxing, audit, isolation, rate limits, and compliance outputs. Output: security validation dossier.",
+      "packet_id": "P5-24-SECURITY-DOD",
+      "wbs_refs": [
+        "6.4"
+      ],
+      "purpose": "Validate auth, RBAC, protections, sandboxing, audit, isolation, rate limits, and compliance outputs.",
+      "status": "PENDING",
+      "owner": "codex",
+      "priority": "CRITICAL",
+      "preconditions": [
+        "P5-21-AUTH-RBAC complete",
+        "P5-22-PROTECTION-SANDBOX-RATELIMIT complete",
+        "P5-23-AUDIT-COMPLIANCE-RECOVERY complete",
+        "P5-06-AI-BACKEND-DOD complete"
+      ],
+      "required_inputs": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md"
+      ],
+      "required_actions": [
+        "Validate auth, RBAC, protections, sandboxing, audit, isolation, rate limits, and compliance outputs. Output: security validation dossier."
+      ],
+      "required_outputs": [
+        "Evidence artifacts for P5-24-SECURITY-DOD"
+      ],
+      "validation_checks": [
+        "Run packet-scoped tests/commands for P5-24-SECURITY-DOD",
+        "Record evidence paths and validation output for P5-24-SECURITY-DOD"
+      ],
+      "exit_criteria": [
+        "Packet P5-24-SECURITY-DOD meets scope, validation, and evidence requirements"
+      ],
+      "halt_conditions": [
+        "Dependency or contract prerequisites unresolved",
+        "Deterministic governance invariants violated"
+      ],
+      "references": [
+        "/mnt/c/Users/User/Downloads/Substrate_Phase5_Master_PRD.md",
+        "docs/codex-migration/prd-v5.0-wbs-packet-plan.json"
+      ]
+    },
+    {
+      "id": "P5-25-TEMPLATE-REVIEW",
+      "wbs_ref": "8.1",
       "area_id": "7-0",
-      "title": "Implement v4.0 typed ontology minimum set",
-      "scope": "Deliver kernel entity and relationship typing required for deterministic governance paths. Actions: Define core entity types and relationship constraints; Implement schema-level validation for relationship semantics; Reject invalid type/relationship combinations at transition time. Outputs: Ontology type registry; Relationship validator test fixtures."
+      "title": "Review all template pages and define target template patterns",
+      "scope": "Audit each template page route, define intended product outcomes, pick fit-for-purpose OSS libraries, and document page-specific implementation intent."
     },
     {
-      "id": "PRD4-12-REFERENCE-ONTOLOGY-V1",
-      "wbs_ref": "7.3",
+      "id": "P5-26-TEMPLATE-KANBAN-GANTT",
+      "wbs_ref": "8.2",
       "area_id": "7-0",
-      "title": "Publish reference ontology pack v1 contract (v4.1)",
-      "scope": "Define the extension boundary for commercial domain ontologies without contaminating kernel scope. Actions: Define ontology pack ingestion contract; Define compatibility/versioning constraints; Define licensing boundary metadata model. Outputs: Reference ontology pack contract; Compatibility validation checklist."
+      "title": "Implement Kanban/Gantt functional template",
+      "scope": "Deliver a usable planning board template with drag workflow and gantt-style timeline primitives."
     },
     {
-      "id": "PRD4-03-CONSTRAINT-PIPELINE",
-      "wbs_ref": "8.0",
+      "id": "P5-27-TEMPLATE-TIMELINE",
+      "wbs_ref": "8.3",
+      "area_id": "7-0",
+      "title": "Implement timeline functional template",
+      "scope": "Deliver event timeline template with filters, grouped tracks, and detail panel."
+    },
+    {
+      "id": "P5-28-TEMPLATE-ASSISTANT",
+      "wbs_ref": "8.4",
+      "area_id": "7-0",
+      "title": "Implement assistant workspace template",
+      "scope": "Deliver assistant workspace template with prompt input, retrieval citations panel, and response cards."
+    },
+    {
+      "id": "P5-29-TEMPLATE-CHAT",
+      "wbs_ref": "8.5",
+      "area_id": "7-0",
+      "title": "Implement governed chat template",
+      "scope": "Deliver chat template with conversation pane, context controls, and metadata side rail."
+    },
+    {
+      "id": "P5-30-TEMPLATE-KNOWLEDGE",
+      "wbs_ref": "8.6",
+      "area_id": "7-0",
+      "title": "Implement knowledge base template",
+      "scope": "Deliver searchable knowledge template with taxonomy facets and document preview patterns."
+    },
+    {
+      "id": "P5-31-TEMPLATE-DOCUMENTS",
+      "wbs_ref": "8.7",
+      "area_id": "7-0",
+      "title": "Implement document management template",
+      "scope": "Deliver documents template with upload queue mock, table/grid views, and lifecycle states."
+    },
+    {
+      "id": "P5-32-TEMPLATE-APPROVALS",
+      "wbs_ref": "8.8",
+      "area_id": "7-0",
+      "title": "Implement approvals workflow template",
+      "scope": "Deliver approvals template with request queue, diff panel, and action controls."
+    },
+    {
+      "id": "P5-33-TEMPLATE-PROMPT-LAB",
+      "wbs_ref": "8.9",
+      "area_id": "7-0",
+      "title": "Implement prompt lab template",
+      "scope": "Deliver prompt authoring template with version cards, test harness panel, and publish workflow."
+    },
+    {
+      "id": "P5-34-TEMPLATE-AGENT-CONSOLE",
+      "wbs_ref": "8.10",
+      "area_id": "7-0",
+      "title": "Implement agent console template",
+      "scope": "Deliver runtime console template with logs, jobs queue, and model/runtime controls."
+    },
+    {
+      "id": "P5-35-TEMPLATE-NEW-ITEM",
+      "wbs_ref": "8.11",
+      "area_id": "7-0",
+      "title": "Implement robust create-item template form",
+      "scope": "Replace basic sample form with validated multi-section creation template and feedback states."
+    },
+    {
+      "id": "P5-36-TEMPLATE-INTEGRATION-DOD",
+      "wbs_ref": "8.12",
+      "area_id": "7-0",
+      "title": "Template pages integration and DoD pass",
+      "scope": "Run integration pass across all template pages, align navigation and states, and capture validation evidence."
+    },
+    {
+      "packet_id": "P5-37-TEMPLATE-UX-AUDIT",
+      "wbs_refs": [
+        "8.1"
+      ],
       "area_id": "8-0",
-      "title": "Implement deterministic constraint pipeline",
-      "scope": "Enforce dependency/policy/risk/integrity checks as ordered deterministic gates. Actions: Implement ordered transition validation stages; Implement invariants: no cycles, no gate bypass, no audit mutation; Fail transition atomically on first hard deny. Outputs: Constraint evaluation pipeline module; Invariant conformance tests."
+      "title": "Audit template pages and document component mapping",
+      "purpose": "Identify all Ant Design usages and map to existing custom components.",
+      "status": "PENDING",
+      "owner": "claude",
+      "priority": "HIGH",
+      "preconditions": [],
+      "required_inputs": [
+        "templates/ai-substrate/app/*/page.tsx (template pages)",
+        "templates/ai-substrate/components/ui/*.tsx",
+        "templates/ai-substrate/components/governance/*.tsx"
+      ],
+      "required_actions": [
+        "Document all Ant Design components used across template pages",
+        "Map each antd component to existing custom component equivalent",
+        "Identify any missing custom components that need to be created",
+        "Create component migration checklist per template page"
+      ],
+      "required_outputs": [
+        "docs/codex-migration/template-ux-remediation-plan.md",
+        "Component mapping matrix (antd \u2192 custom)",
+        "List of missing components to create"
+      ],
+      "validation_checks": [
+        "All 11 template pages catalogued",
+        "Component mapping covers 100% of antd usage",
+        "Migration plan includes validation criteria"
+      ],
+      "exit_criteria": [
+        "Complete audit document exists",
+        "Component mapping approved",
+        "Ready to start page-by-page migration"
+      ],
+      "halt_conditions": [
+        "Existing custom components insufficient for migration",
+        "Design system conflicts identified"
+      ],
+      "id": "P5-37-TEMPLATE-UX-AUDIT",
+      "wbs_ref": "8.1"
     },
     {
-      "id": "PRD4-04-POLICY-ENGINE-BASE",
-      "wbs_ref": "9.0",
-      "area_id": "9-0",
-      "title": "Ship native policy engine with precedence trace",
-      "scope": "Provide fail-closed policy gating with auditable per-rule decision traces. Actions: Implement policy precedence order; Implement fail-closed behavior for unknown/missing policy states; Emit policy trace fields in transition/audit records. Outputs: Policy evaluator with precedence resolver; Policy trace schema and fixture samples."
+      "packet_id": "P5-38-TEMPLATE-KANBAN-FIX",
+      "wbs_refs": [
+        "8.2"
+      ],
+      "area_id": "8-0",
+      "title": "Migrate /kanban page to custom components",
+      "purpose": "Replace Ant Design with custom component library in kanban template.",
+      "status": "PENDING",
+      "owner": "claude",
+      "priority": "HIGH",
+      "preconditions": [
+        "P5-37-TEMPLATE-UX-AUDIT complete"
+      ],
+      "required_inputs": [
+        "templates/ai-substrate/app/kanban/page.tsx",
+        "docs/codex-migration/template-ux-remediation-plan.md"
+      ],
+      "required_actions": [
+        "Replace antd components with custom components from /components/ui/",
+        "Maintain drag-drop functionality using @dnd-kit",
+        "Apply CSS variable-based styling",
+        "Ensure visual consistency with dashboard page"
+      ],
+      "required_outputs": [
+        "Updated templates/ai-substrate/app/kanban/page.tsx",
+        "Visual regression proof (screenshot or description)"
+      ],
+      "validation_checks": [
+        "npm run dev succeeds",
+        "GET /kanban returns 200",
+        "No antd imports remain in file",
+        "Visual consistency verified against dashboard",
+        "Drag-drop functionality works"
+      ],
+      "exit_criteria": [
+        "Kanban page uses only custom components",
+        "Functional parity maintained",
+        "Visual consistency with existing pages"
+      ],
+      "halt_conditions": [
+        "Missing custom component blocks progress",
+        "Drag-drop library incompatible with custom components"
+      ],
+      "id": "P5-38-TEMPLATE-KANBAN-FIX",
+      "wbs_ref": "8.2"
     },
     {
-      "id": "PRD4-08-POLICY-VERSIONING",
-      "wbs_ref": "9.0",
-      "area_id": "9-0",
-      "title": "Add policy versioning and activation controls (v4.1)",
-      "scope": "Extend policy governance with immutable version activation, precedence history, and rationale capture. Actions: Implement policy version records and activation workflow; Require rationale and approval metadata for activation; Integrate version references into transition trace output. Outputs: Policy version registry; Version activation audit report."
+      "packet_id": "P5-39-TEMPLATE-GANTT-FIX",
+      "wbs_refs": [
+        "8.3"
+      ],
+      "area_id": "8-0",
+      "title": "Migrate /gantt page to custom components",
+      "purpose": "Replace Ant Design with custom component library in gantt template.",
+      "status": "PENDING",
+      "owner": "claude",
+      "priority": "MEDIUM",
+      "preconditions": [
+        "P5-38-TEMPLATE-KANBAN-FIX complete"
+      ],
+      "required_inputs": [
+        "templates/ai-substrate/app/gantt/page.tsx",
+        "Component patterns from P5-38"
+      ],
+      "required_actions": [
+        "Replace antd components with custom components",
+        "Maintain gantt-task-react integration",
+        "Apply consistent styling"
+      ],
+      "required_outputs": [
+        "Updated templates/ai-substrate/app/gantt/page.tsx"
+      ],
+      "validation_checks": [
+        "npm run dev succeeds",
+        "GET /gantt returns 200",
+        "No antd imports remain"
+      ],
+      "exit_criteria": [
+        "Gantt page uses only custom components",
+        "Visual consistency maintained"
+      ],
+      "halt_conditions": [],
+      "id": "P5-39-TEMPLATE-GANTT-FIX",
+      "wbs_ref": "8.3"
     },
     {
-      "id": "PRD4-10-OPA-COMPAT-ADAPTER",
-      "wbs_ref": "9.0",
-      "area_id": "9-0",
-      "title": "Implement OPA compatibility adapter (v4.1)",
-      "scope": "Provide optional OPA evaluation path while preserving native deterministic policy semantics. Actions: Implement OPA adapter and mapping contract; Enforce deterministic fallback when OPA is unavailable; Capture OPA decision traces in audit-compatible format. Outputs: OPA adapter contract and implementation; Fallback behavior test report."
+      "packet_id": "P5-40-TEMPLATE-TIMELINE-FIX",
+      "wbs_refs": [
+        "8.4"
+      ],
+      "area_id": "8-0",
+      "title": "Migrate /timeline page to custom components",
+      "purpose": "Replace Ant Design with custom component library in timeline template.",
+      "status": "PENDING",
+      "owner": "claude",
+      "priority": "MEDIUM",
+      "preconditions": [
+        "P5-38-TEMPLATE-KANBAN-FIX complete"
+      ],
+      "required_inputs": [
+        "templates/ai-substrate/app/timeline/page.tsx"
+      ],
+      "required_actions": [
+        "Replace antd components with custom components"
+      ],
+      "required_outputs": [
+        "Updated templates/ai-substrate/app/timeline/page.tsx"
+      ],
+      "validation_checks": [
+        "npm run dev succeeds",
+        "GET /timeline returns 200",
+        "No antd imports remain"
+      ],
+      "exit_criteria": [
+        "Timeline page uses only custom components"
+      ],
+      "halt_conditions": [],
+      "id": "P5-40-TEMPLATE-TIMELINE-FIX",
+      "wbs_ref": "8.4"
     },
     {
-      "id": "PRD4-09-TRUST-SCORING-V1",
-      "wbs_ref": "10.0",
-      "area_id": "10-0",
-      "title": "Implement deterministic trust scoring v1 (v4.1)",
-      "scope": "Deliver governed explainable trust scoring with versioned weights and approval records. Actions: Define trust model schema with version and rationale fields; Implement deterministic trust computation pipeline; Enforce governance approval on trust model changes. Outputs: Trust scoring model v1 artifacts; Change approval and audit trail records."
+      "packet_id": "P5-41-TEMPLATE-ASSISTANT-FIX",
+      "wbs_refs": [
+        "8.5"
+      ],
+      "area_id": "8-0",
+      "title": "Migrate /assistant page to custom components",
+      "purpose": "Replace Ant Design with custom component library in assistant template.",
+      "status": "PENDING",
+      "owner": "claude",
+      "priority": "MEDIUM",
+      "preconditions": [
+        "P5-38-TEMPLATE-KANBAN-FIX complete"
+      ],
+      "required_inputs": [
+        "templates/ai-substrate/app/assistant/page.tsx"
+      ],
+      "required_actions": [
+        "Replace antd components with custom components"
+      ],
+      "required_outputs": [
+        "Updated templates/ai-substrate/app/assistant/page.tsx"
+      ],
+      "validation_checks": [
+        "npm run dev succeeds",
+        "GET /assistant returns 200",
+        "No antd imports remain"
+      ],
+      "exit_criteria": [
+        "Assistant page uses only custom components"
+      ],
+      "halt_conditions": [],
+      "id": "P5-41-TEMPLATE-ASSISTANT-FIX",
+      "wbs_ref": "8.5"
     },
     {
-      "id": "PRD4-05-GRAPH-CORE-POSTGRES",
-      "wbs_ref": "11.0",
-      "area_id": "11-0",
-      "title": "Implement PostgreSQL graph core and traversal APIs",
-      "scope": "Provide production graph persistence and deterministic traversal primitives for governance operations. Actions: Implement adjacency-list schema and indexes; Implement recursive CTE traversal endpoints; Implement cycle detection and impact analysis queries. Outputs: PostgreSQL graph schema; Traversal API contract tests."
+      "packet_id": "P5-42-TEMPLATE-CHAT-FIX",
+      "wbs_refs": [
+        "8.6"
+      ],
+      "area_id": "8-0",
+      "title": "Migrate /chat page to custom components",
+      "purpose": "Replace Ant Design with custom component library in chat template.",
+      "status": "PENDING",
+      "owner": "claude",
+      "priority": "MEDIUM",
+      "preconditions": [
+        "P5-38-TEMPLATE-KANBAN-FIX complete"
+      ],
+      "required_inputs": [
+        "templates/ai-substrate/app/chat/page.tsx"
+      ],
+      "required_actions": [
+        "Replace antd components with custom components"
+      ],
+      "required_outputs": [
+        "Updated templates/ai-substrate/app/chat/page.tsx"
+      ],
+      "validation_checks": [
+        "npm run dev succeeds",
+        "GET /chat returns 200",
+        "No antd imports remain"
+      ],
+      "exit_criteria": [
+        "Chat page uses only custom components"
+      ],
+      "halt_conditions": [],
+      "id": "P5-42-TEMPLATE-CHAT-FIX",
+      "wbs_ref": "8.6"
     },
     {
-      "id": "PRD4-06-IMMUTABLE-AUDIT",
-      "wbs_ref": "12.0",
-      "area_id": "12-0",
-      "title": "Implement immutable audit and provenance chain",
-      "scope": "Guarantee append-only governance evidence with queryable provenance lineage. Actions: Implement append-only audit record persistence; Link transitions to provenance chain entries; Block mutation paths for historical audit records. Outputs: Audit append-only storage layer; Provenance export endpoint and evidence report."
+      "packet_id": "P5-43-TEMPLATE-KNOWLEDGE-FIX",
+      "wbs_refs": [
+        "8.7"
+      ],
+      "area_id": "8-0",
+      "title": "Migrate /knowledge page to custom components",
+      "purpose": "Replace Ant Design with custom component library in knowledge template.",
+      "status": "PENDING",
+      "owner": "claude",
+      "priority": "MEDIUM",
+      "preconditions": [
+        "P5-38-TEMPLATE-KANBAN-FIX complete"
+      ],
+      "required_inputs": [
+        "templates/ai-substrate/app/knowledge/page.tsx"
+      ],
+      "required_actions": [
+        "Replace antd components with custom components"
+      ],
+      "required_outputs": [
+        "Updated templates/ai-substrate/app/knowledge/page.tsx"
+      ],
+      "validation_checks": [
+        "npm run dev succeeds",
+        "GET /knowledge returns 200",
+        "No antd imports remain"
+      ],
+      "exit_criteria": [
+        "Knowledge page uses only custom components"
+      ],
+      "halt_conditions": [],
+      "id": "P5-43-TEMPLATE-KNOWLEDGE-FIX",
+      "wbs_ref": "8.7"
     },
     {
-      "id": "PRD4-07-KERNEL-DOD-E2E",
-      "wbs_ref": "19.0",
-      "area_id": "19-0",
-      "title": "Demonstrate v4.0 kernel Definition of Done",
-      "scope": "Run end-to-end kernel scenario from clean clone within 30 minutes and capture evidence. Actions: Execute clean-start kernel scenario; Capture reproducible evidence artifacts; Publish kernel DoD report with timings. Outputs: Kernel DoD runbook and report; Audit and provenance export artifacts."
+      "packet_id": "P5-44-TEMPLATE-DOCUMENTS-FIX",
+      "wbs_refs": [
+        "8.8"
+      ],
+      "area_id": "8-0",
+      "title": "Migrate /documents page to custom components",
+      "purpose": "Replace Ant Design with custom component library in documents template.",
+      "status": "PENDING",
+      "owner": "claude",
+      "priority": "MEDIUM",
+      "preconditions": [
+        "P5-38-TEMPLATE-KANBAN-FIX complete"
+      ],
+      "required_inputs": [
+        "templates/ai-substrate/app/documents/page.tsx"
+      ],
+      "required_actions": [
+        "Replace antd components with custom components"
+      ],
+      "required_outputs": [
+        "Updated templates/ai-substrate/app/documents/page.tsx"
+      ],
+      "validation_checks": [
+        "npm run dev succeeds",
+        "GET /documents returns 200",
+        "No antd imports remain"
+      ],
+      "exit_criteria": [
+        "Documents page uses only custom components"
+      ],
+      "halt_conditions": [],
+      "id": "P5-44-TEMPLATE-DOCUMENTS-FIX",
+      "wbs_ref": "8.8"
+    },
+    {
+      "packet_id": "P5-45-TEMPLATE-APPROVALS-FIX",
+      "wbs_refs": [
+        "8.9"
+      ],
+      "area_id": "8-0",
+      "title": "Migrate /approvals page to custom components",
+      "purpose": "Replace Ant Design with custom component library in approvals template.",
+      "status": "PENDING",
+      "owner": "claude",
+      "priority": "MEDIUM",
+      "preconditions": [
+        "P5-38-TEMPLATE-KANBAN-FIX complete"
+      ],
+      "required_inputs": [
+        "templates/ai-substrate/app/approvals/page.tsx"
+      ],
+      "required_actions": [
+        "Replace antd components with custom components"
+      ],
+      "required_outputs": [
+        "Updated templates/ai-substrate/app/approvals/page.tsx"
+      ],
+      "validation_checks": [
+        "npm run dev succeeds",
+        "GET /approvals returns 200",
+        "No antd imports remain"
+      ],
+      "exit_criteria": [
+        "Approvals page uses only custom components"
+      ],
+      "halt_conditions": [],
+      "id": "P5-45-TEMPLATE-APPROVALS-FIX",
+      "wbs_ref": "8.9"
+    },
+    {
+      "packet_id": "P5-46-TEMPLATE-PROMPT-LAB-FIX",
+      "wbs_refs": [
+        "8.10"
+      ],
+      "area_id": "8-0",
+      "title": "Migrate /prompt-lab page to custom components",
+      "purpose": "Replace Ant Design with custom component library in prompt-lab template.",
+      "status": "PENDING",
+      "owner": "claude",
+      "priority": "MEDIUM",
+      "preconditions": [
+        "P5-38-TEMPLATE-KANBAN-FIX complete"
+      ],
+      "required_inputs": [
+        "templates/ai-substrate/app/prompt-lab/page.tsx"
+      ],
+      "required_actions": [
+        "Replace antd components with custom components"
+      ],
+      "required_outputs": [
+        "Updated templates/ai-substrate/app/prompt-lab/page.tsx"
+      ],
+      "validation_checks": [
+        "npm run dev succeeds",
+        "GET /prompt-lab returns 200",
+        "No antd imports remain"
+      ],
+      "exit_criteria": [
+        "Prompt-lab page uses only custom components"
+      ],
+      "halt_conditions": [],
+      "id": "P5-46-TEMPLATE-PROMPT-LAB-FIX",
+      "wbs_ref": "8.10"
+    },
+    {
+      "packet_id": "P5-47-TEMPLATE-AGENT-CONSOLE-FIX",
+      "wbs_refs": [
+        "8.11"
+      ],
+      "area_id": "8-0",
+      "title": "Migrate /agent-console page to custom components",
+      "purpose": "Replace Ant Design with custom component library in agent-console template.",
+      "status": "PENDING",
+      "owner": "claude",
+      "priority": "MEDIUM",
+      "preconditions": [
+        "P5-38-TEMPLATE-KANBAN-FIX complete"
+      ],
+      "required_inputs": [
+        "templates/ai-substrate/app/agent-console/page.tsx"
+      ],
+      "required_actions": [
+        "Replace antd components with custom components"
+      ],
+      "required_outputs": [
+        "Updated templates/ai-substrate/app/agent-console/page.tsx"
+      ],
+      "validation_checks": [
+        "npm run dev succeeds",
+        "GET /agent-console returns 200",
+        "No antd imports remain"
+      ],
+      "exit_criteria": [
+        "Agent-console page uses only custom components"
+      ],
+      "halt_conditions": [],
+      "id": "P5-47-TEMPLATE-AGENT-CONSOLE-FIX",
+      "wbs_ref": "8.11"
+    },
+    {
+      "packet_id": "P5-48-TEMPLATE-NEW-FIX",
+      "wbs_refs": [
+        "8.12"
+      ],
+      "area_id": "8-0",
+      "title": "Migrate /new page to custom components",
+      "purpose": "Replace Ant Design with custom component library in new item template.",
+      "status": "PENDING",
+      "owner": "claude",
+      "priority": "MEDIUM",
+      "preconditions": [
+        "P5-38-TEMPLATE-KANBAN-FIX complete"
+      ],
+      "required_inputs": [
+        "templates/ai-substrate/app/new/page.tsx"
+      ],
+      "required_actions": [
+        "Replace antd components with custom components"
+      ],
+      "required_outputs": [
+        "Updated templates/ai-substrate/app/new/page.tsx"
+      ],
+      "validation_checks": [
+        "npm run dev succeeds",
+        "GET /new returns 200",
+        "No antd imports remain"
+      ],
+      "exit_criteria": [
+        "New page uses only custom components"
+      ],
+      "halt_conditions": [],
+      "id": "P5-48-TEMPLATE-NEW-FIX",
+      "wbs_ref": "8.12"
+    },
+    {
+      "packet_id": "P5-49-TEMPLATE-UX-CLEANUP",
+      "wbs_refs": [
+        "8.13"
+      ],
+      "area_id": "8-0",
+      "title": "Remove Ant Design dependency and validate UX consistency",
+      "purpose": "Remove antd from package.json and verify all template pages maintain consistency.",
+      "status": "PENDING",
+      "owner": "claude",
+      "priority": "HIGH",
+      "preconditions": [
+        "P5-38-TEMPLATE-KANBAN-FIX complete",
+        "P5-39-TEMPLATE-GANTT-FIX complete",
+        "P5-40-TEMPLATE-TIMELINE-FIX complete",
+        "P5-41-TEMPLATE-ASSISTANT-FIX complete",
+        "P5-42-TEMPLATE-CHAT-FIX complete",
+        "P5-43-TEMPLATE-KNOWLEDGE-FIX complete",
+        "P5-44-TEMPLATE-DOCUMENTS-FIX complete",
+        "P5-45-TEMPLATE-APPROVALS-FIX complete",
+        "P5-46-TEMPLATE-PROMPT-LAB-FIX complete",
+        "P5-47-TEMPLATE-AGENT-CONSOLE-FIX complete",
+        "P5-48-TEMPLATE-NEW-FIX complete"
+      ],
+      "required_inputs": [
+        "All migrated template pages",
+        "templates/ai-substrate/package.json"
+      ],
+      "required_actions": [
+        "Remove antd and @ant-design/* packages from package.json",
+        "Run npm install to update lockfile",
+        "Verify npm run build succeeds",
+        "Test all 11 template routes return 200",
+        "Visual consistency check across all pages",
+        "Bundle size comparison before/after"
+      ],
+      "required_outputs": [
+        "Updated package.json without antd",
+        "Build validation evidence",
+        "Visual consistency report"
+      ],
+      "validation_checks": [
+        "npm run build succeeds",
+        "All template routes return 200",
+        "No antd imports in codebase (grep verification)",
+        "Bundle size reduced",
+        "Visual consistency across all pages confirmed"
+      ],
+      "exit_criteria": [
+        "Ant Design completely removed",
+        "All template pages use custom components",
+        "Build and tests pass",
+        "Visual consistency validated"
+      ],
+      "halt_conditions": [
+        "Unexpected antd dependency found in other areas"
+      ],
+      "id": "P5-49-TEMPLATE-UX-CLEANUP",
+      "wbs_ref": "8.13"
     }
   ],
   "dependencies": {
-    "PRD4-01-SHARED-CORE-CONTRACT": [
-      "PRD4-00-SCOPE-MATRIX"
+    "P5-01-GOVERNANCE-POLICY-CORE": [
+      "P5-00-CONTRACT-BASELINE"
     ],
-    "PRD4-11-SNAPSHOT-DIFF": [
-      "PRD4-07-KERNEL-DOD-E2E",
-      "PRD4-06-IMMUTABLE-AUDIT"
+    "P5-02-AGENT-LLM-PROMPT-RUNTIME": [
+      "P5-01-GOVERNANCE-POLICY-CORE"
     ],
-    "PRD4-02-ONTOLOGY-MINIMUM": [
-      "PRD4-00-SCOPE-MATRIX"
+    "P5-03-BUDGET-RAG-STRUCTURED-OUTPUT": [
+      "P5-02-AGENT-LLM-PROMPT-RUNTIME"
     ],
-    "PRD4-12-REFERENCE-ONTOLOGY-V1": [
-      "PRD4-07-KERNEL-DOD-E2E"
+    "P5-04-AI-AUDIT-OBSERVABILITY": [
+      "P5-03-BUDGET-RAG-STRUCTURED-OUTPUT"
     ],
-    "PRD4-03-CONSTRAINT-PIPELINE": [
-      "PRD4-01-SHARED-CORE-CONTRACT",
-      "PRD4-02-ONTOLOGY-MINIMUM"
+    "P5-05-AI-SECURITY-GUARDS": [
+      "P5-01-GOVERNANCE-POLICY-CORE",
+      "P5-03-BUDGET-RAG-STRUCTURED-OUTPUT"
     ],
-    "PRD4-04-POLICY-ENGINE-BASE": [
-      "PRD4-03-CONSTRAINT-PIPELINE"
+    "P5-06-AI-BACKEND-DOD": [
+      "P5-04-AI-AUDIT-OBSERVABILITY",
+      "P5-05-AI-SECURITY-GUARDS"
     ],
-    "PRD4-08-POLICY-VERSIONING": [
-      "PRD4-07-KERNEL-DOD-E2E"
+    "P5-07-MULTIUSER-GOVERNANCE-SCHEMA": [
+      "P5-00-CONTRACT-BASELINE"
     ],
-    "PRD4-10-OPA-COMPAT-ADAPTER": [
-      "PRD4-08-POLICY-VERSIONING"
+    "P5-08-EXECUTION-DATA-SEARCH-JOBS": [
+      "P5-07-MULTIUSER-GOVERNANCE-SCHEMA"
     ],
-    "PRD4-09-TRUST-SCORING-V1": [
-      "PRD4-07-KERNEL-DOD-E2E",
-      "PRD4-08-POLICY-VERSIONING"
+    "P5-09-INFRA-OBSERVABILITY-DEPLOY": [
+      "P5-08-EXECUTION-DATA-SEARCH-JOBS"
     ],
-    "PRD4-05-GRAPH-CORE-POSTGRES": [
-      "PRD4-02-ONTOLOGY-MINIMUM"
+    "P5-10-BACKEND-INFRA-DOD": [
+      "P5-09-INFRA-OBSERVABILITY-DEPLOY"
     ],
-    "PRD4-06-IMMUTABLE-AUDIT": [
-      "PRD4-01-SHARED-CORE-CONTRACT",
-      "PRD4-04-POLICY-ENGINE-BASE"
+    "P5-11-FRONTEND-FOUNDATION": [
+      "P5-00-CONTRACT-BASELINE",
+      "P5-09-INFRA-OBSERVABILITY-DEPLOY"
     ],
-    "PRD4-07-KERNEL-DOD-E2E": [
-      "PRD4-03-CONSTRAINT-PIPELINE",
-      "PRD4-04-POLICY-ENGINE-BASE",
-      "PRD4-05-GRAPH-CORE-POSTGRES",
-      "PRD4-06-IMMUTABLE-AUDIT"
+    "P5-12-CORE-AI-WORKSPACES": [
+      "P5-11-FRONTEND-FOUNDATION",
+      "P5-06-AI-BACKEND-DOD"
+    ],
+    "P5-13-OPS-WORKSPACES": [
+      "P5-11-FRONTEND-FOUNDATION",
+      "P5-08-EXECUTION-DATA-SEARCH-JOBS"
+    ],
+    "P5-14-FRONTEND-DOD": [
+      "P5-12-CORE-AI-WORKSPACES",
+      "P5-13-OPS-WORKSPACES"
+    ],
+    "P5-15-TEMPLATE-CONTRACT-INSTALLER": [
+      "P5-00-CONTRACT-BASELINE",
+      "P5-07-MULTIUSER-GOVERNANCE-SCHEMA",
+      "P5-11-FRONTEND-FOUNDATION"
+    ],
+    "P5-16-TEMPLATE-LIBRARY-VERSIONING": [
+      "P5-15-TEMPLATE-CONTRACT-INSTALLER"
+    ],
+    "P5-17-TEMPLATE-DOD": [
+      "P5-16-TEMPLATE-LIBRARY-VERSIONING"
+    ],
+    "P5-18-ANALYTICS-PIPELINE-APIS": [
+      "P5-08-EXECUTION-DATA-SEARCH-JOBS",
+      "P5-04-AI-AUDIT-OBSERVABILITY"
+    ],
+    "P5-19-ANALYTICS-EXPORT-PERF": [
+      "P5-18-ANALYTICS-PIPELINE-APIS"
+    ],
+    "P5-20-ANALYTICS-DOD": [
+      "P5-19-ANALYTICS-EXPORT-PERF"
+    ],
+    "P5-21-AUTH-RBAC": [
+      "P5-07-MULTIUSER-GOVERNANCE-SCHEMA"
+    ],
+    "P5-22-PROTECTION-SANDBOX-RATELIMIT": [
+      "P5-21-AUTH-RBAC",
+      "P5-03-BUDGET-RAG-STRUCTURED-OUTPUT",
+      "P5-01-GOVERNANCE-POLICY-CORE"
+    ],
+    "P5-23-AUDIT-COMPLIANCE-RECOVERY": [
+      "P5-22-PROTECTION-SANDBOX-RATELIMIT",
+      "P5-04-AI-AUDIT-OBSERVABILITY"
+    ],
+    "P5-24-SECURITY-DOD": [
+      "P5-21-AUTH-RBAC",
+      "P5-22-PROTECTION-SANDBOX-RATELIMIT",
+      "P5-23-AUDIT-COMPLIANCE-RECOVERY",
+      "P5-06-AI-BACKEND-DOD"
+    ],
+    "P5-38-TEMPLATE-KANBAN-FIX": [
+      "P5-37-TEMPLATE-UX-AUDIT"
+    ],
+    "P5-39-TEMPLATE-GANTT-FIX": [
+      "P5-38-TEMPLATE-KANBAN-FIX"
+    ],
+    "P5-40-TEMPLATE-TIMELINE-FIX": [
+      "P5-38-TEMPLATE-KANBAN-FIX"
+    ],
+    "P5-41-TEMPLATE-ASSISTANT-FIX": [
+      "P5-38-TEMPLATE-KANBAN-FIX"
+    ],
+    "P5-42-TEMPLATE-CHAT-FIX": [
+      "P5-38-TEMPLATE-KANBAN-FIX"
+    ],
+    "P5-43-TEMPLATE-KNOWLEDGE-FIX": [
+      "P5-38-TEMPLATE-KANBAN-FIX"
+    ],
+    "P5-44-TEMPLATE-DOCUMENTS-FIX": [
+      "P5-38-TEMPLATE-KANBAN-FIX"
+    ],
+    "P5-45-TEMPLATE-APPROVALS-FIX": [
+      "P5-38-TEMPLATE-KANBAN-FIX"
+    ],
+    "P5-46-TEMPLATE-PROMPT-LAB-FIX": [
+      "P5-38-TEMPLATE-KANBAN-FIX"
+    ],
+    "P5-47-TEMPLATE-AGENT-CONSOLE-FIX": [
+      "P5-38-TEMPLATE-KANBAN-FIX"
+    ],
+    "P5-48-TEMPLATE-NEW-FIX": [
+      "P5-38-TEMPLATE-KANBAN-FIX"
+    ],
+    "P5-49-TEMPLATE-UX-CLEANUP": [
+      "P5-38-TEMPLATE-KANBAN-FIX",
+      "P5-39-TEMPLATE-GANTT-FIX",
+      "P5-40-TEMPLATE-TIMELINE-FIX",
+      "P5-41-TEMPLATE-ASSISTANT-FIX",
+      "P5-42-TEMPLATE-CHAT-FIX",
+      "P5-43-TEMPLATE-KNOWLEDGE-FIX",
+      "P5-44-TEMPLATE-DOCUMENTS-FIX",
+      "P5-45-TEMPLATE-APPROVALS-FIX",
+      "P5-46-TEMPLATE-PROMPT-LAB-FIX",
+      "P5-47-TEMPLATE-AGENT-CONSOLE-FIX",
+      "P5-48-TEMPLATE-NEW-FIX"
     ]
   }
 }

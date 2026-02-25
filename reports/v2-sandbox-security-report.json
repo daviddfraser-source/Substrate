@@ -1,0 +1,16 @@
+{
+  "timestamp": "2026-02-24T04:05:27Z",
+  "viewer_status_access_http": 403,
+  "viewer_terminal_access_http": 403,
+  "viewer_status_message": "Developer role required",
+  "viewer_terminal_message": "Developer role required",
+  "dev_blocked_shell_success": false,
+  "dev_blocked_shell_message": "Command blocked by sandbox policy",
+  "dev_allowed_validate_success": true,
+  "security_assertions": {
+    "viewer_denied_status": true,
+    "viewer_denied_terminal": true,
+    "shell_blocked_in_production": true,
+    "whitelisted_command_allowed": true
+  }
+}

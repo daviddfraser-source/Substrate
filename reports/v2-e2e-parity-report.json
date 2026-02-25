@@ -1,0 +1,21 @@
+{
+  "timestamp": "2026-02-24T04:03:11Z",
+  "authenticated": true,
+  "sample_packet": "PRD-13-2",
+  "claim_result": {
+    "success": true,
+    "message": "PRD-13-2 claimed by codex-e2e"
+  },
+  "terminal_validate_success": true,
+  "terminal_graph_success": true,
+  "terminal_metrics": {
+    "terminal_commands_total": 3,
+    "terminal_failures_total": 0,
+    "terminal_latency_avg_ms": 382,
+    "terminal_latency_p95_ms": 414,
+    "terminal_sandbox_mode": "production"
+  },
+  "onboarding_seconds_estimate": 1.63,
+  "target_under_180_seconds": true,
+  "cli_ui_parity_observed": true
+}

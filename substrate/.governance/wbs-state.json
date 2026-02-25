@@ -1,0 +1,1212 @@
+{
+  "version": "1.0",
+  "created_at": "2026-02-17T15:34:29.879592",
+  "updated_at": "2026-02-24T09:20:12.714885",
+  "packets": {
+    "MIN-1-1": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:34:31",
+      "completed_at": "2026-02-17T15:34:33.146949",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "MIN-2-1": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:34:31",
+      "completed_at": "2026-02-17T15:34:33.146949",
+      "notes": null
+    },
+    "MIN-3-1": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:34:31",
+      "completed_at": "2026-02-17T15:34:33.146949",
+      "notes": null
+    },
+    "MIN-4-1": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:34:31",
+      "completed_at": "2026-02-17T15:34:33.146949",
+      "notes": null
+    },
+    "RSK-5-1": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-17T15:34:33.146949",
+      "notes": null
+    },
+    "RSK-5-2": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-17T15:34:33.146949",
+      "notes": null
+    },
+    "RSK-5-3": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-17T15:34:33.146949",
+      "notes": null
+    },
+    "RSK-5-4": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-17T15:34:33.146949",
+      "notes": null
+    },
+    "RSK-5-5": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-17T15:34:33.146949",
+      "notes": null
+    },
+    "E2E-6-1": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-23T08:04:08",
+      "notes": null
+    },
+    "E2E-6-2": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-23T08:04:08",
+      "notes": null
+    },
+    "E2E-6-3": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-23T08:04:08",
+      "notes": null
+    },
+    "E2E-6-4": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-23T08:04:08",
+      "notes": null
+    },
+    "E2E-6-5": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-23T08:04:08",
+      "notes": null
+    },
+    "BF-7-1": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-23T08:26:01",
+      "notes": null
+    },
+    "BF-7-2": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-23T08:26:01",
+      "notes": null
+    },
+    "BF-7-3": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-23T08:26:01",
+      "notes": null
+    },
+    "BF-7-4": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-23T08:26:01",
+      "notes": null
+    },
+    "BF-7-5": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-23T08:26:01",
+      "notes": null
+    },
+    "BF-7-6": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-23T08:26:01",
+      "notes": null
+    },
+    "OPT-12-1": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-23T08:59:50",
+      "notes": null
+    },
+    "OPT-12-2": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-23T08:59:50",
+      "notes": null
+    },
+    "OPT-12-3": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-23T08:59:50",
+      "notes": null
+    },
+    "OPT-12-4": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-23T08:59:50",
+      "notes": null
+    },
+    "OPT-12-5": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-23T08:59:50",
+      "notes": null
+    },
+    "OPT-12-6": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-23T08:59:50",
+      "notes": null
+    },
+    "OPT-12-7": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-23T08:59:50",
+      "notes": null
+    },
+    "OPT-12-8": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-23T08:59:50",
+      "notes": null
+    },
+    "GOV-13-1": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-23T15:56:05",
+      "notes": null
+    },
+    "GOV-13-2": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-23T15:56:05",
+      "notes": null
+    },
+    "GOV-13-3": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-23T15:56:05",
+      "notes": null
+    },
+    "GOV-13-4": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-23T15:56:05",
+      "notes": null
+    },
+    "GOV-13-5": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-23T15:56:05",
+      "notes": null
+    },
+    "GOV-13-6": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-23T15:56:05",
+      "notes": null
+    },
+    "GOV-13-7": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-23T15:56:05",
+      "notes": null
+    },
+    "GOV-13-8": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-23T15:56:05",
+      "notes": null
+    },
+    "REM-14-1": {
+      "status": "done",
+      "assigned_to": "claude",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-23T17:51:27",
+      "notes": null
+    },
+    "REM-14-2": {
+      "status": "done",
+      "assigned_to": "claude",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-23T17:56:08",
+      "notes": null
+    },
+    "REM-14-3": {
+      "status": "done",
+      "assigned_to": "gemini",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-23T18:24:39",
+      "notes": null
+    },
+    "REM-14-4": {
+      "status": "done",
+      "assigned_to": "claude",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-23T17:58:53",
+      "notes": null
+    },
+    "REM-14-5": {
+      "status": "done",
+      "assigned_to": "gemini",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-23T18:29:51",
+      "notes": null
+    },
+    "REM-14-6": {
+      "status": "done",
+      "assigned_to": "gemini",
+      "started_at": "2026-02-23T08:00:00",
+      "completed_at": "2026-02-23T19:35:00",
+      "notes": "Fixed undefined WBS_STATE/WBS_DEF/BREAK_FIX_STORE_PATH/RESIDUAL_RISK_REGISTER_PATH globals in wbs_cli.py. Introduced _PathAccessor proxy class (os.PathLike) with use-time resolvers. Replaced bare-global usages in save_state(), governance_engine(), _snapshot_state_bytes(), _restore_state_bytes(), require_state(), save_definition(). Updated apply_runtime_project() docstring documenting env-var resolution contract. Evidence: substrate/.governance/wbs_cli.py. Validation: python -m py_compile (pass); test_cli_contract.py 10/10 pass; server API failures confirmed pre-existing WinError (not caused by this change). State recovery required due to wbs-state.json clobbered by test_server_api.py teardown."
+    },
+    "RW-15-1": {
+      "status": "done",
+      "assigned_to": "gemini",
+      "started_at": "2026-02-24T08:30:14.593093",
+      "completed_at": "2026-02-24T08:41:29.546136",
+      "notes": "Updated GEMINI.md \u2014 added '## Ralph Wiggum Self-Check' section (~40 lines) with Pre-Claim Check, Pre-Done Check, and Non-Goals sub-sections. Validated: Select-String confirmed all 4 target headings present (6 matches). Consistent with constitution.md Article I \u00a73."
+    },
+    "RW-15-2": {
+      "status": "done",
+      "assigned_to": "gemini",
+      "started_at": "2026-02-24T08:46:26.622612",
+      "completed_at": "2026-02-24T08:47:52.368985",
+      "notes": "Updated CLAUDE.md \u2014 added Ralph Wiggum Self-Check section (~45 lines) consistent with GEMINI.md; noted plan-mode relationship and hooks context specific to Claude. Files: CLAUDE.md. Validation: Select-String 5 matches (all target headings present). Risk: none."
+    },
+    "RW-15-3": {
+      "status": "done",
+      "assigned_to": "gemini",
+      "started_at": "2026-02-24T08:46:26.781109",
+      "completed_at": "2026-02-24T08:48:03.865547",
+      "notes": "Created .gemini/skills/ralph-wiggum/SKILL.md (82 lines) \u2014 YAML frontmatter (name, description), Pre-Claim Checklist, Pre-Done Checklist, examples (good/bad), Non-Goals. Files: .gemini/skills/ralph-wiggum/SKILL.md. Validation: Select-String 6 matches (frontmatter + all section headings present). Risk: none."
+    },
+    "RW-15-4": {
+      "status": "done",
+      "assigned_to": "gemini",
+      "started_at": "2026-02-24T08:52:33.198872",
+      "completed_at": "2026-02-24T08:53:44.768026",
+      "notes": "Updated AGENTS.md and codex.md with Ralph Wiggum Self-Check cross-reference sections. Validated manually. Risk: none."
+    },
+    "VSX-16-1": {
+      "status": "done",
+      "assigned_to": "gemini",
+      "started_at": "2026-02-24T09:10:45.517772",
+      "completed_at": "2026-02-24T09:11:43.972426",
+      "notes": "Created substrate/.governance/mcp_server.py using FastMCP. Plumbed wbs_cli.py commands into native exposed tools (ready, claim, done, status, context, log). Validated by installing mcp (v1.26.0) and successfully loading the module in python."
+    },
+    "VSX-16-2": {
+      "status": "done",
+      "assigned_to": "gemini",
+      "started_at": "2026-02-24T09:12:04.536629",
+      "completed_at": "2026-02-24T09:18:43.278267",
+      "notes": "Created substrate/.governance/update_ambient_state.py. It reads wbs-state.json to find the active 'in_progress' packet for the agent and writes the scope/validation checks to .gemini/system_prompt_addition.md. Hooked update_ambient_state() into the claim_packet and mark_packet_done functions in mcp_server.py to keep ambient context synchronized automatically. Validated by running the script and confirming the markdown file renders the active packet context."
+    },
+    "VSX-16-3": {
+      "status": "done",
+      "assigned_to": "gemini",
+      "started_at": "2026-02-24T09:19:00.682277",
+      "completed_at": "2026-02-24T09:19:22.031031",
+      "notes": "Created .gemini/skills/claim-with-task/SKILL.md to map the governance JSON schema into the native VS Code task.md UI. Instructs the agent to claim via MCP, extract required actions/validations via the context MCP tool, and overwrite task.md before declaring the task boundary. Validated file structure and markdown."
+    },
+    "VSX-16-4": {
+      "status": "done",
+      "assigned_to": "gemini",
+      "started_at": "2026-02-24T09:19:39.443430",
+      "completed_at": "2026-02-24T09:19:57.636102",
+      "notes": "Created .gemini/skills/auto-done/SKILL.md to replace manual Ralph Wiggum narration with programmatic execution. Instructs the agent to algorithmically query git log/status and test outputs to synthesize evidence before invoking the mark_packet_done MCP tool. Evaluated file structure against VSX-16-4 JSON scope requirements."
+    }
+  },
+  "log": [
+    {
+      "packet_id": "MIN-1-1",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:31",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "MIN-1-1",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:33.146949",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "MIN-2-1",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:31",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "MIN-2-1",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:33.146949",
+      "notes": "MIN-2-1 completed"
+    },
+    {
+      "packet_id": "MIN-3-1",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:31",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "MIN-3-1",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:33.146949",
+      "notes": "MIN-3-1 completed"
+    },
+    {
+      "packet_id": "MIN-4-1",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:31",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "MIN-4-1",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:33.146949",
+      "notes": "MIN-4-1 completed"
+    },
+    {
+      "packet_id": "RSK-5-1",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "RSK-5-1",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:33.146949",
+      "notes": "RSK-5-1 completed"
+    },
+    {
+      "packet_id": "RSK-5-2",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "RSK-5-2",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:33.146949",
+      "notes": "RSK-5-2 completed"
+    },
+    {
+      "packet_id": "RSK-5-3",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "RSK-5-3",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:33.146949",
+      "notes": "RSK-5-3 completed"
+    },
+    {
+      "packet_id": "RSK-5-4",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "RSK-5-4",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:33.146949",
+      "notes": "RSK-5-4 completed"
+    },
+    {
+      "packet_id": "RSK-5-5",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "RSK-5-5",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:33.146949",
+      "notes": "RSK-5-5 completed"
+    },
+    {
+      "packet_id": "E2E-6-1",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "E2E-6-1",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:04:08",
+      "notes": "E2E-6-1 completed"
+    },
+    {
+      "packet_id": "E2E-6-2",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "E2E-6-2",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:04:08",
+      "notes": "E2E-6-2 completed"
+    },
+    {
+      "packet_id": "E2E-6-3",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "E2E-6-3",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:04:08",
+      "notes": "E2E-6-3 completed"
+    },
+    {
+      "packet_id": "E2E-6-4",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "E2E-6-4",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:04:08",
+      "notes": "E2E-6-4 completed"
+    },
+    {
+      "packet_id": "E2E-6-5",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "E2E-6-5",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:04:08",
+      "notes": "E2E-6-5 completed"
+    },
+    {
+      "packet_id": "BF-7-1",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "BF-7-1",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:26:01",
+      "notes": "BF-7-1 completed"
+    },
+    {
+      "packet_id": "BF-7-2",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "BF-7-2",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:26:01",
+      "notes": "BF-7-2 completed"
+    },
+    {
+      "packet_id": "BF-7-3",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "BF-7-3",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:26:01",
+      "notes": "BF-7-3 completed"
+    },
+    {
+      "packet_id": "BF-7-4",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "BF-7-4",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:26:01",
+      "notes": "BF-7-4 completed"
+    },
+    {
+      "packet_id": "BF-7-5",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "BF-7-5",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:26:01",
+      "notes": "BF-7-5 completed"
+    },
+    {
+      "packet_id": "BF-7-6",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "BF-7-6",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:26:01",
+      "notes": "BF-7-6 completed"
+    },
+    {
+      "packet_id": "OPT-12-1",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "OPT-12-1",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:59:50",
+      "notes": "OPT-12-1 completed"
+    },
+    {
+      "packet_id": "OPT-12-2",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "OPT-12-2",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:59:50",
+      "notes": "OPT-12-2 completed"
+    },
+    {
+      "packet_id": "OPT-12-3",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "OPT-12-3",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:59:50",
+      "notes": "OPT-12-3 completed"
+    },
+    {
+      "packet_id": "OPT-12-4",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "OPT-12-4",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:59:50",
+      "notes": "OPT-12-4 completed"
+    },
+    {
+      "packet_id": "OPT-12-5",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "OPT-12-5",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:59:50",
+      "notes": "OPT-12-5 completed"
+    },
+    {
+      "packet_id": "OPT-12-6",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "OPT-12-6",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:59:50",
+      "notes": "OPT-12-6 completed"
+    },
+    {
+      "packet_id": "OPT-12-7",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "OPT-12-7",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:59:50",
+      "notes": "OPT-12-7 completed"
+    },
+    {
+      "packet_id": "OPT-12-8",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "OPT-12-8",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:59:50",
+      "notes": "OPT-12-8 completed"
+    },
+    {
+      "packet_id": "GOV-13-1",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "GOV-13-1",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T15:56:05",
+      "notes": "GOV-13-1 completed"
+    },
+    {
+      "packet_id": "GOV-13-2",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "GOV-13-2",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T15:56:05",
+      "notes": "GOV-13-2 completed"
+    },
+    {
+      "packet_id": "GOV-13-3",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "GOV-13-3",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T15:56:05",
+      "notes": "GOV-13-3 completed"
+    },
+    {
+      "packet_id": "GOV-13-4",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "GOV-13-4",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T15:56:05",
+      "notes": "GOV-13-4 completed"
+    },
+    {
+      "packet_id": "GOV-13-5",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "GOV-13-5",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T15:56:05",
+      "notes": "GOV-13-5 completed"
+    },
+    {
+      "packet_id": "GOV-13-6",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "GOV-13-6",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T15:56:05",
+      "notes": "GOV-13-6 completed"
+    },
+    {
+      "packet_id": "GOV-13-7",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "GOV-13-7",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T15:56:05",
+      "notes": "GOV-13-7 completed"
+    },
+    {
+      "packet_id": "GOV-13-8",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "GOV-13-8",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T15:56:05",
+      "notes": "GOV-13-8 completed"
+    },
+    {
+      "packet_id": "REM-14-1",
+      "event": "started",
+      "agent": "claude",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by claude"
+    },
+    {
+      "packet_id": "REM-14-1",
+      "event": "completed",
+      "agent": "claude",
+      "timestamp": "2026-02-23T17:51:27",
+      "notes": "REM-14-1 completed"
+    },
+    {
+      "packet_id": "REM-14-2",
+      "event": "started",
+      "agent": "claude",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by claude"
+    },
+    {
+      "packet_id": "REM-14-2",
+      "event": "completed",
+      "agent": "claude",
+      "timestamp": "2026-02-23T17:56:08",
+      "notes": "REM-14-2 completed"
+    },
+    {
+      "packet_id": "REM-14-3",
+      "event": "started",
+      "agent": "gemini",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by gemini"
+    },
+    {
+      "packet_id": "REM-14-3",
+      "event": "completed",
+      "agent": "gemini",
+      "timestamp": "2026-02-23T18:24:39",
+      "notes": "REM-14-3 completed"
+    },
+    {
+      "packet_id": "REM-14-4",
+      "event": "started",
+      "agent": "claude",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by claude"
+    },
+    {
+      "packet_id": "REM-14-4",
+      "event": "completed",
+      "agent": "claude",
+      "timestamp": "2026-02-23T17:58:53",
+      "notes": "REM-14-4 completed"
+    },
+    {
+      "packet_id": "REM-14-5",
+      "event": "started",
+      "agent": "gemini",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by gemini"
+    },
+    {
+      "packet_id": "REM-14-5",
+      "event": "completed",
+      "agent": "gemini",
+      "timestamp": "2026-02-23T18:29:51",
+      "notes": "REM-14-5 completed"
+    },
+    {
+      "packet_id": "REM-14-6",
+      "event": "started",
+      "agent": "gemini",
+      "timestamp": "2026-02-23T08:00:00",
+      "notes": "Claimed by gemini"
+    },
+    {
+      "packet_id": "REM-14-6",
+      "event": "completed",
+      "agent": "gemini",
+      "timestamp": "2026-02-23T19:35:00",
+      "notes": "Fixed undefined WBS_STATE/WBS_DEF/BREAK_FIX_STORE_PATH/RESIDUAL_RISK_REGISTER_PATH globals in wbs_cli.py. Introduced _PathAccessor proxy class (os.PathLike) with use-time resolvers. Replaced bare-global usages in save_state(), governance_engine(), _snapshot_state_bytes(), _restore_state_bytes(), require_state(), save_definition(). Updated apply_runtime_project() docstring documenting env-var resolution contract. Evidence: substrate/.governance/wbs_cli.py. Validation: python -m py_compile (pass); test_cli_contract.py 10/10 pass; server API failures confirmed pre-existing WinError (not caused by this change). State recovery required due to wbs-state.json clobbered by test_server_api.py teardown."
+    },
+    {
+      "packet_id": "AREA-1.0",
+      "event": "area_closed",
+      "agent": "gemini",
+      "timestamp": "2026-02-24T08:08:30.782482",
+      "notes": "Drift assessment: substrate/docs/codex-migration/drift-wbs1.md | All MIN-1-* packets done. Scaffold init confirmed operational via 42 subsequent packet executions."
+    },
+    {
+      "packet_id": "AREA-2.0",
+      "event": "area_closed",
+      "agent": "gemini",
+      "timestamp": "2026-02-24T08:08:43.149936",
+      "notes": "Drift assessment: substrate/docs/codex-migration/drift-wbs2.md | All MIN-2-* packets done. Core claim-execute-done workflow confirmed via full project execution."
+    },
+    {
+      "packet_id": "AREA-3.0",
+      "event": "area_closed",
+      "agent": "gemini",
+      "timestamp": "2026-02-24T08:08:54.306759",
+      "notes": "Drift assessment: substrate/docs/codex-migration/drift-wbs3.md | All MIN-3-* packets done. Quality baseline confirmed active via validation checks in all subsequent WBS areas."
+    },
+    {
+      "packet_id": "AREA-14.0",
+      "event": "area_closed",
+      "agent": "gemini",
+      "timestamp": "2026-02-24T08:09:03.907874",
+      "notes": "Drift assessment: substrate/docs/codex-migration/drift-wbs14-remediation-2026-02-24.md | All REM-14-* packets done. Remediation of WBS 13.0 review findings complete. Residual risks: test teardown state clobber, Windows WinError (both pre-existing)."
+    },
+    {
+      "packet_id": "RW-15-1",
+      "event": "started",
+      "agent": "gemini",
+      "timestamp": "2026-02-24T08:30:14.593112",
+      "notes": "Claimed by gemini"
+    },
+    {
+      "packet_id": "RW-15-1",
+      "event": "completed",
+      "agent": "gemini",
+      "timestamp": "2026-02-24T08:41:29.546143",
+      "notes": "Updated GEMINI.md \u2014 added '## Ralph Wiggum Self-Check' section (~40 lines) with Pre-Claim Check, Pre-Done Check, and Non-Goals sub-sections. Validated: Select-String confirmed all 4 target headings present (6 matches). Consistent with constitution.md Article I \u00a73.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "RW-15-2",
+      "event": "started",
+      "agent": "gemini",
+      "timestamp": "2026-02-24T08:46:26.622631",
+      "notes": "Claimed by gemini"
+    },
+    {
+      "packet_id": "RW-15-3",
+      "event": "started",
+      "agent": "gemini",
+      "timestamp": "2026-02-24T08:46:26.781129",
+      "notes": "Claimed by gemini"
+    },
+    {
+      "packet_id": "RW-15-2",
+      "event": "completed",
+      "agent": "gemini",
+      "timestamp": "2026-02-24T08:47:52.368990",
+      "notes": "Updated CLAUDE.md \u2014 added Ralph Wiggum Self-Check section (~45 lines) consistent with GEMINI.md; noted plan-mode relationship and hooks context specific to Claude. Files: CLAUDE.md. Validation: Select-String 5 matches (all target headings present). Risk: none.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "RW-15-3",
+      "event": "completed",
+      "agent": "gemini",
+      "timestamp": "2026-02-24T08:48:03.865553",
+      "notes": "Created .gemini/skills/ralph-wiggum/SKILL.md (82 lines) \u2014 YAML frontmatter (name, description), Pre-Claim Checklist, Pre-Done Checklist, examples (good/bad), Non-Goals. Files: .gemini/skills/ralph-wiggum/SKILL.md. Validation: Select-String 6 matches (frontmatter + all section headings present). Risk: none.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "RW-15-4",
+      "event": "started",
+      "agent": "gemini",
+      "timestamp": "2026-02-24T08:52:33.198890",
+      "notes": "Claimed by gemini"
+    },
+    {
+      "packet_id": "RW-15-4",
+      "event": "completed",
+      "agent": "gemini",
+      "timestamp": "2026-02-24T08:53:44.768032",
+      "notes": "Updated AGENTS.md and codex.md with Ralph Wiggum Self-Check cross-reference sections. Validated manually. Risk: none.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "AREA-15.0",
+      "event": "area_closed",
+      "agent": "gemini",
+      "timestamp": "2026-02-24T09:01:54.184776",
+      "notes": "Drift assessment: substrate/docs/codex-migration/drift-wbs15.md | All RW-15-* packets done. Ralph Wiggum checklist is active and documented across all agent integration profiles."
+    },
+    {
+      "packet_id": "VSX-16-1",
+      "event": "started",
+      "agent": "gemini",
+      "timestamp": "2026-02-24T09:10:45.517789",
+      "notes": "Claimed by gemini"
+    },
+    {
+      "packet_id": "VSX-16-1",
+      "event": "completed",
+      "agent": "gemini",
+      "timestamp": "2026-02-24T09:11:43.972432",
+      "notes": "Created substrate/.governance/mcp_server.py using FastMCP. Plumbed wbs_cli.py commands into native exposed tools (ready, claim, done, status, context, log). Validated by installing mcp (v1.26.0) and successfully loading the module in python.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "VSX-16-2",
+      "event": "started",
+      "agent": "gemini",
+      "timestamp": "2026-02-24T09:12:04.536648",
+      "notes": "Claimed by gemini"
+    },
+    {
+      "packet_id": "VSX-16-2",
+      "event": "completed",
+      "agent": "gemini",
+      "timestamp": "2026-02-24T09:18:43.278273",
+      "notes": "Created substrate/.governance/update_ambient_state.py. It reads wbs-state.json to find the active 'in_progress' packet for the agent and writes the scope/validation checks to .gemini/system_prompt_addition.md. Hooked update_ambient_state() into the claim_packet and mark_packet_done functions in mcp_server.py to keep ambient context synchronized automatically. Validated by running the script and confirming the markdown file renders the active packet context.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "VSX-16-3",
+      "event": "started",
+      "agent": "gemini",
+      "timestamp": "2026-02-24T09:19:00.682296",
+      "notes": "Claimed by gemini"
+    },
+    {
+      "packet_id": "VSX-16-3",
+      "event": "completed",
+      "agent": "gemini",
+      "timestamp": "2026-02-24T09:19:22.031038",
+      "notes": "Created .gemini/skills/claim-with-task/SKILL.md to map the governance JSON schema into the native VS Code task.md UI. Instructs the agent to claim via MCP, extract required actions/validations via the context MCP tool, and overwrite task.md before declaring the task boundary. Validated file structure and markdown.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "VSX-16-4",
+      "event": "started",
+      "agent": "gemini",
+      "timestamp": "2026-02-24T09:19:39.443449",
+      "notes": "Claimed by gemini"
+    },
+    {
+      "packet_id": "VSX-16-4",
+      "event": "completed",
+      "agent": "gemini",
+      "timestamp": "2026-02-24T09:19:57.636110",
+      "notes": "Created .gemini/skills/auto-done/SKILL.md to replace manual Ralph Wiggum narration with programmatic execution. Instructs the agent to algorithmically query git log/status and test outputs to synthesize evidence before invoking the mark_packet_done MCP tool. Evaluated file structure against VSX-16-4 JSON scope requirements.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "AREA-16.0",
+      "event": "area_closed",
+      "agent": "gemini",
+      "timestamp": "2026-02-24T09:20:12.714880",
+      "notes": "Drift assessment: substrate/docs/codex-migration/drift-wbs16.md | All VSX-16-* packets done. VS Code & Antigravity native integrations, including the MCP server and ambient state injection, are active."
+    }
+  ],
+  "area_closeouts": {
+    "4.0": {
+      "status": "closed",
+      "closed_by": "codex",
+      "drift_assessment_path": "docs/codex-migration/drift-wbs4-minimal-2026-02-17.md",
+      "closed_at": "2026-02-17T17:18:23"
+    },
+    "5.0": {
+      "status": "closed",
+      "closed_by": "codex",
+      "drift_assessment_path": "docs/codex-migration/drift-wbs5-residual-risk-2026-02-17.md",
+      "closed_at": "2026-02-17T17:06:59"
+    },
+    "6.0": {
+      "status": "closed",
+      "closed_by": "codex",
+      "drift_assessment_path": "substrate/docs/codex-migration/drift-wbs6.md",
+      "closed_at": "2026-02-23T08:04:08"
+    },
+    "7.0": {
+      "status": "closed",
+      "closed_by": "codex",
+      "drift_assessment_path": "substrate/docs/codex-migration/drift-wbs7.md",
+      "closed_at": "2026-02-23T08:26:01"
+    },
+    "12.0": {
+      "status": "closed",
+      "closed_by": "codex",
+      "drift_assessment_path": "substrate/docs/codex-migration/drift-wbs12.md",
+      "closed_at": "2026-02-23T08:59:50"
+    },
+    "13.0": {
+      "status": "closed",
+      "closed_by": "codex",
+      "drift_assessment_path": "substrate/docs/codex-migration/drift-wbs13.md",
+      "closed_at": "2026-02-23T15:56:05"
+    },
+    "1.0": {
+      "status": "closed",
+      "area_title": "Scaffold Init",
+      "closed_by": "gemini",
+      "closed_at": "2026-02-24T08:08:30.782456",
+      "drift_assessment_path": "substrate/docs/codex-migration/drift-wbs1.md",
+      "notes": "All MIN-1-* packets done. Scaffold init confirmed operational via 42 subsequent packet executions.",
+      "integrity_method": "review-based (no cryptographic hashing required)"
+    },
+    "2.0": {
+      "status": "closed",
+      "area_title": "Core Workflow",
+      "closed_by": "gemini",
+      "closed_at": "2026-02-24T08:08:43.149915",
+      "drift_assessment_path": "substrate/docs/codex-migration/drift-wbs2.md",
+      "notes": "All MIN-2-* packets done. Core claim-execute-done workflow confirmed via full project execution.",
+      "integrity_method": "review-based (no cryptographic hashing required)"
+    },
+    "3.0": {
+      "status": "closed",
+      "area_title": "Quality Baseline",
+      "closed_by": "gemini",
+      "closed_at": "2026-02-24T08:08:54.306737",
+      "drift_assessment_path": "substrate/docs/codex-migration/drift-wbs3.md",
+      "notes": "All MIN-3-* packets done. Quality baseline confirmed active via validation checks in all subsequent WBS areas.",
+      "integrity_method": "review-based (no cryptographic hashing required)"
+    },
+    "14.0": {
+      "status": "closed",
+      "area_title": "Review Remediation - WBS 13.0 Findings",
+      "closed_by": "gemini",
+      "closed_at": "2026-02-24T08:09:03.907851",
+      "drift_assessment_path": "substrate/docs/codex-migration/drift-wbs14-remediation-2026-02-24.md",
+      "notes": "All REM-14-* packets done. Remediation of WBS 13.0 review findings complete. Residual risks: test teardown state clobber, Windows WinError (both pre-existing).",
+      "integrity_method": "review-based (no cryptographic hashing required)"
+    },
+    "15.0": {
+      "status": "closed",
+      "area_title": "Ralph Wiggum Pre-Action Self-Check",
+      "closed_by": "gemini",
+      "closed_at": "2026-02-24T09:01:54.184756",
+      "drift_assessment_path": "substrate/docs/codex-migration/drift-wbs15.md",
+      "notes": "All RW-15-* packets done. Ralph Wiggum checklist is active and documented across all agent integration profiles.",
+      "integrity_method": "review-based (no cryptographic hashing required)"
+    },
+    "16.0": {
+      "status": "closed",
+      "area_title": "VS Code & Antigravity Native Integration",
+      "closed_by": "gemini",
+      "closed_at": "2026-02-24T09:20:12.714860",
+      "drift_assessment_path": "substrate/docs/codex-migration/drift-wbs16.md",
+      "notes": "All VSX-16-* packets done. VS Code & Antigravity native integrations, including the MCP server and ambient state injection, are active.",
+      "integrity_method": "review-based (no cryptographic hashing required)"
+    }
+  },
+  "log_integrity_mode": "plain",
+  "operator_mode": "balanced",
+  "mode_overrides": {}
+}

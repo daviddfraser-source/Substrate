@@ -1,0 +1,9 @@
+{
+  "[project]/node_modules/@svar-ui/react-gantt/dist/index.es.js [app-client] (ecmascript, next/dynamic entry)": {
+    "id": "[project]/node_modules/@svar-ui/react-gantt/dist/index.es.js [app-client] (ecmascript, next/dynamic entry)",
+    "files": [
+      "static/chunks/node_modules_@svar-ui_a096f57f._.js",
+      "static/chunks/node_modules_@svar-ui_react-gantt_dist_index_es_eac45440.js"
+    ]
+  }
+}

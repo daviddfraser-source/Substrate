@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "updated_at": "2026-02-22T22:00:12.881415+00:00",
+  "runs": [
+    {
+      "run_id": "e2e-20260222T220012Z-66b01976",
+      "timestamp": "2026-02-22T22:00:12.765565+00:00",
+      "agent": "codex",
+      "packet_id": null,
+      "trigger": "local",
+      "suite": "governance-viewer-smoke",
+      "status": "pass",
+      "duration_sec": 0.106,
+      "command": "python3 -m unittest substrate/tests/test_root_docs_paths.py -v",
+      "exit_code": 0,
+      "summary": {
+        "passed": 2,
+        "failed": 0,
+        "skipped": 0,
+        "total": 2
+      },
+      "failures": [],
+      "artifacts": [
+        "substrate/reports/e2e/e2e-20260222T220012Z-66b01976.log"
+      ]
+    },
+    {
+      "run_id": "e2e-20260222T215338Z-0696b5ac",
+      "timestamp": "2026-02-22T21:53:38.139807+00:00",
+      "agent": "codex",
+      "packet_id": "E2E-6-1",
+      "trigger": "local",
+      "suite": "smoke",
+      "status": "pass",
+      "duration_sec": 0.158,
+      "command": "python3 -m unittest substrate/tests/test_root_docs_paths.py -v",
+      "exit_code": 0,
+      "summary": {
+        "passed": 2,
+        "failed": 0,
+        "skipped": 0,
+        "total": 2
+      },
+      "failures": [],
+      "artifacts": [
+        "substrate/reports/e2e/e2e-20260222T215338Z-0696b5ac.log"
+      ]
+    }
+  ]
+}

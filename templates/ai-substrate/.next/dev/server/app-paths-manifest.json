@@ -1,0 +1,14 @@
+{
+  "/agent-console/page": "app/agent-console/page.js",
+  "/approvals/page": "app/approvals/page.js",
+  "/assistant/page": "app/assistant/page.js",
+  "/chat/page": "app/chat/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/documents/page": "app/documents/page.js",
+  "/gantt/page": "app/gantt/page.js",
+  "/kanban/page": "app/kanban/page.js",
+  "/knowledge/page": "app/knowledge/page.js",
+  "/new/page": "app/new/page.js",
+  "/prompt-lab/page": "app/prompt-lab/page.js",
+  "/timeline/page": "app/timeline/page.js"
+}

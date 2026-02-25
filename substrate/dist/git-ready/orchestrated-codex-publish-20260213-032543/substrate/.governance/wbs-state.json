@@ -1,0 +1,2447 @@
+{
+  "version": "1.0",
+  "created_at": "2026-02-17T15:34:29.879592",
+  "updated_at": "2026-02-23T08:59:50.346039",
+  "packets": {
+    "UPG-001": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:34:31.067454",
+      "completed_at": "2026-02-17T15:34:33.146949",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-002": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:34:33.136262",
+      "completed_at": "2026-02-17T15:34:34.433198",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-003": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:34:36.549268",
+      "completed_at": "2026-02-17T15:34:38.698397",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-004": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:34:39.925903",
+      "completed_at": "2026-02-17T15:34:41.702388",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-005": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:34:42.395606",
+      "completed_at": "2026-02-17T15:34:42.802252",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-006": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:34:43.181441",
+      "completed_at": "2026-02-17T15:34:43.504533",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-007": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:34:43.899336",
+      "completed_at": "2026-02-17T15:34:44.304301",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-008": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:34:44.665741",
+      "completed_at": "2026-02-17T15:34:45.023981",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-009": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:34:45.402750",
+      "completed_at": "2026-02-17T15:34:45.739926",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-010": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:34:46.140791",
+      "completed_at": "2026-02-17T15:34:46.528064",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-011": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:34:46.868604",
+      "completed_at": "2026-02-17T15:34:47.257391",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-012": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:34:47.643367",
+      "completed_at": "2026-02-17T15:34:47.989781",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-013": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:34:48.404722",
+      "completed_at": "2026-02-17T15:34:48.776483",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-014": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:34:49.187646",
+      "completed_at": "2026-02-17T15:34:49.542514",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-015": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:34:49.894480",
+      "completed_at": "2026-02-17T15:34:50.277996",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-016": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:34:50.694501",
+      "completed_at": "2026-02-17T15:34:51.077231",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-017": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:34:51.449714",
+      "completed_at": "2026-02-17T15:34:51.747156",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-018": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:34:52.101529",
+      "completed_at": "2026-02-17T15:34:52.455046",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-019": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:34:52.842893",
+      "completed_at": "2026-02-17T15:34:53.214164",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-020": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:35:28.186442",
+      "completed_at": "2026-02-17T15:35:29.284250",
+      "notes": "Evidence: README.md, test.sh, src/governed_platform/governance/engine.py, src/governed_platform/governance/state_manager.py; Validation: ./scripts/quality-gates.sh; Tag: v1.0"
+    },
+    "UPG-021": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:34:53.556787",
+      "completed_at": "2026-02-17T15:34:53.903657",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-022": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:34:54.297903",
+      "completed_at": "2026-02-17T15:34:54.660027",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-023": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:34:55.051770",
+      "completed_at": "2026-02-17T15:34:55.407627",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-024": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:34:55.750748",
+      "completed_at": "2026-02-17T15:34:56.105749",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-025": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:34:56.494695",
+      "completed_at": "2026-02-17T15:34:56.882723",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-026": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:34:57.220620",
+      "completed_at": "2026-02-17T15:34:57.619904",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-027": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:34:57.996021",
+      "completed_at": "2026-02-17T15:34:58.389758",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-028": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:34:58.768638",
+      "completed_at": "2026-02-17T15:34:59.094402",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-029": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:34:59.466809",
+      "completed_at": "2026-02-17T15:34:59.820790",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-030": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:35:00.186688",
+      "completed_at": "2026-02-17T15:35:00.593948",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-031": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:35:00.958596",
+      "completed_at": "2026-02-17T15:35:01.357261",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-032": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:35:01.694629",
+      "completed_at": "2026-02-17T15:35:02.027234",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-033": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:35:02.465996",
+      "completed_at": "2026-02-17T15:35:02.826289",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-034": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:35:03.237060",
+      "completed_at": "2026-02-17T15:35:03.628009",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-035": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:35:04.012932",
+      "completed_at": "2026-02-17T15:35:04.388050",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-036": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:35:04.718147",
+      "completed_at": "2026-02-17T15:35:05.090007",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-037": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:35:04.096812",
+      "completed_at": "2026-02-17T15:35:04.446052",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-038": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:35:04.879581",
+      "completed_at": "2026-02-17T15:35:05.211427",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-039": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:35:05.595680",
+      "completed_at": "2026-02-17T15:35:05.949756",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-040": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:35:06.281089",
+      "completed_at": "2026-02-17T15:35:06.732177",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-041": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:35:07.095138",
+      "completed_at": "2026-02-17T15:35:07.468769",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-042": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:35:07.852096",
+      "completed_at": "2026-02-17T15:35:08.203808",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-043": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:35:08.603281",
+      "completed_at": "2026-02-17T15:35:08.921827",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-044": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:35:09.309612",
+      "completed_at": "2026-02-17T15:35:09.685529",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-045": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:35:10.062424",
+      "completed_at": "2026-02-17T15:35:10.428742",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-046": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:35:10.765160",
+      "completed_at": "2026-02-17T15:35:11.165922",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-047": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:35:11.598528",
+      "completed_at": "2026-02-17T15:35:11.930910",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-048": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:35:12.365954",
+      "completed_at": "2026-02-17T15:35:12.720154",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-049": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:35:13.152806",
+      "completed_at": "2026-02-17T15:35:13.573265",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-050": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:35:13.893121",
+      "completed_at": "2026-02-17T15:35:14.241457",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-051": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:35:14.615408",
+      "completed_at": "2026-02-17T15:35:15.278576",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-052": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:35:15.707213",
+      "completed_at": "2026-02-17T15:35:16.064849",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-053": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:35:16.433700",
+      "completed_at": "2026-02-17T15:35:17.224264",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-054": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:35:17.627032",
+      "completed_at": "2026-02-17T15:35:17.968511",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-055": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:35:18.292740",
+      "completed_at": "2026-02-17T15:35:19.289115",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-056": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:35:19.675331",
+      "completed_at": "2026-02-17T15:35:20.320700",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-057": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:35:20.864414",
+      "completed_at": "2026-02-17T15:35:21.199232",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-058": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:35:21.593161",
+      "completed_at": "2026-02-17T15:35:22.540525",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-059": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T15:35:22.908255",
+      "completed_at": "2026-02-17T15:35:23.257288",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    "UPG-060": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T16:30:14.844948",
+      "completed_at": "2026-02-17T16:33:36.006475",
+      "notes": "Evidence: .governance/wbs.json, docs/codex-migration/packets/substrate-internal-upgrade-roadmap-wbs-2026-02-17.json, README.md, docs/template-usage.md, docs/wbs-template-profiles.md, scripts/init-scaffold.sh, scripts/scaffold-check.sh, scripts/check_docs_no_legacy_commands.sh; Validation: python3 .governance/wbs_cli.py validate && python3 .governance/wbs_cli.py validate-packet .governance/wbs.json && ./scripts/scaffold-check.sh"
+    },
+    "UPG-061": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T16:33:44.769996",
+      "completed_at": "2026-02-17T16:35:11.649846",
+      "notes": "Evidence: .governance/wbs_cli.py, tests/test_cli_contract.py; Validation: python3 -m unittest tests.test_cli_contract.CliContractTests.test_init_without_argument_uses_default_wbs_path tests.test_cli_contract.CliContractTests.test_init_with_argument_overrides_default_wbs_path -v && python3 -m py_compile .governance/wbs_cli.py"
+    },
+    "UPG-062": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T16:35:23.469830",
+      "completed_at": "2026-02-17T16:36:57.956934",
+      "notes": "Evidence: .gitignore, scripts/governance-state-guard.sh, scripts/scaffold-check.sh, tests/test_governance_state_guard.py; Validation: python3 -m unittest tests.test_governance_state_guard -v && ./scripts/scaffold-check.sh"
+    },
+    "UPG-063": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T16:37:12.008767",
+      "completed_at": "2026-02-17T16:38:27.824337",
+      "notes": "Evidence: scripts/reset-scaffold.sh, README.md, docs/template-usage.md, scripts/README.md; Validation: bash -n scripts/reset-scaffold.sh and isolated execution in temp workspace (scripts/reset-scaffold.sh .governance/wbs.json) with successful validate"
+    },
+    "UPG-064": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T16:38:57.686786",
+      "completed_at": "2026-02-17T16:40:52.071636",
+      "notes": "Evidence: .governance/wbs_cli.py, scripts/template-integrity.sh, scripts/scaffold-check.sh, scripts/governance-state-guard.sh, tests/test_cli_contract.py; Validation: python3 .governance/wbs_cli.py template-validate"
+    },
+    "UPG-065": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T16:41:12.929791",
+      "completed_at": "2026-02-17T16:43:48.512572",
+      "notes": "Evidence: README.md, docs/template-usage.md, scripts/README.md. Validation: python3 .governance/wbs_cli.py template-validate; python3 .governance/wbs_cli.py validate; ./scripts/check_docs_no_legacy_commands.sh."
+    },
+    "UPG-066": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T16:43:56.109598",
+      "completed_at": "2026-02-17T16:44:50.718107",
+      "notes": "Evidence: docs/codex-migration/template-hygiene-release-readiness-2026-02-17.md, docs/codex-migration/scaffold-check-report.md. Validation: python3 .governance/wbs_cli.py template-validate; python3 .governance/wbs_cli.py validate; python3 .governance/wbs_cli.py validate-packet .governance/wbs.json; ./scripts/scaffold-check.sh; python3 -m unittest tests.test_cli_contract tests.test_governance_state_guard -v; ./scripts/check_docs_no_legacy_commands.sh."
+    },
+    "MIN-1-1": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T17:17:14.831352",
+      "completed_at": "2026-02-17T17:17:16.826987",
+      "notes": "Evidence: .governance/wbs.json, .governance/wbs-state.json. Validation: python3 .governance/wbs_cli.py validate."
+    },
+    "MIN-2-1": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T17:17:53.743153",
+      "completed_at": "2026-02-17T17:17:55.068559",
+      "notes": "Evidence: .governance/wbs-state.json log entries for MIN-2-1 claim/done/note. Validation: python3 .governance/wbs_cli.py status."
+    },
+    "MIN-3-1": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T17:18:03.564587",
+      "completed_at": "2026-02-17T17:18:06.691903",
+      "notes": "Evidence: validation command outputs and .governance/wbs-state.json lifecycle log. Validation: python3 .governance/wbs_cli.py validate --strict; python3 .governance/wbs_cli.py validate-packet .governance/wbs.json."
+    },
+    "MIN-4-1": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T17:18:21.848598",
+      "completed_at": "2026-02-17T17:18:23.105443",
+      "notes": "Evidence: docs/codex-migration/drift-wbs4-minimal-2026-02-17.md. Validation: python3 .governance/wbs_cli.py status; python3 .governance/wbs_cli.py log 20."
+    },
+    "RSK-5-1": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T16:51:29.512510",
+      "completed_at": "2026-02-17T17:00:20.496396",
+      "notes": "Evidence: src/governed_platform/governance/residual_risks.py, .governance/residual-risk-register.schema.json, .governance/schema-registry.json, .gitignore, scripts/governance-state-guard.sh, scripts/scaffold-check.sh, scripts/template-integrity.sh. Validation: python3 .governance/wbs_cli.py validate --strict; python3 .governance/wbs_cli.py validate-packet .governance/wbs.json; python3 -m py_compile src/governed_platform/governance/residual_risks.py."
+    },
+    "RSK-5-2": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T17:00:25.333080",
+      "completed_at": "2026-02-17T17:00:48.844742",
+      "notes": "Evidence: .governance/wbs_cli.py (done parsing + risk ack enforcement), .governance/wbs_server.py (residual_risk_ack passthrough), tests/test_cli_contract.py, tests/test_server_api.py, tests/test_residual_risks.py. Validation: python3 -m unittest tests.test_cli_contract.CliContractTests.test_done_requires_explicit_residual_risk_ack tests.test_server_api.ServerApiTests.test_claim_and_done_endpoints tests.test_residual_risks.ResidualRiskTests.test_done_declared_risks_create_register_entries -v."
+    },
+    "RSK-5-3": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T17:00:56.002893",
+      "completed_at": "2026-02-17T17:01:16.008937",
+      "notes": "Evidence: .governance/wbs_cli.py (risk-list/risk-show/risk-add/risk-update-status/risk-summary, risk-json export), src/governed_platform/governance/residual_risks.py, tests/test_residual_risks.py. Validation: python3 -m unittest tests.test_residual_risks.ResidualRiskTests.test_risk_cli_lifecycle_commands -v; python3 .governance/wbs_cli.py --json risk-summary."
+    },
+    "RSK-5-4": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T17:03:30.072764",
+      "completed_at": "2026-02-17T17:03:30.448476",
+      "notes": "Evidence: docs/codex-migration/residual-risk-governance.md, README.md, docs/template-usage.md, docs/governance-workflow-codex.md, scripts/README.md, scripts/wbs-done, scripts/cc-done, scripts/gc-done. Validation: ./scripts/check_docs_no_legacy_commands.sh; python3 .governance/wbs_cli.py risk-list --status open; python3 .governance/wbs_cli.py risk-summary."
+    },
+    "RSK-5-5": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-17T17:04:40.468527",
+      "completed_at": "2026-02-17T17:06:40.835016",
+      "notes": "Evidence: docs/codex-migration/residual-risk-rollout-readiness-2026-02-17.md, .governance/wbs_cli.py, .governance/wbs_server.py, src/governed_platform/governance/residual_risks.py, .governance/residual-risk-register.schema.json. Validation: python3 .governance/wbs_cli.py validate --strict; python3 .governance/wbs_cli.py validate-packet .governance/wbs.json; python3 .governance/wbs_cli.py template-validate; ./scripts/scaffold-check.sh; python3 -m unittest tests.test_residual_risks tests.test_cli_contract tests.test_server_api tests.test_governance_state_guard tests.test_log_integrity tests.test_governance_policy tests.test_start_validate tests.test_validate_strict -v; ./scripts/check_docs_no_legacy_commands.sh."
+    },
+    "E2E-6-1": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T07:52:13.650570",
+      "completed_at": "2026-02-23T07:54:14.487233",
+      "notes": "Evidence: substrate/.governance/e2e-runs.schema.json, substrate/scripts/e2e-run.py, substrate/.governance/schema-registry.json, .gitignore, substrate/.governance/e2e-runs.json, substrate/reports/e2e/e2e-20260222T215338Z-0696b5ac.log. Validation: python3 -m py_compile substrate/scripts/e2e-run.py; python3 substrate/scripts/e2e-run.py --suite smoke --cmd 'python3 -m unittest substrate/tests/test_root_docs_paths.py -v' --agent codex --packet-id E2E-6-1 --trigger local."
+    },
+    "E2E-6-2": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T07:54:22.805385",
+      "completed_at": "2026-02-23T07:55:40.984678",
+      "notes": "Evidence: substrate/.governance/wbs_server.py. Validation: python3 substrate/.governance/wbs_server.py 8092 (smoke), curl /api/e2e/runs?limit=5, curl /api/e2e/run?id=e2e-20260222T215338Z-0696b5ac; responses confirmed success and run detail payloads."
+    },
+    "E2E-6-3": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T07:55:48.568641",
+      "completed_at": "2026-02-23T07:59:12.077228",
+      "notes": "Evidence: substrate/.governance/static/index.html. Validation: python3 -m py_compile substrate/.governance/wbs_server.py; python3 substrate/.governance/wbs_server.py 8093; curl / (contains E2E modal/button markers); curl /api/e2e/runs?limit=3 (success payload)."
+    },
+    "E2E-6-4": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T07:59:26.661802",
+      "completed_at": "2026-02-23T08:00:30.806804",
+      "notes": "Evidence: substrate/scripts/quality-gates.sh, .github/workflows/test.yml, Makefile, substrate/.governance/e2e-runs.json, substrate/reports/e2e/e2e-20260222T220012Z-66b01976.log. Validation: bash -n substrate/scripts/quality-gates.sh; make e2e-smoke (pass, run recorded)."
+    },
+    "E2E-6-5": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:00:41.156632",
+      "completed_at": "2026-02-23T08:03:46.200137",
+      "notes": "Evidence: substrate/tests/test_server_api.py, substrate/tests/test_e2e_viewer_ui.py, substrate/tests/test_e2e_run_writer.py, substrate/docs/e2e-viewer-workflow.md, README.md, START.md, substrate/scripts/README.md, substrate/.governance/static/index.html, substrate/.governance/wbs_server.py, substrate/scripts/e2e-run.py, substrate/scripts/quality-gates.sh, .github/workflows/test.yml, Makefile. Validation: python3 -m unittest substrate/tests/test_server_api.py substrate/tests/test_e2e_viewer_ui.py substrate/tests/test_e2e_run_writer.py -v; python3 substrate/.governance/wbs_cli.py validate --strict; python3 -m py_compile substrate/.governance/wbs_server.py substrate/scripts/e2e-run.py substrate/tests/test_server_api.py substrate/tests/test_e2e_viewer_ui.py substrate/tests/test_e2e_run_writer.py."
+    },
+    "BF-7-1": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:09:29.883006",
+      "completed_at": "2026-02-23T08:14:04.397950",
+      "notes": "Evidence: substrate/.governance/break-fix-log.schema.json, substrate/.governance/break-fix-log.json, substrate/src/governed_platform/governance/break_fix.py, substrate/.governance/schema-registry.json. Validation: python3 -m py_compile substrate/src/governed_platform/governance/break_fix.py; PYTHONPATH=substrate/src python3 smoke for open/start/resolve/summary; python3 substrate/.governance/wbs_cli.py validate --strict."
+    },
+    "BF-7-2": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:14:11.125247",
+      "completed_at": "2026-02-23T08:16:26.663778",
+      "notes": "Evidence: substrate/.governance/wbs_cli.py, substrate/src/governed_platform/governance/break_fix.py. Validation: python3 -m py_compile substrate/.governance/wbs_cli.py; break-fix CLI smoke (open->start->note->resolve, list/show, export break-fix-json) via python3 harness."
+    },
+    "BF-7-3": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:16:40.459740",
+      "completed_at": "2026-02-23T08:17:45.007532",
+      "notes": "Evidence: substrate/.governance/wbs_server.py, substrate/src/governed_platform/governance/break_fix.py. Validation: python3 -m py_compile substrate/.governance/wbs_server.py; HTTP smoke over /api/break-fix/{open,start,note,resolve,items,item,summary}."
+    },
+    "BF-7-4": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:17:59.745801",
+      "completed_at": "2026-02-23T08:20:18.492317",
+      "notes": "Evidence: substrate/.governance/static/index.html. Validation: served dashboard and verified break-fix modal/UI markers plus /api/break-fix/summary response via curl."
+    },
+    "BF-7-5": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:20:36.436347",
+      "completed_at": "2026-02-23T08:22:30.049308",
+      "notes": "Evidence: substrate/.governance/wbs_cli.py, substrate/.governance/wbs_server.py, substrate/.governance/static/index.html, substrate/src/governed_platform/governance/break_fix.py. Validation: python3 -m py_compile substrate/.governance/wbs_cli.py substrate/.governance/wbs_server.py; --json briefing/status include break_fix fields; /api/status payload includes break_fix_summary and packet break_fix_active."
+    },
+    "BF-7-6": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:22:39.199112",
+      "completed_at": "2026-02-23T08:25:36.826272",
+      "notes": "Evidence: substrate/tests/test_break_fix_cli.py, substrate/tests/test_server_api.py, substrate/tests/test_break_fix_viewer_ui.py, substrate/tests/test_cli_briefing.py, substrate/docs/break-fix-workflow.md, README.md, START.md, substrate/scripts/README.md. Validation: python3 -m unittest substrate/tests/test_break_fix_cli.py substrate/tests/test_server_api.py substrate/tests/test_break_fix_viewer_ui.py substrate/tests/test_cli_briefing.py substrate/tests/test_cli_export.py -v; python3 substrate/.governance/wbs_cli.py validate --strict; python3 -m py_compile substrate/.governance/wbs_cli.py substrate/.governance/wbs_server.py substrate/src/governed_platform/governance/break_fix.py."
+    },
+    "OPT-12-1": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:49:04.361533",
+      "completed_at": "2026-02-23T08:50:13.755930",
+      "notes": "Evidence: substrate/.governance/wbs_cli.py. Validation: python3 -m py_compile substrate/.governance/wbs_cli.py; done-checklist smoke using temp WBS + checklist file (pass)."
+    },
+    "OPT-12-2": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:50:21.838076",
+      "completed_at": "2026-02-23T08:51:15.014027",
+      "notes": "Evidence: substrate/.governance/wbs_cli.py. Validation: python3 -m py_compile substrate/.governance/wbs_cli.py; python3 substrate/.governance/wbs_cli.py --json delivery-report 12.0 (payload includes summary + packet_lines)."
+    },
+    "OPT-12-3": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:51:22.755872",
+      "completed_at": "2026-02-23T08:52:05.633526",
+      "notes": "Evidence: substrate/.governance/wbs_cli.py. Validation: python3 -m py_compile substrate/.governance/wbs_cli.py; python3 substrate/.governance/wbs_cli.py --json stale 1 (returns severity payload)."
+    },
+    "OPT-12-4": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:52:15.286455",
+      "completed_at": "2026-02-23T08:53:13.999988",
+      "notes": "Evidence: substrate/.governance/wbs_cli.py. Validation: python3 -m py_compile substrate/.governance/wbs_cli.py; python3 substrate/.governance/wbs_cli.py --json packet-presets."
+    },
+    "OPT-12-5": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:53:28.963757",
+      "completed_at": "2026-02-23T08:54:00.056111",
+      "notes": "Evidence: substrate/.governance/wbs_cli.py. Validation: python3 -m py_compile substrate/.governance/wbs_cli.py; verify-evidence smoke (negative and positive cases) with temp WBS."
+    },
+    "OPT-12-6": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:54:07.903994",
+      "completed_at": "2026-02-23T08:55:00.175225",
+      "notes": "Evidence: substrate/.governance/wbs_cli.py. Validation: python3 -m py_compile substrate/.governance/wbs_cli.py; wbs-diff JSON smoke with two temp WBS files (areas/packets/deps delta assertions)."
+    },
+    "OPT-12-7": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:55:12.279212",
+      "completed_at": "2026-02-23T08:56:25.282941",
+      "notes": "Evidence: substrate/.governance/wbs_cli.py. Validation: python3 -m py_compile substrate/.governance/wbs_cli.py; mode-profile set/show JSON smoke; stale JSON reflects profile factors."
+    },
+    "OPT-12-8": {
+      "status": "done",
+      "assigned_to": "codex",
+      "started_at": "2026-02-23T08:56:35.994608",
+      "completed_at": "2026-02-23T08:57:40.955403",
+      "notes": "Evidence: substrate/.governance/wbs_cli.py. Validation: python3 -m py_compile substrate/.governance/wbs_cli.py; python3 substrate/.governance/wbs_cli.py --json closeout-readiness 12.0."
+    }
+  },
+  "log": [
+    {
+      "packet_id": "UPG-001",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:31.067482",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-001",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:33.146961",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-002",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:33.136276",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-002",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:34.433234",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-003",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:36.549281",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-003",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:38.698408",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-004",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:39.925916",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-004",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:41.702400",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-005",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:42.395619",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-005",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:42.802264",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-006",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:43.181452",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-006",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:43.504544",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-007",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:43.899348",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-007",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:44.304313",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-008",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:44.665753",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-008",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:45.023992",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-009",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:45.402762",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-009",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:45.739937",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-010",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:46.140803",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-010",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:46.528076",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-011",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:46.868617",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-011",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:47.257402",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-012",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:47.643378",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-012",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:47.989792",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-013",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:48.404733",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-013",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:48.776495",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-014",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:49.187658",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-014",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:49.542526",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-015",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:49.894491",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-015",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:50.278008",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-016",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:50.694512",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-016",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:51.077243",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-017",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:51.449726",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-017",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:51.747167",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-018",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:52.101542",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-018",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:52.455057",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-019",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:52.842904",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-019",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:53.214176",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-021",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:53.556798",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-021",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:53.903670",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-022",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:54.297915",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-022",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:54.660039",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-023",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:55.051781",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-023",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:55.407640",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-024",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:55.750761",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-024",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:56.105760",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-025",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:56.494707",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-025",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:56.882735",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-026",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:57.220631",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-026",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:57.619919",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-027",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:57.996033",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-027",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:58.389770",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-028",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:58.768650",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-028",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:59.094414",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-029",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:59.466820",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-029",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:34:59.820802",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-030",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:00.186700",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-030",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:00.593960",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-031",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:00.958608",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-031",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:01.357275",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-032",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:01.694640",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-032",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:02.027245",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-033",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:02.466008",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-033",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:02.826301",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-034",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:03.237072",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-034",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:03.628022",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-035",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:04.012944",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-035",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:04.388061",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-036",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:04.718158",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-036",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:05.090019",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-037",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:04.096824",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-037",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:04.446063",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-038",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:04.879600",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-038",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:05.211439",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-039",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:05.595693",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-039",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:05.949769",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-040",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:06.281105",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-040",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:06.732188",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-041",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:07.095149",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-041",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:07.468781",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-042",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:07.852109",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-042",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:08.203819",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-043",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:08.603292",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-043",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:08.921839",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-044",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:09.309625",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-044",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:09.685540",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-045",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:10.062442",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-045",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:10.428753",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-046",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:10.765171",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-046",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:11.165935",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-047",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:11.598540",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-047",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:11.930921",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-048",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:12.365976",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-048",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:12.720166",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-049",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:13.152818",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-049",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:13.573279",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-050",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:13.893134",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-050",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:14.241470",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-051",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:14.615422",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-051",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:15.278588",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-052",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:15.707225",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-052",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:16.064863",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-053",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:16.433712",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-053",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:17.224277",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-054",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:17.627044",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-054",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:17.968524",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-055",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:18.292751",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-055",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:19.289128",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-056",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:19.675344",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-056",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:20.320715",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-057",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:20.864426",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-057",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:21.199245",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-058",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:21.593173",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-058",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:22.540537",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "UPG-059",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:22.908267",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-059",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:23.257300",
+      "notes": "State reconstruction after lifecycle recovery to complete UPG-020."
+    },
+    {
+      "packet_id": "AREA-8.0",
+      "event": "area_closed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:23.872293",
+      "notes": "Drift assessment: docs/codex-migration/drift-wbs8-doc-viewer.md | Reconstructed closeout after lifecycle recovery."
+    },
+    {
+      "packet_id": "AREA-9.0",
+      "event": "area_closed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:24.758981",
+      "notes": "Drift assessment: docs/codex-migration/drift-wbs9.md | Reconstructed closeout after lifecycle recovery."
+    },
+    {
+      "packet_id": "AREA-10.0",
+      "event": "area_closed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:25.954028",
+      "notes": "Drift assessment: docs/codex-migration/drift-wbs10.md | Reconstructed closeout after lifecycle recovery."
+    },
+    {
+      "packet_id": "AREA-11.0",
+      "event": "area_closed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:27.098079",
+      "notes": "Drift assessment: docs/codex-migration/drift-wbs11.md | Reconstructed closeout after lifecycle recovery."
+    },
+    {
+      "packet_id": "UPG-020",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:28.186455",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-020",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:29.284264",
+      "notes": "Final review complete; .meta delete-before-publishing guidance added in README; quality gates passed; git repository initialized and tag v1.0 created at commit 07a3fc5."
+    },
+    {
+      "packet_id": "UPG-020",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-17T15:35:30.489534",
+      "notes": "Evidence: README.md, test.sh, src/governed_platform/governance/engine.py, src/governed_platform/governance/state_manager.py; Validation: ./scripts/quality-gates.sh; Tag: v1.0"
+    },
+    {
+      "packet_id": "UPG-060",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T16:30:14.844960",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-060",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T16:33:36.006497",
+      "notes": "Replaced default .governance/wbs.json with clean schema-complete minimal scaffold baseline, archived prior internal upgrade roadmap to docs/codex-migration/packets/substrate-internal-upgrade-roadmap-wbs-2026-02-17.json, and updated bootstrap defaults/docs away from internal migration profiles."
+    },
+    {
+      "packet_id": "UPG-060",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-17T16:33:36.396901",
+      "notes": "Evidence: .governance/wbs.json, docs/codex-migration/packets/substrate-internal-upgrade-roadmap-wbs-2026-02-17.json, README.md, docs/template-usage.md, docs/wbs-template-profiles.md, scripts/init-scaffold.sh, scripts/scaffold-check.sh, scripts/check_docs_no_legacy_commands.sh; Validation: python3 .governance/wbs_cli.py validate && python3 .governance/wbs_cli.py validate-packet .governance/wbs.json && ./scripts/scaffold-check.sh"
+    },
+    {
+      "packet_id": "UPG-061",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T16:33:44.770010",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-061",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T16:35:11.649860",
+      "notes": "Updated CLI init behavior to default to .governance/wbs.json when no path is provided while preserving explicit init path override; updated help text accordingly."
+    },
+    {
+      "packet_id": "UPG-061",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-17T16:35:12.199232",
+      "notes": "Evidence: .governance/wbs_cli.py, tests/test_cli_contract.py; Validation: python3 -m unittest tests.test_cli_contract.CliContractTests.test_init_without_argument_uses_default_wbs_path tests.test_cli_contract.CliContractTests.test_init_with_argument_overrides_default_wbs_path -v && python3 -m py_compile .governance/wbs_cli.py"
+    },
+    {
+      "packet_id": "UPG-062",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T16:35:23.469849",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-062",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T16:36:57.956958",
+      "notes": "Hardened runtime artifact protections: added legacy runtime log ignore (.governance/activity-log.jsonl), expanded governance-state-guard coverage to runtime artifacts, and added tracked-runtime guard to scaffold-check."
+    },
+    {
+      "packet_id": "UPG-062",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-17T16:36:59.650206",
+      "notes": "Evidence: .gitignore, scripts/governance-state-guard.sh, scripts/scaffold-check.sh, tests/test_governance_state_guard.py; Validation: python3 -m unittest tests.test_governance_state_guard -v && ./scripts/scaffold-check.sh"
+    },
+    {
+      "packet_id": "UPG-063",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T16:37:12.008780",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-063",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T16:38:27.824352",
+      "notes": "Added idempotent scaffold reset/bootstrap command scripts/reset-scaffold.sh that clears runtime artifacts and re-initializes from selected WBS source in one step; documented onboarding usage."
+    },
+    {
+      "packet_id": "UPG-063",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-17T16:38:29.034573",
+      "notes": "Evidence: scripts/reset-scaffold.sh, README.md, docs/template-usage.md, scripts/README.md; Validation: bash -n scripts/reset-scaffold.sh and isolated execution in temp workspace (scripts/reset-scaffold.sh .governance/wbs.json) with successful validate"
+    },
+    {
+      "packet_id": "UPG-064",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T16:38:57.686816",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-064",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T16:40:52.071649",
+      "notes": "Added first-class CLI command  backed by scripts/template-integrity.sh to verify scaffold cleanliness, runtime artifact tracking guard, required template assets, and isolated bootstrap smoke for init/reset commands."
+    },
+    {
+      "packet_id": "UPG-064",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-17T16:40:52.437322",
+      "notes": "Evidence: .governance/wbs_cli.py, scripts/template-integrity.sh, scripts/scaffold-check.sh, scripts/governance-state-guard.sh, tests/test_cli_contract.py; Validation: python3 .governance/wbs_cli.py template-validate"
+    },
+    {
+      "packet_id": "UPG-064",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-17T16:41:02.371770",
+      "notes": "Evidence: .governance/wbs_cli.py, scripts/template-integrity.sh, scripts/scaffold-check.sh, scripts/governance-state-guard.sh, tests/test_cli_contract.py; Validation: python3 .governance/wbs_cli.py template-validate"
+    },
+    {
+      "packet_id": "UPG-065",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T16:41:12.929809",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-065",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T16:43:48.512585",
+      "notes": "Clarified scaffold versus runtime artifact boundaries in primary docs and script docs; added explicit release hygiene guidance for template publishing."
+    },
+    {
+      "packet_id": "UPG-065",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-17T16:43:49.132926",
+      "notes": "Evidence: README.md, docs/template-usage.md, scripts/README.md. Validation: python3 .governance/wbs_cli.py template-validate; python3 .governance/wbs_cli.py validate; ./scripts/check_docs_no_legacy_commands.sh."
+    },
+    {
+      "packet_id": "UPG-066",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T16:43:56.109611",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "UPG-066",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T16:44:50.718120",
+      "notes": "Completed end-to-end template hygiene validation and documented release readiness with residual risks and next actions."
+    },
+    {
+      "packet_id": "UPG-066",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-17T16:44:51.067505",
+      "notes": "Evidence: docs/codex-migration/template-hygiene-release-readiness-2026-02-17.md, docs/codex-migration/scaffold-check-report.md. Validation: python3 .governance/wbs_cli.py template-validate; python3 .governance/wbs_cli.py validate; python3 .governance/wbs_cli.py validate-packet .governance/wbs.json; ./scripts/scaffold-check.sh; python3 -m unittest tests.test_cli_contract tests.test_governance_state_guard -v; ./scripts/check_docs_no_legacy_commands.sh."
+    },
+    {
+      "packet_id": "RSK-5-1",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T16:51:29.512522",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "RSK-5-1",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T17:00:20.496407",
+      "notes": "Defined residual risk runtime contract and schema-backed storage baseline with guardrails for template hygiene.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "RSK-5-1",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-17T17:00:21.184633",
+      "notes": "Evidence: src/governed_platform/governance/residual_risks.py, .governance/residual-risk-register.schema.json, .governance/schema-registry.json, .gitignore, scripts/governance-state-guard.sh, scripts/scaffold-check.sh, scripts/template-integrity.sh. Validation: python3 .governance/wbs_cli.py validate --strict; python3 .governance/wbs_cli.py validate-packet .governance/wbs.json; python3 -m py_compile src/governed_platform/governance/residual_risks.py."
+    },
+    {
+      "packet_id": "RSK-5-2",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T17:00:25.333092",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "RSK-5-2",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T17:00:48.844753",
+      "notes": "Integrated mandatory residual risk acknowledgement into packet completion flow with non-interactive flags and API passthrough support.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "RSK-5-2",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-17T17:00:50.065704",
+      "notes": "Evidence: .governance/wbs_cli.py (done parsing + risk ack enforcement), .governance/wbs_server.py (residual_risk_ack passthrough), tests/test_cli_contract.py, tests/test_server_api.py, tests/test_residual_risks.py. Validation: python3 -m unittest tests.test_cli_contract.CliContractTests.test_done_requires_explicit_residual_risk_ack tests.test_server_api.ServerApiTests.test_claim_and_done_endpoints tests.test_residual_risks.ResidualRiskTests.test_done_declared_risks_create_register_entries -v."
+    },
+    {
+      "packet_id": "RSK-5-3",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T17:00:56.002939",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "RSK-5-3",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T17:01:16.008949",
+      "notes": "Implemented residual-risk CLI lifecycle commands for listing, inspection, creation, status transitions, summaries, and risk export.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "RSK-5-3",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-17T17:01:17.143822",
+      "notes": "Evidence: .governance/wbs_cli.py (risk-list/risk-show/risk-add/risk-update-status/risk-summary, risk-json export), src/governed_platform/governance/residual_risks.py, tests/test_residual_risks.py. Validation: python3 -m unittest tests.test_residual_risks.ResidualRiskTests.test_risk_cli_lifecycle_commands -v; python3 .governance/wbs_cli.py --json risk-summary."
+    },
+    {
+      "packet_id": "RSK-5-4",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T17:03:30.072776",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "RSK-5-4",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T17:03:30.448488",
+      "notes": "Published residual-risk governance documentation and aligned operator workflow/docs with the new done/risk command contract.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "RSK-5-4",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-17T17:03:30.859468",
+      "notes": "Evidence: docs/codex-migration/residual-risk-governance.md, README.md, docs/template-usage.md, docs/governance-workflow-codex.md, scripts/README.md, scripts/wbs-done, scripts/cc-done, scripts/gc-done. Validation: ./scripts/check_docs_no_legacy_commands.sh; python3 .governance/wbs_cli.py risk-list --status open; python3 .governance/wbs_cli.py risk-summary."
+    },
+    {
+      "packet_id": "RSK-5-5",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T17:04:40.468544",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "RSK-5-5",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T17:06:40.835028",
+      "notes": "Completed rollout validation for residual-risk governance and published readiness notes including git-linkage behavior and residual operational risks.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "RSK-5-5",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-17T17:06:42.141900",
+      "notes": "Evidence: docs/codex-migration/residual-risk-rollout-readiness-2026-02-17.md, .governance/wbs_cli.py, .governance/wbs_server.py, src/governed_platform/governance/residual_risks.py, .governance/residual-risk-register.schema.json. Validation: python3 .governance/wbs_cli.py validate --strict; python3 .governance/wbs_cli.py validate-packet .governance/wbs.json; python3 .governance/wbs_cli.py template-validate; ./scripts/scaffold-check.sh; python3 -m unittest tests.test_residual_risks tests.test_cli_contract tests.test_server_api tests.test_governance_state_guard tests.test_log_integrity tests.test_governance_policy tests.test_start_validate tests.test_validate_strict -v; ./scripts/check_docs_no_legacy_commands.sh."
+    },
+    {
+      "packet_id": "AREA-5.0",
+      "event": "area_closed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T17:06:59.394616",
+      "notes": "Drift assessment: docs/codex-migration/drift-wbs5-residual-risk-2026-02-17.md | Residual risk governance area complete and validated."
+    },
+    {
+      "packet_id": "MIN-1-1",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T17:17:14.831365",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "MIN-1-1",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T17:17:16.827000",
+      "notes": "Initialized governance files baseline and verified active scaffold state.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "MIN-1-1",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-17T17:17:17.784250",
+      "notes": "Evidence: .governance/wbs.json, .governance/wbs-state.json. Validation: python3 .governance/wbs_cli.py validate."
+    },
+    {
+      "packet_id": "MIN-2-1",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T17:17:53.743165",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "MIN-2-1",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T17:17:55.068570",
+      "notes": "Executed packet lifecycle path under CLI governance controls and verified transition behavior.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "MIN-2-1",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-17T17:17:56.021202",
+      "notes": "Evidence: .governance/wbs-state.json log entries for MIN-2-1 claim/done/note. Validation: python3 .governance/wbs_cli.py status."
+    },
+    {
+      "packet_id": "MIN-3-1",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T17:18:03.564600",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "MIN-3-1",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T17:18:06.691915",
+      "notes": "Ran baseline governance validation checks successfully for the active scaffold definition.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "MIN-3-1",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-17T17:18:07.856397",
+      "notes": "Evidence: validation command outputs and .governance/wbs-state.json lifecycle log. Validation: python3 .governance/wbs_cli.py validate --strict; python3 .governance/wbs_cli.py validate-packet .governance/wbs.json."
+    },
+    {
+      "packet_id": "MIN-4-1",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-17T17:18:21.848668",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "MIN-4-1",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T17:18:23.105455",
+      "notes": "Completed minimal closeout packet and produced required drift assessment artifact.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "MIN-4-1",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-17T17:18:23.504563",
+      "notes": "Evidence: docs/codex-migration/drift-wbs4-minimal-2026-02-17.md. Validation: python3 .governance/wbs_cli.py status; python3 .governance/wbs_cli.py log 20."
+    },
+    {
+      "packet_id": "AREA-4.0",
+      "event": "area_closed",
+      "agent": "codex",
+      "timestamp": "2026-02-17T17:18:23.809447",
+      "notes": "Drift assessment: docs/codex-migration/drift-wbs4-minimal-2026-02-17.md | Minimal closeout area complete."
+    },
+    {
+      "packet_id": "E2E-6-1",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T07:52:13.650755",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "E2E-6-1",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T07:54:14.487251",
+      "notes": "Added substrate/.governance/e2e-runs.schema.json and substrate/scripts/e2e-run.py writer; registered schema and runtime ignore for e2e-runs store.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "E2E-6-1",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-23T07:54:15.222467",
+      "notes": "Evidence: substrate/.governance/e2e-runs.schema.json, substrate/scripts/e2e-run.py, substrate/.governance/schema-registry.json, .gitignore, substrate/.governance/e2e-runs.json, substrate/reports/e2e/e2e-20260222T215338Z-0696b5ac.log. Validation: python3 -m py_compile substrate/scripts/e2e-run.py; python3 substrate/scripts/e2e-run.py --suite smoke --cmd 'python3 -m unittest substrate/tests/test_root_docs_paths.py -v' --agent codex --packet-id E2E-6-1 --trigger local."
+    },
+    {
+      "packet_id": "E2E-6-2",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T07:54:22.805400",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "E2E-6-2",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T07:55:40.984692",
+      "notes": "Implemented read-only E2E API routes in substrate/.governance/wbs_server.py: /api/e2e/runs and /api/e2e/run.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "E2E-6-2",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-23T07:55:41.688856",
+      "notes": "Evidence: substrate/.governance/wbs_server.py. Validation: python3 substrate/.governance/wbs_server.py 8092 (smoke), curl /api/e2e/runs?limit=5, curl /api/e2e/run?id=e2e-20260222T215338Z-0696b5ac; responses confirmed success and run detail payloads."
+    },
+    {
+      "packet_id": "E2E-6-3",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T07:55:48.568700",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "E2E-6-3",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T07:59:12.077254",
+      "notes": "Added E2E Runs viewer UI modal in substrate/.governance/static/index.html with run history, filters, findings panel, and artifact previews backed by new E2E APIs.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "E2E-6-3",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-23T07:59:12.802254",
+      "notes": "Evidence: substrate/.governance/static/index.html. Validation: python3 -m py_compile substrate/.governance/wbs_server.py; python3 substrate/.governance/wbs_server.py 8093; curl / (contains E2E modal/button markers); curl /api/e2e/runs?limit=3 (success payload)."
+    },
+    {
+      "packet_id": "E2E-6-4",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T07:59:26.661818",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "E2E-6-4",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:30.806818",
+      "notes": "Integrated E2E runner into local quality gates and CI; added CI artifact upload and Makefile e2e-smoke target.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "E2E-6-4",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:31.510959",
+      "notes": "Evidence: substrate/scripts/quality-gates.sh, .github/workflows/test.yml, Makefile, substrate/.governance/e2e-runs.json, substrate/reports/e2e/e2e-20260222T220012Z-66b01976.log. Validation: bash -n substrate/scripts/quality-gates.sh; make e2e-smoke (pass, run recorded)."
+    },
+    {
+      "packet_id": "E2E-6-5",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:00:41.156645",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "E2E-6-5",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:03:46.200152",
+      "notes": "Added tests and docs for E2E viewer capability across data contract, API routes, UI surfacing, and run writer flow.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "E2E-6-5",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:03:46.910525",
+      "notes": "Evidence: substrate/tests/test_server_api.py, substrate/tests/test_e2e_viewer_ui.py, substrate/tests/test_e2e_run_writer.py, substrate/docs/e2e-viewer-workflow.md, README.md, START.md, substrate/scripts/README.md, substrate/.governance/static/index.html, substrate/.governance/wbs_server.py, substrate/scripts/e2e-run.py, substrate/scripts/quality-gates.sh, .github/workflows/test.yml, Makefile. Validation: python3 -m unittest substrate/tests/test_server_api.py substrate/tests/test_e2e_viewer_ui.py substrate/tests/test_e2e_run_writer.py -v; python3 substrate/.governance/wbs_cli.py validate --strict; python3 -m py_compile substrate/.governance/wbs_server.py substrate/scripts/e2e-run.py substrate/tests/test_server_api.py substrate/tests/test_e2e_viewer_ui.py substrate/tests/test_e2e_run_writer.py."
+    },
+    {
+      "packet_id": "AREA-6.0",
+      "event": "area_closed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:04:08.048062",
+      "notes": "Drift assessment: substrate/docs/codex-migration/drift-wbs6.md | Completed E2E visibility capability across contract, API, UI, CI/local integration, tests, and docs."
+    },
+    {
+      "packet_id": "BF-7-1",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:09:29.883021",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "BF-7-1",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:14:04.397966",
+      "notes": "Defined break-fix schema and runtime store contract with lifecycle/state fields in governance layer.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "BF-7-1",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:14:05.091501",
+      "notes": "Evidence: substrate/.governance/break-fix-log.schema.json, substrate/.governance/break-fix-log.json, substrate/src/governed_platform/governance/break_fix.py, substrate/.governance/schema-registry.json. Validation: python3 -m py_compile substrate/src/governed_platform/governance/break_fix.py; PYTHONPATH=substrate/src python3 smoke for open/start/resolve/summary; python3 substrate/.governance/wbs_cli.py validate --strict."
+    },
+    {
+      "packet_id": "BF-7-2",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:14:11.125261",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "BF-7-2",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:16:26.663792",
+      "notes": "Implemented break-fix CLI lifecycle commands (open/start/resolve/reject/note/list/show) with transition guards and resolve-evidence enforcement.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "BF-7-2",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:16:27.419028",
+      "notes": "Evidence: substrate/.governance/wbs_cli.py, substrate/src/governed_platform/governance/break_fix.py. Validation: python3 -m py_compile substrate/.governance/wbs_cli.py; break-fix CLI smoke (open->start->note->resolve, list/show, export break-fix-json) via python3 harness."
+    },
+    {
+      "packet_id": "BF-7-3",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:16:40.459755",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "BF-7-3",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:17:45.007545",
+      "notes": "Added break-fix API endpoints in wbs_server for queue/read/summary and lifecycle transitions with shared validation semantics.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "BF-7-3",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:17:45.676980",
+      "notes": "Evidence: substrate/.governance/wbs_server.py, substrate/src/governed_platform/governance/break_fix.py. Validation: python3 -m py_compile substrate/.governance/wbs_server.py; HTTP smoke over /api/break-fix/{open,start,note,resolve,items,item,summary}."
+    },
+    {
+      "packet_id": "BF-7-4",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:17:59.745818",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "BF-7-4",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:20:18.492331",
+      "notes": "Added Break-Fix dashboard modal with queue filters, create flow, lifecycle actions, linked packet visibility, and evidence/findings detail rendering.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "BF-7-4",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:20:19.108905",
+      "notes": "Evidence: substrate/.governance/static/index.html. Validation: served dashboard and verified break-fix modal/UI markers plus /api/break-fix/summary response via curl."
+    },
+    {
+      "packet_id": "BF-7-5",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:20:36.436362",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "BF-7-5",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:22:30.049323",
+      "notes": "Integrated break-fix into governance reporting/export and surfaced unresolved break-fix counts in packet/status views.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "BF-7-5",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:22:30.653533",
+      "notes": "Evidence: substrate/.governance/wbs_cli.py, substrate/.governance/wbs_server.py, substrate/.governance/static/index.html, substrate/src/governed_platform/governance/break_fix.py. Validation: python3 -m py_compile substrate/.governance/wbs_cli.py substrate/.governance/wbs_server.py; --json briefing/status include break_fix fields; /api/status payload includes break_fix_summary and packet break_fix_active."
+    },
+    {
+      "packet_id": "BF-7-6",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:22:39.199126",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "BF-7-6",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:25:36.826286",
+      "notes": "Added break-fix tests and operator documentation covering schema, lifecycle transitions, API/UI behavior, reporting integration, and evidence chain expectations.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "BF-7-6",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:25:37.449786",
+      "notes": "Evidence: substrate/tests/test_break_fix_cli.py, substrate/tests/test_server_api.py, substrate/tests/test_break_fix_viewer_ui.py, substrate/tests/test_cli_briefing.py, substrate/docs/break-fix-workflow.md, README.md, START.md, substrate/scripts/README.md. Validation: python3 -m unittest substrate/tests/test_break_fix_cli.py substrate/tests/test_server_api.py substrate/tests/test_break_fix_viewer_ui.py substrate/tests/test_cli_briefing.py substrate/tests/test_cli_export.py -v; python3 substrate/.governance/wbs_cli.py validate --strict; python3 -m py_compile substrate/.governance/wbs_cli.py substrate/.governance/wbs_server.py substrate/src/governed_platform/governance/break_fix.py."
+    },
+    {
+      "packet_id": "AREA-7.0",
+      "event": "area_closed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:26:01.651726",
+      "notes": "Drift assessment: substrate/docs/codex-migration/drift-wbs7.md | Completed break-fix mode implementation with lifecycle, API/UI integration, reporting, tests, and docs."
+    },
+    {
+      "packet_id": "OPT-12-1",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:49:04.361547",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "OPT-12-1",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:50:13.755944",
+      "notes": "Added optional --checklist gate to done workflow with markdown/JSON checklist validation, preserving default behavior when omitted.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "OPT-12-1",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:50:14.573357",
+      "notes": "Evidence: substrate/.governance/wbs_cli.py. Validation: python3 -m py_compile substrate/.governance/wbs_cli.py; done-checklist smoke using temp WBS + checklist file (pass)."
+    },
+    {
+      "packet_id": "OPT-12-2",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:50:21.838096",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "OPT-12-2",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:51:15.014040",
+      "notes": "Implemented delivery-report command with scope selection and full per-packet delivery lines (timestamps, notes, evidence refs, risks/next actions).",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "OPT-12-2",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:51:15.838814",
+      "notes": "Evidence: substrate/.governance/wbs_cli.py. Validation: python3 -m py_compile substrate/.governance/wbs_cli.py; python3 substrate/.governance/wbs_cli.py --json delivery-report 12.0 (payload includes summary + packet_lines)."
+    },
+    {
+      "packet_id": "OPT-12-3",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:51:22.755891",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "OPT-12-3",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:52:05.633541",
+      "notes": "Enhanced stale watchdog with warning/critical severity bands, recommended next actions, and JSON payload output.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "OPT-12-3",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:52:06.331282",
+      "notes": "Evidence: substrate/.governance/wbs_cli.py. Validation: python3 -m py_compile substrate/.governance/wbs_cli.py; python3 substrate/.governance/wbs_cli.py --json stale 1 (returns severity payload)."
+    },
+    {
+      "packet_id": "OPT-12-4",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:52:15.286469",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "OPT-12-4",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:53:14.000003",
+      "notes": "Added optional packet presets and preset listing command to speed packet creation without changing default add-packet flow.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "OPT-12-4",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:53:14.580827",
+      "notes": "Evidence: substrate/.governance/wbs_cli.py. Validation: python3 -m py_compile substrate/.governance/wbs_cli.py; python3 substrate/.governance/wbs_cli.py --json packet-presets."
+    },
+    {
+      "packet_id": "OPT-12-5",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:53:28.963770",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "OPT-12-5",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:54:00.056123",
+      "notes": "Added optional done evidence path verification via --verify-evidence with fail-fast checks for missing or absent evidence references.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "OPT-12-5",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:54:00.782601",
+      "notes": "Evidence: substrate/.governance/wbs_cli.py. Validation: python3 -m py_compile substrate/.governance/wbs_cli.py; verify-evidence smoke (negative and positive cases) with temp WBS."
+    },
+    {
+      "packet_id": "OPT-12-6",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:54:07.904009",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "OPT-12-6",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:55:00.175237",
+      "notes": "Implemented wbs-diff command to explain structural area/packet/dependency changes between two WBS files.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "OPT-12-6",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:55:00.861860",
+      "notes": "Evidence: substrate/.governance/wbs_cli.py. Validation: python3 -m py_compile substrate/.governance/wbs_cli.py; wbs-diff JSON smoke with two temp WBS files (areas/packets/deps delta assertions)."
+    },
+    {
+      "packet_id": "OPT-12-7",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:55:12.279226",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "OPT-12-7",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:56:25.282955",
+      "notes": "Added optional operator mode profiles (speed/balanced/strict) and wired profile defaults into done/stale behavior without forcing profile usage.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "OPT-12-7",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:56:25.918852",
+      "notes": "Evidence: substrate/.governance/wbs_cli.py. Validation: python3 -m py_compile substrate/.governance/wbs_cli.py; mode-profile set/show JSON smoke; stale JSON reflects profile factors."
+    },
+    {
+      "packet_id": "OPT-12-8",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:56:35.994623",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "OPT-12-8",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:57:40.955416",
+      "notes": "Implemented closeout-readiness command with numeric readiness score, blocker breakdown, and closeout gating signal for L2 areas.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "OPT-12-8",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:57:41.647122",
+      "notes": "Evidence: substrate/.governance/wbs_cli.py. Validation: python3 -m py_compile substrate/.governance/wbs_cli.py; python3 substrate/.governance/wbs_cli.py --json closeout-readiness 12.0."
+    },
+    {
+      "packet_id": "AREA-12.0",
+      "event": "area_closed",
+      "agent": "codex",
+      "timestamp": "2026-02-23T08:59:50.346032",
+      "notes": "Drift assessment: substrate/docs/codex-migration/drift-wbs12.md | Completed all optional productivity enhancements in non-forcing mode."
+    }
+  ],
+  "area_closeouts": {
+    "8.0": {
+      "status": "closed",
+      "area_title": "Documentation Viewer Expansion",
+      "closed_by": "codex",
+      "closed_at": "2026-02-17T15:35:23.872262",
+      "drift_assessment_path": "docs/codex-migration/drift-wbs8-doc-viewer.md",
+      "notes": "Reconstructed closeout after lifecycle recovery.",
+      "integrity_method": "review-based (no cryptographic hashing required)"
+    },
+    "9.0": {
+      "status": "closed",
+      "area_title": "Governance Hardening",
+      "closed_by": "codex",
+      "closed_at": "2026-02-17T15:35:24.758965",
+      "drift_assessment_path": "docs/codex-migration/drift-wbs9.md",
+      "notes": "Reconstructed closeout after lifecycle recovery.",
+      "integrity_method": "review-based (no cryptographic hashing required)"
+    },
+    "10.0": {
+      "status": "closed",
+      "area_title": "Session Continuity & Guided Planning",
+      "closed_by": "codex",
+      "closed_at": "2026-02-17T15:35:25.954011",
+      "drift_assessment_path": "docs/codex-migration/drift-wbs10.md",
+      "notes": "Reconstructed closeout after lifecycle recovery.",
+      "integrity_method": "review-based (no cryptographic hashing required)"
+    },
+    "11.0": {
+      "status": "closed",
+      "area_title": "Git-Native Governance",
+      "closed_by": "codex",
+      "closed_at": "2026-02-17T15:35:27.098062",
+      "drift_assessment_path": "docs/codex-migration/drift-wbs11.md",
+      "notes": "Reconstructed closeout after lifecycle recovery.",
+      "integrity_method": "review-based (no cryptographic hashing required)"
+    },
+    "5.0": {
+      "status": "closed",
+      "area_title": "Residual Risk Governance",
+      "closed_by": "codex",
+      "closed_at": "2026-02-17T17:06:59.394594",
+      "drift_assessment_path": "docs/codex-migration/drift-wbs5-residual-risk-2026-02-17.md",
+      "notes": "Residual risk governance area complete and validated.",
+      "integrity_method": "review-based (no cryptographic hashing required)"
+    },
+    "4.0": {
+      "status": "closed",
+      "area_title": "Closeout",
+      "closed_by": "codex",
+      "closed_at": "2026-02-17T17:18:23.809431",
+      "drift_assessment_path": "docs/codex-migration/drift-wbs4-minimal-2026-02-17.md",
+      "notes": "Minimal closeout area complete.",
+      "integrity_method": "review-based (no cryptographic hashing required)"
+    },
+    "6.0": {
+      "status": "closed",
+      "area_title": "E2E Visibility in WBS Viewer",
+      "closed_by": "codex",
+      "closed_at": "2026-02-23T08:04:08.048039",
+      "drift_assessment_path": "substrate/docs/codex-migration/drift-wbs6.md",
+      "notes": "Completed E2E visibility capability across contract, API, UI, CI/local integration, tests, and docs.",
+      "integrity_method": "review-based (no cryptographic hashing required)"
+    },
+    "7.0": {
+      "status": "closed",
+      "area_title": "Break-Fix Mode with Audit History",
+      "closed_by": "codex",
+      "closed_at": "2026-02-23T08:26:01.651702",
+      "drift_assessment_path": "substrate/docs/codex-migration/drift-wbs7.md",
+      "notes": "Completed break-fix mode implementation with lifecycle, API/UI integration, reporting, tests, and docs.",
+      "integrity_method": "review-based (no cryptographic hashing required)"
+    },
+    "12.0": {
+      "status": "closed",
+      "area_title": "Optional Productive Workflow Enhancements",
+      "closed_by": "codex",
+      "closed_at": "2026-02-23T08:59:50.346016",
+      "drift_assessment_path": "substrate/docs/codex-migration/drift-wbs12.md",
+      "notes": "Completed all optional productivity enhancements in non-forcing mode.",
+      "integrity_method": "review-based (no cryptographic hashing required)"
+    }
+  },
+  "log_integrity_mode": "plain",
+  "operator_mode": "balanced",
+  "mode_overrides": {}
+}

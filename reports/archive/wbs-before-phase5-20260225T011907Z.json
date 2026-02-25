@@ -1,0 +1,194 @@
+{
+  "metadata": {
+    "project_name": "Substrate PRD v4.1 Delivery Plan Draft",
+    "approved_by": "david-fraser",
+    "approved_at": "2026-02-25",
+    "planning_source": "from_json",
+    "planning_generated_at": "2026-02-25T10:10:15.218698"
+  },
+  "work_areas": [
+    {
+      "id": "4-0",
+      "title": "Scope Discipline and Roadmap Alignment",
+      "description": "Packets mapped to PRD v4.1 section family 4.0."
+    },
+    {
+      "id": "6-0",
+      "title": "Shared Core Contract",
+      "description": "Packets mapped to PRD v4.1 section family 6.0."
+    },
+    {
+      "id": "7-0",
+      "title": "Ontology Layer",
+      "description": "Packets mapped to PRD v4.1 section family 7.0."
+    },
+    {
+      "id": "8-0",
+      "title": "Constraint Engine",
+      "description": "Packets mapped to PRD v4.1 section family 8.0."
+    },
+    {
+      "id": "9-0",
+      "title": "Policy Engine",
+      "description": "Packets mapped to PRD v4.1 section family 9.0."
+    },
+    {
+      "id": "10-0",
+      "title": "Trust Scoring",
+      "description": "Packets mapped to PRD v4.1 section family 10.0."
+    },
+    {
+      "id": "11-0",
+      "title": "Graph Core",
+      "description": "Packets mapped to PRD v4.1 section family 11.0."
+    },
+    {
+      "id": "12-0",
+      "title": "Versioning and Audit Semantics",
+      "description": "Packets mapped to PRD v4.1 section family 12.0."
+    },
+    {
+      "id": "19-0",
+      "title": "Definition of Done",
+      "description": "Packets mapped to PRD v4.1 section family 19.0."
+    }
+  ],
+  "packets": [
+    {
+      "id": "PRD4-00-SCOPE-MATRIX",
+      "wbs_ref": "4.1",
+      "area_id": "4-0",
+      "title": "Publish normative phase scope matrix",
+      "scope": "Eliminate roadmap ambiguity by defining MUST/MUST NOT capability boundaries for v4.0-v4.3. Actions: Add Section 4.1 scope matrix to PRD v4.1; Align roadmap text with matrix constraints; Add release-gate rule that MUST NOT scope cannot block phase closeout. Outputs: PRD v4.1 updated scope matrix section; Roadmap section aligned with phase matrix."
+    },
+    {
+      "id": "PRD4-01-SHARED-CORE-CONTRACT",
+      "wbs_ref": "6.0",
+      "area_id": "6-0",
+      "title": "Enforce shared-core decision contract across surfaces",
+      "scope": "Prevent CLI/API/terminal divergence by formalizing and testing one transition authority envelope. Actions: Define transition result envelope; Route CLI/API/terminal through same core decision path; Add parity tests for identical inputs across surfaces. Outputs: Shared decision envelope contract doc; Parity test suite and baseline report."
+    },
+    {
+      "id": "PRD4-11-SNAPSHOT-DIFF",
+      "wbs_ref": "6.0",
+      "area_id": "6-0",
+      "title": "Implement state snapshot and diff (v4.1)",
+      "scope": "Enable governed state comparison for audit and operations without mutating history. Actions: Implement snapshot capture API; Implement deterministic diff output; Link snapshot/diff events into audit log. Outputs: Snapshot/diff API and usage guide; Deterministic snapshot replay fixtures."
+    },
+    {
+      "id": "PRD4-02-ONTOLOGY-MINIMUM",
+      "wbs_ref": "7.0",
+      "area_id": "7-0",
+      "title": "Implement v4.0 typed ontology minimum set",
+      "scope": "Deliver kernel entity and relationship typing required for deterministic governance paths. Actions: Define core entity types and relationship constraints; Implement schema-level validation for relationship semantics; Reject invalid type/relationship combinations at transition time. Outputs: Ontology type registry; Relationship validator test fixtures."
+    },
+    {
+      "id": "PRD4-12-REFERENCE-ONTOLOGY-V1",
+      "wbs_ref": "7.3",
+      "area_id": "7-0",
+      "title": "Publish reference ontology pack v1 contract (v4.1)",
+      "scope": "Define the extension boundary for commercial domain ontologies without contaminating kernel scope. Actions: Define ontology pack ingestion contract; Define compatibility/versioning constraints; Define licensing boundary metadata model. Outputs: Reference ontology pack contract; Compatibility validation checklist."
+    },
+    {
+      "id": "PRD4-03-CONSTRAINT-PIPELINE",
+      "wbs_ref": "8.0",
+      "area_id": "8-0",
+      "title": "Implement deterministic constraint pipeline",
+      "scope": "Enforce dependency/policy/risk/integrity checks as ordered deterministic gates. Actions: Implement ordered transition validation stages; Implement invariants: no cycles, no gate bypass, no audit mutation; Fail transition atomically on first hard deny. Outputs: Constraint evaluation pipeline module; Invariant conformance tests."
+    },
+    {
+      "id": "PRD4-04-POLICY-ENGINE-BASE",
+      "wbs_ref": "9.0",
+      "area_id": "9-0",
+      "title": "Ship native policy engine with precedence trace",
+      "scope": "Provide fail-closed policy gating with auditable per-rule decision traces. Actions: Implement policy precedence order; Implement fail-closed behavior for unknown/missing policy states; Emit policy trace fields in transition/audit records. Outputs: Policy evaluator with precedence resolver; Policy trace schema and fixture samples."
+    },
+    {
+      "id": "PRD4-08-POLICY-VERSIONING",
+      "wbs_ref": "9.0",
+      "area_id": "9-0",
+      "title": "Add policy versioning and activation controls (v4.1)",
+      "scope": "Extend policy governance with immutable version activation, precedence history, and rationale capture. Actions: Implement policy version records and activation workflow; Require rationale and approval metadata for activation; Integrate version references into transition trace output. Outputs: Policy version registry; Version activation audit report."
+    },
+    {
+      "id": "PRD4-10-OPA-COMPAT-ADAPTER",
+      "wbs_ref": "9.0",
+      "area_id": "9-0",
+      "title": "Implement OPA compatibility adapter (v4.1)",
+      "scope": "Provide optional OPA evaluation path while preserving native deterministic policy semantics. Actions: Implement OPA adapter and mapping contract; Enforce deterministic fallback when OPA is unavailable; Capture OPA decision traces in audit-compatible format. Outputs: OPA adapter contract and implementation; Fallback behavior test report."
+    },
+    {
+      "id": "PRD4-09-TRUST-SCORING-V1",
+      "wbs_ref": "10.0",
+      "area_id": "10-0",
+      "title": "Implement deterministic trust scoring v1 (v4.1)",
+      "scope": "Deliver governed explainable trust scoring with versioned weights and approval records. Actions: Define trust model schema with version and rationale fields; Implement deterministic trust computation pipeline; Enforce governance approval on trust model changes. Outputs: Trust scoring model v1 artifacts; Change approval and audit trail records."
+    },
+    {
+      "id": "PRD4-05-GRAPH-CORE-POSTGRES",
+      "wbs_ref": "11.0",
+      "area_id": "11-0",
+      "title": "Implement PostgreSQL graph core and traversal APIs",
+      "scope": "Provide production graph persistence and deterministic traversal primitives for governance operations. Actions: Implement adjacency-list schema and indexes; Implement recursive CTE traversal endpoints; Implement cycle detection and impact analysis queries. Outputs: PostgreSQL graph schema; Traversal API contract tests."
+    },
+    {
+      "id": "PRD4-06-IMMUTABLE-AUDIT",
+      "wbs_ref": "12.0",
+      "area_id": "12-0",
+      "title": "Implement immutable audit and provenance chain",
+      "scope": "Guarantee append-only governance evidence with queryable provenance lineage. Actions: Implement append-only audit record persistence; Link transitions to provenance chain entries; Block mutation paths for historical audit records. Outputs: Audit append-only storage layer; Provenance export endpoint and evidence report."
+    },
+    {
+      "id": "PRD4-07-KERNEL-DOD-E2E",
+      "wbs_ref": "19.0",
+      "area_id": "19-0",
+      "title": "Demonstrate v4.0 kernel Definition of Done",
+      "scope": "Run end-to-end kernel scenario from clean clone within 30 minutes and capture evidence. Actions: Execute clean-start kernel scenario; Capture reproducible evidence artifacts; Publish kernel DoD report with timings. Outputs: Kernel DoD runbook and report; Audit and provenance export artifacts."
+    }
+  ],
+  "dependencies": {
+    "PRD4-01-SHARED-CORE-CONTRACT": [
+      "PRD4-00-SCOPE-MATRIX"
+    ],
+    "PRD4-11-SNAPSHOT-DIFF": [
+      "PRD4-07-KERNEL-DOD-E2E",
+      "PRD4-06-IMMUTABLE-AUDIT"
+    ],
+    "PRD4-02-ONTOLOGY-MINIMUM": [
+      "PRD4-00-SCOPE-MATRIX"
+    ],
+    "PRD4-12-REFERENCE-ONTOLOGY-V1": [
+      "PRD4-07-KERNEL-DOD-E2E"
+    ],
+    "PRD4-03-CONSTRAINT-PIPELINE": [
+      "PRD4-01-SHARED-CORE-CONTRACT",
+      "PRD4-02-ONTOLOGY-MINIMUM"
+    ],
+    "PRD4-04-POLICY-ENGINE-BASE": [
+      "PRD4-03-CONSTRAINT-PIPELINE"
+    ],
+    "PRD4-08-POLICY-VERSIONING": [
+      "PRD4-07-KERNEL-DOD-E2E"
+    ],
+    "PRD4-10-OPA-COMPAT-ADAPTER": [
+      "PRD4-08-POLICY-VERSIONING"
+    ],
+    "PRD4-09-TRUST-SCORING-V1": [
+      "PRD4-07-KERNEL-DOD-E2E",
+      "PRD4-08-POLICY-VERSIONING"
+    ],
+    "PRD4-05-GRAPH-CORE-POSTGRES": [
+      "PRD4-02-ONTOLOGY-MINIMUM"
+    ],
+    "PRD4-06-IMMUTABLE-AUDIT": [
+      "PRD4-01-SHARED-CORE-CONTRACT",
+      "PRD4-04-POLICY-ENGINE-BASE"
+    ],
+    "PRD4-07-KERNEL-DOD-E2E": [
+      "PRD4-03-CONSTRAINT-PIPELINE",
+      "PRD4-04-POLICY-ENGINE-BASE",
+      "PRD4-05-GRAPH-CORE-POSTGRES",
+      "PRD4-06-IMMUTABLE-AUDIT"
+    ]
+  }
+}

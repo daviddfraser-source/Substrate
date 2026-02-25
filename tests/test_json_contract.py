@@ -74,6 +74,20 @@ class JsonContractTests(unittest.TestCase):
         log = json.loads(run_cli(['--json', 'log', '5']).stdout)
         self.assertIn('log', log)
 
+    def test_lifecycle_json_includes_shared_decision_envelope(self):
+        claim = json.loads(run_cli(['--json', 'claim', 'A', 'agent-a']).stdout)
+        self.assertTrue(claim['success'])
+        self.assertIn('decision', claim)
+        self.assertEqual(claim['decision']['action'], 'claim')
+        self.assertEqual(claim['decision']['packet_id'], 'A')
+        self.assertEqual(claim['decision']['status'], 'allowed')
+
+        done = json.loads(run_cli(['--json', 'done', 'A', 'agent-a', 'notes', '--risk', 'none']).stdout)
+        self.assertTrue(done['success'])
+        self.assertIn('decision', done)
+        self.assertEqual(done['decision']['action'], 'done')
+        self.assertEqual(done['decision']['packet_id'], 'A')
+
 
 if __name__ == '__main__':
     unittest.main()

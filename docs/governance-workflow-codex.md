@@ -8,6 +8,7 @@ Use this exact startup path for a fresh clone:
 
 ```bash
 scripts/init-scaffold.sh templates/wbs-codex-minimal.json
+python3 scripts/generate-session-brief.py
 python3 .governance/wbs_cli.py ready
 python3 .governance/wbs_cli.py claim <packet_id> <agent>
 python3 .governance/wbs_cli.py done <packet_id> <agent> "Evidence: ..." --risk none
@@ -22,16 +23,22 @@ scripts/reset-scaffold.sh templates/wbs-codex-minimal.json
 
 ## Session Start
 
-0. Use the versioned briefing/context contract as the session read-model baseline:
+0. Refresh generated session context artifacts:
+   - `python3 scripts/generate-session-brief.py`
+   - read `docs/session-brief.md`
+
+1. Use the versioned briefing/context contract as the session read-model baseline:
    - `docs/codex-migration/briefing-context-schema.md`
-1. Check ready scope:
+2. Check ready scope:
    - `python3 .governance/wbs_cli.py ready`
-2. Inspect current state:
+3. Inspect current state:
    - `python3 .governance/wbs_cli.py status`
-3. Claim one packet:
+4. Claim one packet:
    - `python3 .governance/wbs_cli.py claim <packet_id> <agent>`
-4. Inspect packet context bundle before execution:
+5. Inspect packet context bundle before execution:
    - `python3 .governance/wbs_cli.py context <packet_id> --format json --max-events 40 --max-notes-bytes 4000`
+   - `python3 scripts/generate-packet-bundle.py <packet_id>`
+   - read `.governance/packets/<packet_id>/context.md`
 
 ## Execution
 

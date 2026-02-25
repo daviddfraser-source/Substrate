@@ -1,0 +1,226 @@
+{
+  "entries": [
+    {
+      "packet_id": "CORE-15-2",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-24T17:59:27.145361",
+      "notes": "Validation: python3 -m unittest tests/test_substrate_core_storage.py"
+    },
+    {
+      "packet_id": "CORE-15-3",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-24T17:59:31.989108",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "CORE-15-3",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-24T18:00:12.125824",
+      "notes": "Added src/substrate_core/validation.py for dependency gating and transition validators with tests in tests/test_substrate_core_validation.py.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "CORE-15-3",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-24T18:00:15.810245",
+      "notes": "Validation: python3 -m unittest tests/test_substrate_core_validation.py"
+    },
+    {
+      "packet_id": "CORE-15-4",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-24T18:00:22.307509",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "CORE-15-4",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-24T18:01:03.862457",
+      "notes": "Implemented src/substrate_core/audit.py with structured mutation payloads and immutable append semantics on state log; added tests/test_substrate_core_audit.py.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "CORE-15-4",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-24T18:01:08.476497",
+      "notes": "Validation: python3 -m unittest tests/test_substrate_core_audit.py"
+    },
+    {
+      "packet_id": "CORE-15-5",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-24T18:01:18.894769",
+      "notes": "Claimed by codex"
+    },
+    {
+      "packet_id": "CORE-15-5",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-24T18:02:25.480234",
+      "notes": "Implemented src/substrate_core/engine.py and src/substrate_core/state.py with PacketEngine + ActorContext API (claim/done/fail/block/note/get_status/validate/reset) decoupled from argparse.",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "CORE-15-5",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-24T18:02:32.378341",
+      "notes": "Validation: python3 inline import check for substrate_core PacketEngine/ActorContext/FileStorage."
+    },
+    {
+      "packet_id": "CORE-15-6",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-24T18:04:12.991657",
+      "notes": "Claimed by codex",
+      "actor": "codex",
+      "role": "operator",
+      "source": "cli",
+      "action": "claim",
+      "packet": "CORE-15-6",
+      "result": "success",
+      "exit_state": "in_progress"
+    },
+    {
+      "packet_id": "CORE-15-6",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-24T18:04:17.583249",
+      "notes": "Refactored CLI lifecycle handlers (claim/done/note/fail/reset) to delegate mutations to substrate_core PacketEngine with ActorContext; kept CLI parsing/output behavior unchanged.",
+      "actor": "codex",
+      "role": "operator",
+      "source": "cli",
+      "action": "done",
+      "packet": "CORE-15-6",
+      "result": "success",
+      "exit_state": "done",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "CORE-15-6",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-24T18:04:23.989900",
+      "notes": "Validation: python3 -m unittest tests/test_cli_contract.py tests/test_cli_e2e.py tests/test_cli_transitions_edge.py",
+      "actor": "codex",
+      "role": "operator",
+      "source": "cli",
+      "action": "note",
+      "packet": "CORE-15-6",
+      "result": "success",
+      "exit_state": "done"
+    },
+    {
+      "packet_id": "CORE-15-7",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-24T18:04:39.190901",
+      "notes": "Claimed by codex",
+      "actor": "codex",
+      "role": "operator",
+      "source": "cli",
+      "action": "claim",
+      "packet": "CORE-15-7",
+      "result": "success",
+      "exit_state": "in_progress"
+    },
+    {
+      "packet_id": "CORE-15-7",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-24T18:05:29.988330",
+      "notes": "Updated .governance/wbs_server.py lifecycle routes to invoke substrate_core PacketEngine directly (no CLI subprocess) for claim/done/note/fail/reset with residual risk validation retained.",
+      "actor": "codex",
+      "role": "operator",
+      "source": "cli",
+      "action": "done",
+      "packet": "CORE-15-7",
+      "result": "success",
+      "exit_state": "done",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "CORE-15-7",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-24T18:05:37.879204",
+      "notes": "Validation: python3 -m unittest tests/test_server_api.py",
+      "actor": "codex",
+      "role": "operator",
+      "source": "cli",
+      "action": "note",
+      "packet": "CORE-15-7",
+      "result": "success",
+      "exit_state": "done"
+    },
+    {
+      "packet_id": "CORE-15-8",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-24T18:05:49.930467",
+      "notes": "Claimed by codex",
+      "actor": "codex",
+      "role": "operator",
+      "source": "cli",
+      "action": "claim",
+      "packet": "CORE-15-8",
+      "result": "success",
+      "exit_state": "in_progress"
+    },
+    {
+      "packet_id": "CORE-15-8",
+      "event": "completed",
+      "agent": "codex",
+      "timestamp": "2026-02-24T18:07:05.149309",
+      "notes": "Reworked embedded terminal substrate commands in .governance/wbs_server.py to call PacketEngine and in-process APIs directly (no CLI subprocess) and added tests/test_terminal_engine_integration.py.",
+      "actor": "codex",
+      "role": "operator",
+      "source": "cli",
+      "action": "done",
+      "packet": "CORE-15-8",
+      "result": "success",
+      "exit_state": "done",
+      "risk_ack": "none",
+      "risk_ids": []
+    },
+    {
+      "packet_id": "CORE-15-8",
+      "event": "noted",
+      "agent": "codex",
+      "timestamp": "2026-02-24T18:07:09.456267",
+      "notes": "Validation: python3 -m unittest tests/test_terminal_engine_integration.py",
+      "actor": "codex",
+      "role": "operator",
+      "source": "cli",
+      "action": "note",
+      "packet": "CORE-15-8",
+      "result": "success",
+      "exit_state": "done"
+    },
+    {
+      "packet_id": "CORE-15-9",
+      "event": "started",
+      "agent": "codex",
+      "timestamp": "2026-02-24T18:07:16.051960",
+      "notes": "Claimed by codex",
+      "actor": "codex",
+      "role": "operator",
+      "source": "cli",
+      "action": "claim",
+      "packet": "CORE-15-9",
+      "result": "success",
+      "exit_state": "in_progress"
+    }
+  ]
+}

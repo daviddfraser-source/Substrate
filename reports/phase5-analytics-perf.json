@@ -1,0 +1,9 @@
+{
+  "packet_id": "P5-19-ANALYTICS-EXPORT-PERF",
+  "generated_at": "2026-02-25T01:56:50.731079+00:00",
+  "events": 10000,
+  "record_seconds": 0.022132,
+  "aggregate_seconds": 0.001004,
+  "csv_export_seconds": 4e-05,
+  "event_count": 10000
+}

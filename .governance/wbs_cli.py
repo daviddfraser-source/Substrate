@@ -89,6 +89,7 @@ from planner import (
     validate_definition as validate_planned_definition,
     write_definition as write_planned_definition,
 )
+from substrate_core import ActorContext, FileStorage, PacketEngine
 
 try:
     from jsonschema import Draft202012Validator
@@ -223,6 +224,11 @@ def governance_engine() -> GovernanceEngine:
     if changed:
         sm.save(state)
     return GovernanceEngine(definition, sm)
+
+
+def packet_engine() -> PacketEngine:
+    """Build substrate core packet engine with file-backed storage."""
+    return PacketEngine(storage=FileStorage(WBS_STATE), definition=load_definition())
 
 
 def log_event(state: dict, packet_id: str, event: str, agent: str = None, notes: str = None):
@@ -841,12 +847,20 @@ def _run_lifecycle_with_git(
     if auto_commit and mode != GIT_MODE_DISABLED:
         snapshot = _snapshot_state_bytes()
 
-    ok, msg = operation()
+    op_result = operation()
+    data = {}
+    if isinstance(op_result, tuple):
+        if len(op_result) >= 3:
+            ok, msg, data = op_result[0], op_result[1], op_result[2]
+        else:
+            ok, msg = op_result[0], op_result[1]
+    else:
+        ok, msg = False, "Invalid lifecycle operation result"
     if not ok:
-        return ok, msg
+        return ok, msg, data
 
     if not auto_commit or mode == GIT_MODE_DISABLED:
-        return ok, msg
+        return ok, msg, data
 
     commit_ok, commit_msg, commit_hash, git_event_id = run_governance_auto_commit(
         repo_root=GOV.parent,
@@ -878,13 +892,14 @@ def _run_lifecycle_with_git(
             else:
                 _annotate_git_tag(packet_id, error=tag_reason)
                 suffix += f" (tag warning: {tag_reason})"
-        return True, f"{msg}{suffix}"
+        return True, f"{msg}{suffix}", data
 
     if mode == GIT_MODE_STRICT:
         _restore_state_bytes(snapshot)
         return (
             False,
             f"Git-native strict mode: auto-commit failed ({commit_msg}). Transition rolled back.",
+            data,
         )
 
     _annotate_git_link(
@@ -896,7 +911,7 @@ def _run_lifecycle_with_git(
         error=commit_msg,
         event_id=git_event_id,
     )
-    return True, f"{msg} (Git-native advisory warning: {commit_msg})"
+    return True, f"{msg} (Git-native advisory warning: {commit_msg})", data
 
 
 def check_deps_met(packet_id: str, definition: dict, state: dict) -> tuple:
@@ -911,13 +926,17 @@ def check_deps_met(packet_id: str, definition: dict, state: dict) -> tuple:
 
 def cmd_claim(packet_id: str, agent: str) -> bool:
     """Claim a packet."""
-    ok, msg = _run_lifecycle_with_git(
+    ok, msg, data = _run_lifecycle_with_git(
         packet_id=packet_id,
         action="claim",
         agent=agent,
-        operation=lambda: governance_engine().claim(packet_id, agent),
+        operation=lambda: (
+            lambda res: (res.ok, res.message, res.payload)
+        )(packet_engine().claim(packet_id, ActorContext(user_id=agent, role="operator", source="cli"))),
     )
-    if ok:
+    if JSON_OUTPUT:
+        output_json({"success": ok, "message": msg, "decision": data.get("decision", {}), "payload": data})
+    elif ok:
         print(green(msg))
     else:
         print(red(_format_error(msg)))
@@ -1040,11 +1059,13 @@ def cmd_done(
             print(red(str(e)))
             return False
 
-    ok, msg = _run_lifecycle_with_git(
+    ok, msg, data = _run_lifecycle_with_git(
         packet_id=packet_id,
         action="done",
         agent=agent,
-        operation=lambda: governance_engine().done(packet_id, agent, notes),
+        operation=lambda: (
+            lambda res: (res.ok, res.message, res.payload)
+        )(packet_engine().done(packet_id, ActorContext(user_id=agent, role="operator", source="cli"), notes)),
     )
     risk_ids = []
     risk_git_commit = ""
@@ -1069,7 +1090,9 @@ def cmd_done(
             risk_git_status=("linked" if risk_git_commit else ("warning" if risk_git_error else "")),
             risk_git_error=risk_git_error,
         )
-    if ok:
+    if JSON_OUTPUT:
+        output_json({"success": ok, "message": msg, "decision": data.get("decision", {}), "payload": data, "risk_ids": risk_ids})
+    elif ok:
         if risk_ids:
             msg = f"{msg} (residual risks declared: {', '.join(risk_ids)})"
             if risk_git_commit:
@@ -1086,13 +1109,17 @@ def cmd_done(
 
 def cmd_note(packet_id: str, agent: str, notes: str) -> bool:
     """Update notes for any existing packet state."""
-    ok, msg = _run_lifecycle_with_git(
+    ok, msg, data = _run_lifecycle_with_git(
         packet_id=packet_id,
         action="note",
         agent=agent,
-        operation=lambda: governance_engine().note(packet_id, agent, notes),
+        operation=lambda: (
+            lambda res: (res.ok, res.message, res.payload)
+        )(packet_engine().note(packet_id, notes, ActorContext(user_id=agent, role="operator", source="cli"))),
     )
-    if ok:
+    if JSON_OUTPUT:
+        output_json({"success": ok, "message": msg, "decision": data.get("decision", {}), "payload": data})
+    elif ok:
         print(green(msg))
     else:
         print(red(_format_error(msg)))
@@ -1101,13 +1128,17 @@ def cmd_note(packet_id: str, agent: str, notes: str) -> bool:
 
 def cmd_fail(packet_id: str, agent: str, reason: str = "") -> bool:
     """Mark packet failed and block downstream."""
-    ok, msg = _run_lifecycle_with_git(
+    ok, msg, data = _run_lifecycle_with_git(
         packet_id=packet_id,
         action="fail",
         agent=agent,
-        operation=lambda: governance_engine().fail(packet_id, agent, reason),
+        operation=lambda: (
+            lambda res: (res.ok, res.message, res.payload)
+        )(packet_engine().fail(packet_id, ActorContext(user_id=agent, role="operator", source="cli"), reason)),
     )
-    if ok:
+    if JSON_OUTPUT:
+        output_json({"success": ok, "message": msg, "decision": data.get("decision", {}), "payload": data})
+    elif ok:
         print(yellow(msg))
     else:
         print(red(_format_error(msg)))
@@ -1116,13 +1147,17 @@ def cmd_fail(packet_id: str, agent: str, reason: str = "") -> bool:
 
 def cmd_reset(packet_id: str) -> bool:
     """Reset packet to pending."""
-    ok, msg = _run_lifecycle_with_git(
+    ok, msg, data = _run_lifecycle_with_git(
         packet_id=packet_id,
         action="reset",
         agent="system",
-        operation=lambda: governance_engine().reset(packet_id),
+        operation=lambda: (
+            lambda res: (res.ok, res.message, res.payload)
+        )(packet_engine().reset(packet_id, ActorContext(user_id="system", role="system", source="cli"))),
     )
-    if ok:
+    if JSON_OUTPUT:
+        output_json({"success": ok, "message": msg, "decision": data.get("decision", {}), "payload": data})
+    elif ok:
         print(green(msg))
     else:
         print(red(_format_error(msg)))
@@ -1139,7 +1174,7 @@ def cmd_handover(
     to_agent: str = "",
 ) -> bool:
     """Create governed handover record for an in-progress packet."""
-    ok, msg = _run_lifecycle_with_git(
+    ok, msg, _data = _run_lifecycle_with_git(
         packet_id=packet_id,
         action="handover",
         agent=agent,
@@ -1162,7 +1197,7 @@ def cmd_handover(
 
 def cmd_resume(packet_id: str, agent: str) -> bool:
     """Resume a packet from active handover and atomically assign owner."""
-    ok, msg = _run_lifecycle_with_git(
+    ok, msg, _data = _run_lifecycle_with_git(
         packet_id=packet_id,
         action="resume",
         agent=agent,
@@ -1828,7 +1863,7 @@ def _validate_drift_assessment(path: str) -> tuple:
 
 def cmd_closeout_l2(area_id: str, agent: str, assessment_path: str, notes: str = "") -> bool:
     """Close out a level-2 area with required drift assessment evidence."""
-    ok, msg = _run_lifecycle_with_git(
+    ok, msg, _data = _run_lifecycle_with_git(
         packet_id=f"AREA-{area_id}",
         action="closeout-l2",
         agent=agent,

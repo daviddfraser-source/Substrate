@@ -75,3 +75,5 @@ scripts/reset-scaffold.sh templates/wbs-codex-minimal.json
 - `scripts/build-template-bundle.sh`
   - Builds a distributable scaffold template tarball under `dist/`.
   - Resets mutable WBS state in packaged output.
+
+- `session-start.sh` - Runs optimized packet-first startup (briefing -> ready -> optional claim -> bundle).

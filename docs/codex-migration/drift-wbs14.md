@@ -1,38 +1,30 @@
 ## Scope Reviewed
-
-- Area: 14.0 Claude Code Integration
-- Packets: CDX-14-1 through CDX-14-13
+- WBS 14.0 Context-Efficient Governance Automation
+- Packets WBS-14-1 through WBS-14-7
 
 ## Expected vs Delivered
-
-- Expected: production-ready Claude Code operating docs/skills/scripts/test coverage aligned with existing agent-agnostic governance engine.
-- Delivered: full Claude integration surface across `CLAUDE.md`, `.claude/settings.json`, `.claude/skills/*`, `scripts/cc-*`, `README.md`, `AGENTS.md`, `.claudeignore`, guide docs, ADR, and dedicated tests.
+- Expected: Template pack, generated session context, packet bundles, automated governance checks, infra packetization, startup workflow helper, and context efficiency reporting.
+- Delivered: All seven packets completed with evidence-linked outputs and validations.
 
 ## Drift Assessment
-
-- Minor planned adjustment: deferred caller auto-detection/implicit output-mode switching in CLI; documented explicitly in ADR instead of implementing hidden behavior.
-- Result: preserved deterministic, agent-agnostic CLI contract while enabling Claude workflow through explicit commands and documentation.
+- No blocking scope drift detected.
+- Minor implementation choice: baseline context measurement uses byte estimates rather than tokenizer-level accounting; documented as follow-up enhancement.
 
 ## Evidence Reviewed
-
-- `.governance/wbs-state.json` status/notes for CDX-14-* packets
-- `.governance/wbs_cli.py log 80`
-- Artifacts:
-  - `CLAUDE.md`
-  - `.claude/settings.json`
-  - `.claude/skills/*`
-  - `scripts/cc-*`
-  - `docs/claude-code-guide.md`
-  - `docs/adr-claude-agent-detection-deferred.md`
-  - `tests/test_claude_integration.py`
+- .governance/wbs.json
+- .governance/wbs-state.json
+- docs/session-brief.md
+- .governance/session-brief.json
+- .governance/packets/WBS-14-7/context.md
+- reports/context-efficiency-report.json
+- docs/codex-migration/context-efficiency-report.md
+- scripts/governance-integrity-check.sh
 
 ## Residual Risks
-
-- `.claude/settings.json` behavior may vary by Claude Code runtime version because settings support is evolving.
-- Governance strictness for evidence quality remains policy-led (notes content quality), not fully semantic-validated.
+- Context efficiency percentages are estimate-based; tokenizer-aware metrics should be added.
+- Session supplement files can stale if not regenerated; mitigated by startup script integration.
 
 ## Immediate Next Actions
-
-1. Run an operator pilot with real Claude Code sessions and capture friction points.
-2. If needed, add CLI flags only with explicit contract and tests (no implicit caller behavior).
-3. Keep Claude skills/docs aligned whenever CLI contracts evolve.
+- Add tokenizer-based context measurement mode.
+- Publish context-efficiency metrics as CI artifact for trend tracking.
+- Expand template archetypes based on real project telemetry.

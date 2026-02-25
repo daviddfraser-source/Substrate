@@ -28,6 +28,12 @@ jobs:
           python3 .governance/wbs_cli.py git-protocol --json >/tmp/git-protocol.json
           python3 .governance/wbs_cli.py --json git-verify-ledger --strict >/tmp/git-ledger-verify.json
 
+
+      - name: Governance integrity checks
+        run: |
+          chmod +x scripts/governance-integrity-check.sh
+          ./scripts/governance-integrity-check.sh
+
       - name: Run quality gates
         run: |
           chmod +x scripts/quality-gates.sh

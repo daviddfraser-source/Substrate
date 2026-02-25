@@ -16,7 +16,7 @@ repos:
 
       - id: wbs-validate
         name: WBS validate
-        entry: python3 .governance/wbs_cli.py validate
+        entry: python3 .governance/wbs_cli.py validate --strict
         language: system
         pass_filenames: false
 
@@ -26,6 +26,12 @@ repos:
         language: system
         pass_filenames: false
 
+
+      - id: governance-integrity-fast
+        name: Governance integrity fast checks
+        entry: bash scripts/governance-integrity-check.sh
+        language: system
+        pass_filenames: false
       - id: shell-lint-if-available
         name: Shell lint (if shellcheck installed)
         entry: bash -lc 'command -v shellcheck >/dev/null 2>&1 && shellcheck scripts/*.sh || echo "shellcheck not installed; skipping"'

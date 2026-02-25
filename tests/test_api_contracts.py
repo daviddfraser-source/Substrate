@@ -29,8 +29,14 @@ class ApiContractTests(unittest.TestCase):
             "/audit",
             "/agents",
             "/metrics",
+            "/analytics/summary",
+            "/analytics/token-usage",
+            "/analytics/export",
+            "/traces",
             "/proposals",
             "/health",
+            "/readyz",
+            "/livez",
         }:
             self.assertIn(required, paths)
 
